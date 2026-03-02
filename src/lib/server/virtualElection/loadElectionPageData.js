@@ -13,36 +13,30 @@ export async function loadElectionPageData(scope) {
 	const session = await getServerAuthSession();
 	const userId = getUserIdFromSession(session);
 
-	let initialTotals = [];
-	try {
-		initialTotals = await getTotals(scope);
-	} catch (error) {
-		if (!isMissingVirtualElectionTableError(error)) throw error;
-	}
+	// Run independent queries in parallel for faster server render
+	const [initialTotals, initialMe, initialRidings, electionOptions] = await Promise.all([
+		getTotals(scope).catch((error) =>
+			isMissingVirtualElectionTableError(error) ? [] : Promise.reject(error)
+		),
+		userId
+			? getUserVote(userId, scope).catch((error) =>
+					isMissingVirtualElectionTableError(error) ? { voted: false } : Promise.reject(error)
+				)
+			: Promise.resolve({ voted: false }),
+		getRidingsForScope(scope),
+		getElectionOptionsForScope(scope).catch(() => null)
+	]);
 
-	let initialMe = { voted: false };
-	if (userId) {
-		try {
-			initialMe = await getUserVote(userId, scope);
-		} catch (error) {
-			if (!isMissingVirtualElectionTableError(error)) throw error;
-		}
-	}
-
-	const initialRidings = await getRidingsForScope(scope);
 	let mapMetadata = getMapMetadataForScope(scope);
-	try {
-		const options = await getElectionOptionsForScope(scope);
+	if (electionOptions) {
 		mapMetadata = {
-			countryCode: options.countryCode,
-			mapVersion: options.mapVersion,
-			mode: options.mode,
-			regionKey: options.regionKey,
-			allocationRule: options.allocationRule,
-			electoralVotesVersion: options.electoralVotesVersion
+			countryCode: electionOptions.countryCode,
+			mapVersion: electionOptions.mapVersion,
+			mode: electionOptions.mode,
+			regionKey: electionOptions.regionKey,
+			allocationRule: electionOptions.allocationRule,
+			electoralVotesVersion: electionOptions.electoralVotesVersion
 		};
-	} catch {
-		// Fall back to static scope metadata if DB options are unavailable.
 	}
 
 	return {

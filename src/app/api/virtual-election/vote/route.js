@@ -45,7 +45,7 @@ export async function POST(request) {
 		const clientIp = getClientAddress(request);
 		const ipHash = hashIp(clientIp);
 
-		assertRateLimit(ipHash);
+		await assertRateLimit(ipHash);
 		await assertCaptchaIfConfigured({ captchaToken, clientIp });
 
 		const scope = normalizeScope({

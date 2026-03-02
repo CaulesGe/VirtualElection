@@ -8,11 +8,8 @@ import { db } from '@/lib/server/db/client';
 import { getMapMetadataForScope } from '@/lib/server/virtualElection/mapMetadata';
 import { getRidingsForScope } from '@/lib/server/virtualElection/ridings';
 import {
-	constituencies,
-	countries,
 	electionParties,
 	elections,
-	jurisdictions,
 	parties,
 	virtualElectionRidingTotals,
 	virtualElectionVotes
@@ -84,11 +81,6 @@ export function assertAllowedScope(scopeInput) {
 	return scope;
 }
 
-function isScopeFallbackAllowed() {
-	const explicit = String(process.env.ALLOW_SCOPE_FALLBACK ?? '').toLowerCase() === 'true';
-	return explicit && process.env.NODE_ENV !== 'production';
-}
-
 async function readAllowedPartiesFromDb(scope) {
 	const electionRows = await db
 		.select({ id: elections.id })
@@ -144,48 +136,23 @@ export function assertValidRidingId(ridingId) {
 }
 
 async function assertValidRidingForScope(ridingId, scope) {
-	if (scope.country === 'us') {
+	try {
 		const ridings = await getRidingsForScope(scope);
 		const exists = ridings.some((riding) => String(riding.code) === String(ridingId));
 		if (exists) return;
 		throw new VirtualElectionError('INVALID_RIDING', 'Invalid riding ID.');
-	}
-
-	try {
-		const rows = await db
-			.select({ code: constituencies.code })
-			.from(constituencies)
-			.innerJoin(jurisdictions, eq(jurisdictions.id, constituencies.jurisdictionId))
-			.innerJoin(countries, eq(countries.id, jurisdictions.countryId))
-			.where(
-				and(
-					eq(constituencies.code, ridingId),
-					sql`lower(${countries.code}) = ${scope.country}`,
-					sql`lower(${jurisdictions.code}) = ${scope.district}`
-				)
-			)
-			.limit(1);
-		if (rows[0]) return;
 	} catch (error) {
-		if (!isScopeFallbackAllowed()) {
-			console.error('[INTEGRITY_EVENT] Scope/riding validation fallback blocked', {
-				scope,
-				ridingId,
-				reason: error?.message ?? 'unknown'
-			});
-			throw new VirtualElectionError(
-				'SCOPE_VALIDATION_UNAVAILABLE',
-				'Riding validation unavailable. Vote rejected for integrity.'
-			);
-		}
-		console.error('[INTEGRITY_EVENT] Scope/riding validation fallback used', {
+		if (error instanceof VirtualElectionError) throw error;
+		console.error('[INTEGRITY_EVENT] Scope/riding validation unavailable', {
 			scope,
 			ridingId,
 			reason: error?.message ?? 'unknown'
 		});
-		return;
+		throw new VirtualElectionError(
+			'SCOPE_VALIDATION_UNAVAILABLE',
+			'Riding validation unavailable. Vote rejected for integrity.'
+		);
 	}
-	throw new VirtualElectionError('INVALID_RIDING', 'Invalid riding ID.');
 }
 
 export async function castOrUpdateVote(input) {

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import styles from './Header.module.css';
 
 function getCountryNameFromPath(pathname) {
 	if (pathname?.startsWith('/usa')) return 'USA';
@@ -39,19 +40,19 @@ export default function Header({ isAuthenticated = false, userLabel = '' }) {
 		: `/api/auth/signin?callbackUrl=${encodeURIComponent(userPageUrl)}`;
 
 	return (
-		<header className="site-header">
-			<div className="site-header-inner">
-				<Link href="/" className="site-brand">
+		<header className={styles.header}>
+			<div className={styles.inner}>
+				<Link href="/" className={styles.brand}>
 					VirtualElection
 				</Link>
-				<h1 className="site-title">How will you vote in {countryName}?</h1>
-				<div className="country-selector-wrap">
+				<h1 className={styles.title}>How will you vote in {countryName}?</h1>
+				<div className={styles.selectorWrap}>
 					<label htmlFor="country-selector" className="sr-only">
 						Switch election country
 					</label>
 					<select
 						id="country-selector"
-						className="country-selector"
+						className={styles.selector}
 						aria-label="Switch election country"
 						value={currentCountryRoute}
 						onChange={(event) => {
@@ -62,8 +63,8 @@ export default function Header({ isAuthenticated = false, userLabel = '' }) {
 						<option value="/usa/president">USA</option>
 					</select>
 				</div>
-				<div className="header-user-slot">
-					<Link href={userHref} className="header-user-btn">
+				<div className={styles.userSlot}>
+					<Link href={userHref} className={styles.userBtn}>
 						{isAuthenticated ? (userLabel ? `User: ${userLabel}` : 'User') : 'Login'}
 					</Link>
 				</div>

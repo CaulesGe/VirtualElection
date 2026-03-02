@@ -1,10 +1,32 @@
 'use client';
 
 import { useCallback, useMemo, useRef, useState } from 'react';
-import VirtualElectionMap from '@/lib/components/virtualElection/MapComponent/VirtualElectionMap';
+import dynamic from 'next/dynamic';
+import { List as VirtualList } from 'react-window';
 import RidingBarChart from '@/lib/components/virtualElection/MapComponent/RidingBarChart';
 import { getPartyColor, getPartyShortName } from '@/lib/components/virtualElection/partyMeta';
 import { getMapAdapter } from '@/lib/components/virtualElection/MapComponent/adapters';
+import styles from './MapController.module.css';
+
+function SearchResultRow({ index, style, filteredRidings, onSelect }) {
+	const riding = filteredRidings[index];
+	if (!riding) return null;
+	return (
+		<button
+			type="button"
+			style={style}
+			onMouseDown={(e) => e.preventDefault()}
+			onClick={() => onSelect(riding)}
+		>
+			{riding.code} - {riding.name}
+		</button>
+	);
+}
+
+const VirtualElectionMap = dynamic(
+	() => import('@/lib/components/virtualElection/MapComponent/VirtualElectionMap'),
+	{ ssr: false, loading: () => <div className="election-map-container" style={{ display: 'grid', placeItems: 'center' }}>Loading map…</div> }
+);
 
 function normalizeSearchText(value) {
 	return String(value ?? '')
@@ -213,14 +235,13 @@ export default function MapController({
 	}
 
 	function handleSearchBlur() {
-		// Small delay so a click on a result button registers before we close
 		blurTimeoutRef.current = setTimeout(() => setSearchOpen(false), 150);
 	}
 
 	return (
-		<div className="map-controller">
-			<h3 className="riding-map-title">Riding Map</h3>
-			<div className="search-wrap">
+		<div className={styles.controller}>
+			<h3 className={styles.title}>Riding Map</h3>
+			<div className={styles.searchWrap}>
 				<input
 					value={searchQuery}
 					onChange={(event) => setSearchQuery(event.target.value)}
@@ -229,17 +250,19 @@ export default function MapController({
 					placeholder="Search riding by code or name..."
 				/>
 				{searchOpen && filteredRidings.length > 0 ? (
-					<div className="map-search-results">
-						{filteredRidings.map((riding) => (
-							<button key={riding.code} type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => handleSelectFromSearch(riding)}>
-								{riding.code} - {riding.name}
-							</button>
-						))}
-					</div>
-				) : null}
+				<div className={styles.searchResults}>
+					<VirtualList
+						rowComponent={SearchResultRow}
+						rowCount={filteredRidings.length}
+						rowHeight={36}
+						rowProps={{ filteredRidings, onSelect: handleSelectFromSearch }}
+						style={{ height: Math.min(filteredRidings.length * 36, 320), willChange: 'transform' }}
+					/>
+				</div>
+			) : null}
 			</div>
 
-			<div className="map-shell">
+			<div className={styles.shell}>
 				<VirtualElectionMap
 					adapter={adapter}
 					mapVersion={mapVersion}
@@ -253,7 +276,7 @@ export default function MapController({
 					onSelectDistrict={handleSelectDistrict}
 					onFeaturesLoaded={setMapDistricts}
 				/>
-				<div className="riding-bar-chart-overlay">
+				<div className={styles.chartOverlay}>
 					<RidingBarChart riding={chartRiding} ridingTotals={chartTotals} />
 				</div>
 			</div>

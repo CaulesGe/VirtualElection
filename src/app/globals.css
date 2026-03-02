@@ -1,3 +1,4 @@
+/* === Base Reset === */
 html,
 body {
   max-width: 100vw;
@@ -23,837 +24,142 @@ a {
   text-decoration: none;
 }
 
-.home-election-card:hover {
-	transform: translateY(-2px);
-	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
-	border-color: #d1d5db !important;
-}
-
-.home-page {
-	max-width: 980px;
-	margin: 4rem auto;
-	padding: 0 1rem;
-	display: grid;
-	gap: 1.2rem;
-}
-
-.home-hero {
-	max-width: 760px;
-	display: grid;
-	gap: 0.55rem;
-}
-
-.home-kicker {
-	color: #0f172a;
-	font-weight: 700;
-	font-size: 1rem;
-}
-
-.home-hero h1 {
-	margin: 0;
-	font-size: 2.35rem;
-	letter-spacing: -0.02em;
-	line-height: 1.1;
-}
-
-.home-subtitle {
-	color: #4b5563;
-	font-size: 1rem;
-	line-height: 1.6;
-}
-
-.home-card-grid {
-	display: flex;
-	gap: 0.75rem;
-	flex-wrap: wrap;
-	align-items: stretch;
-}
-
-.home-election-card {
-	flex: 1 1 280px;
-	border: 1px solid #e5e7eb;
-	border-radius: 14px;
-	padding: 1.1rem;
-	color: inherit;
-	background: #fff;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-	transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
-	display: grid;
-	gap: 0.45rem;
-}
-
-.home-card-title {
-	margin: 0;
-	font-size: 1.12rem;
-	font-weight: 700;
-	display: flex;
-	gap: 10px;
-	align-items: center;
-}
-
-.home-badge {
-	font-size: 12px;
-	padding: 2px 8px;
-	border-radius: 999px;
-	border: 1px solid #e5e7eb;
-	color: #374151;
-	background: #f9fafb;
-}
-
-.home-card-subtitle {
-	margin: 0.35rem 0 0;
-	color: #4b5563;
-	line-height: 1.4;
-}
-
-.home-card-cta {
-	margin-top: 0.9rem;
-	color: #1d4ed8;
-	font-weight: 600;
-}
-
-.home-tip {
-	margin-top: 0.4rem;
-	color: #6b7280;
-	font-size: 13px;
-}
-
-.home-card-flag {
-	width: 28px;
-	height: 20px;
-	border-radius: 3px;
-	object-fit: cover;
-	flex-shrink: 0;
-}
-
-.site-header {
-	position: sticky;
-	top: 0;
-	z-index: 1000;
-	background: #ffffffee;
-	backdrop-filter: blur(6px);
-	border-bottom: 1px solid #e5e7eb;
-}
-
-.site-header-inner {
-	max-width: 1400px;
-	margin: 0 auto;
-	padding: 0.65rem 1rem;
-	display: grid;
-	grid-template-columns: auto 1fr auto auto;
-	align-items: center;
-	gap: 0.8rem;
-}
-
-.site-brand {
-	font-weight: 700;
-	color: #111827;
-}
-
-.site-title {
-	font-size: 1rem;
-	font-weight: 700;
-	color: #111827;
-	margin: 0;
-	text-align: center;
-}
-
-.country-selector-wrap {
-	display: inline-flex;
-}
-
-.country-selector {
-	border: 1px solid #d1d5db;
-	background: #fff;
-	color: #111827;
-	font-size: 0.9rem;
-	border-radius: 0.45rem;
-	padding: 0.35rem 1.8rem 0.35rem 0.55rem;
-}
-
-.header-user-slot {
-	display: inline-flex;
-	justify-content: flex-end;
-}
-
-.header-user-btn {
-	display: inline-flex;
-	align-items: center;
-	padding: 0.35rem 0.7rem;
-	border: 1px solid #d1d5db;
-	border-radius: 0.45rem;
-	background: #fff;
-	color: #1f2937;
-	font-size: 0.88rem;
-}
-
+/* === Shared Utilities === */
 .sr-only {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	padding: 0;
-	margin: -1px;
-	overflow: hidden;
-	clip: rect(0, 0, 0, 0);
-	white-space: nowrap;
-	border: 0;
-}
-
-.usa-office-switcher {
-	display: inline-flex;
-	gap: 0.4rem;
-	padding: 0.35rem;
-	border: 1px solid #e5e7eb;
-	border-radius: 0.6rem;
-	background: #fff;
-	align-self: start;
-}
-
-.usa-office-switcher a {
-	padding: 0.38rem 0.68rem;
-	border: 1px solid #d1d5db;
-	border-radius: 0.45rem;
-	font-size: 0.88rem;
-	color: #1f2937;
-	background: #fff;
-}
-
-.usa-office-switcher a.active {
-	background: #1d4ed8;
-	border-color: #1d4ed8;
-	color: #fff;
-}
-
-.user-page {
-	max-width: 900px;
-	margin: 2rem auto;
-	padding: 0 1rem 2rem;
-}
-
-.user-page-card {
-	background: #fff;
-	border: 1px solid #e5e7eb;
-	border-radius: 0.8rem;
-	padding: 1rem;
-	display: grid;
-	gap: 0.9rem;
-}
-
-.user-page-header h1 {
-	margin: 0;
-	font-size: 1.4rem;
-}
-
-.user-page-top-actions {
-	display: inline-flex;
-	gap: 0.55rem;
-	flex-wrap: wrap;
-	justify-content: flex-start;
-}
-
-.user-page-bottom-actions {
-	display: inline-flex;
-	gap: 0.55rem;
-	flex-wrap: wrap;
-	justify-content: center;
-	padding-top: 0.35rem;
-	border-top: 1px solid #f1f5f9;
-	width: 100%;
-}
-
-.user-action-btn {
-	display: inline-flex;
-	align-items: center;
-	padding: 0.4rem 0.72rem;
-	border: 1px solid #d1d5db;
-	border-radius: 0.45rem;
-	background: #fff;
-	color: #111827;
-}
-
-.user-action-btn.danger {
-	border-color: #fca5a5;
-	color: #991b1b;
-}
-
-.user-votes-table-wrap {
-	overflow-x: auto;
-}
-
-.user-votes-table {
-	width: 100%;
-	border-collapse: collapse;
-}
-
-.user-votes-table th,
-.user-votes-table td {
-	text-align: left;
-	padding: 0.55rem 0.5rem;
-	border-bottom: 1px solid #e5e7eb;
-	font-size: 0.95rem;
-}
-
-.virtual-election-page {
-	max-width: 1400px;
-	margin: 0 auto;
-	padding: 1.2rem 1rem 2rem;
-	display: grid;
-	gap: 1rem;
-}
-
-.regional-breakdown {
-	border: 1px solid #e5e7eb;
-	border-radius: 0.8rem;
-	background: #fff;
-	padding: 1rem;
-	display: grid;
-	gap: 0.9rem;
-}
-
-.regional-header {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 0.8rem;
-	flex-wrap: wrap;
-}
-
-.regional-header h2 {
-	margin: 0;
-	font-size: 1.2rem;
-}
-
-.regional-controls {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.5rem;
-	flex-wrap: wrap;
-}
-
-.chart-mode-toggle {
-	display: inline-flex;
-	border: 1px solid #d1d5db;
-	border-radius: 0.7rem;
-	overflow: hidden;
-}
-
-.chart-mode-toggle button {
-	padding: 0.4rem 0.8rem;
-	border: 0;
-	background: #fff;
-	color: #111827;
-	border-radius: 0;
-}
-
-.chart-mode-toggle button.active {
-	background: #1d4ed8;
-	color: #fff;
-}
-
-.chart-subtitle {
-	margin: 0 0 0.3rem;
-	font-size: 0.95rem;
-	font-weight: 600;
-	color: #6b7280;
-	text-transform: uppercase;
-	letter-spacing: 0.02em;
-}
-
-.region-vote-tooltip {
-	background: rgba(255, 255, 255, 0.97);
-	border: 1px solid #d1d5db;
-	border-radius: 0.5rem;
-	padding: 0.45rem 0.6rem;
-	box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
-	font-size: 0.9rem;
-	color: #111827;
-}
-
-.region-label {
-	font-size: 0.92rem;
-	color: #374151;
-	font-weight: 600;
-}
-
-#virtual-region-selector {
-	padding: 0.35rem 0.55rem;
-	border: 1px solid #d1d5db;
-	border-radius: 0.45rem;
-	background: #fff;
-	color: #111827;
-}
-
-.regional-grid {
-	display: grid;
-	grid-template-columns: repeat(2, minmax(0, 1fr));
-	gap: 0.9rem;
-}
-
-.regional-grid.single-card {
-	grid-template-columns: 1fr;
-}
-
-.regional-card {
-	border: 1px solid #e5e7eb;
-	border-radius: 0.7rem;
-	padding: 0.75rem;
-}
-
-.regional-card h3 {
-	margin: 0 0 0.7rem;
-	font-size: 1rem;
-}
-
-header h1 {
-	margin: 0;
-	font-size: 1.8rem;
-}
-
-header p {
-	margin: 0.4rem 0 0;
-	color: #4b5563;
-}
-
-.received-line {
-	margin: 0.35rem 0 0;
-	color: #1f2937;
-	font-weight: 600;
-}
-
-.page-title-row {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 0.75rem;
-	flex-wrap: wrap;
-}
-
-.layout-grid {
-	display: grid;
-	grid-template-columns: minmax(0, 1.8fr) minmax(320px, 1fr);
-	gap: 1rem;
-	align-items: start;
-}
-
-.right-panel {
-	display: grid;
-	gap: 1rem;
-	position: sticky;
-	top: 1rem;
-}
-
-.totals-card,
-.controls-card {
-	border: 1px solid #e5e7eb;
-	border-radius: 0.75rem;
-	padding: 1rem;
-	background: #fff;
-	display: grid;
-	gap: 0.6rem;
-}
-
-.totals-card h3,
-.controls-card h3 {
-	margin: 0;
-	font-size: 1.05rem;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .muted {
-	margin: 0;
-	color: #4b5563;
+  margin: 0;
+  color: #4b5563;
 }
 
-.party-totals {
-	display: grid;
-	gap: 0.45rem;
+.error {
+  margin: 0;
+  color: #b91c1c;
+  font-size: 0.9rem;
 }
 
-.row {
-	display: flex;
-	justify-content: space-between;
-	border-bottom: 1px dashed #e5e7eb;
-	padding-bottom: 0.3rem;
+/* === Shared Element Styles === */
+header h1 {
+  margin: 0;
+  font-size: 1.8rem;
 }
 
-.legend-list {
-	display: grid;
-	gap: 0.4rem;
-}
-
-.legend-row {
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-	font-size: 0.92rem;
-}
-
-.swatch {
-	width: 0.9rem;
-	height: 0.9rem;
-	border-radius: 0.2rem;
-	border: 1px solid rgba(0, 0, 0, 0.12);
-	flex-shrink: 0;
-}
-
-.virtual-map {
-	display: grid;
-	gap: 0.75rem;
-}
-
-.search-wrap {
-	position: relative;
-	z-index: 500;
-	border: 1px solid #d1d5db;
-	border-radius: 0.5rem;
-	padding: 0.5rem;
-	background: #fff;
-}
-
-.search-wrap input {
-	width: 100%;
-	border: 0;
-	outline: none;
-	font-size: 0.95rem;
-}
-
-.search-wrap:focus-within {
-	border-color: #93c5fd;
-	box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
-}
-
-.map-fallback {
-	border: 1px solid #e5e7eb;
-	border-radius: 0.75rem;
-	background: #fff;
-	padding: 0.75rem;
-	display: grid;
-	gap: 0.65rem;
-	min-height: 640px;
-}
-
-.map-fallback-title {
-	font-size: 1rem;
-	font-weight: 700;
-}
-
-.riding-list {
-	display: grid;
-	gap: 0.4rem;
-	max-height: 560px;
-	overflow: auto;
-}
-
-.riding-item {
-	display: flex;
-	align-items: flex-start;
-	gap: 0.55rem;
-	border: 1px solid #e5e7eb;
-	border-radius: 0.45rem;
-	padding: 0.45rem 0.55rem;
-	text-align: left;
-	background: #fff;
-	cursor: pointer;
-}
-
-.riding-item.selected {
-	border-color: #1d4ed8;
-	background: #eff6ff;
-}
-
-.riding-main {
-	display: grid;
-	gap: 0.2rem;
-}
-
-.map-controller {
-	display: grid;
-	gap: 0.75rem;
-}
-
-.riding-map-title {
-	text-align: center;
-	font-size: 1.25rem;
-	font-weight: 700;
-}
-
-.map-search-results {
-	position: absolute;
-	top: 100%;
-	left: 0;
-	right: 0;
-	display: grid;
-	gap: 0;
-	max-height: 320px;
-	overflow-y: auto;
-	background: #fff;
-	border: 1px solid #d1d5db;
-	border-top: none;
-	border-radius: 0 0 0.5rem 0.5rem;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-	z-index: 510;
-}
-
-.map-search-results button {
-	background: #fff;
-	color: #111827;
-	border: none;
-	border-bottom: 1px solid #f3f4f6;
-	text-align: left;
-	padding: 0.55rem 0.75rem;
-	font-size: 0.92rem;
-	cursor: pointer;
-	transition: background 0.1s;
-}
-
-.map-search-results button:hover {
-	background: #eff6ff;
-}
-
-.map-search-results button:last-child {
-	border-bottom: none;
-}
-
-.map-shell {
-	position: relative;
-}
-
-.election-map-container {
-	width: 100%;
-	height: 620px;
-	border-radius: 0.75rem;
-	border: 1px solid #e5e7eb;
-	overflow: hidden;
-}
-
-.riding-bar-chart-overlay {
-	position: absolute;
-	top: 0.75rem;
-	right: 0.75rem;
-	z-index: 450;
-	width: clamp(260px, 36vw, 420px);
-	max-height: calc(100% - 1.5rem);
-	overflow: auto;
-	padding: 0.55rem;
-	border-radius: 0.6rem;
-	background: rgba(255, 255, 255, 0.95);
-	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
-.riding-chart-meta h4 {
-	margin: 0;
-	font-size: 1rem;
-}
-
-.president-ev-card {
-	border: 1px solid #e5e7eb;
-	border-radius: 0.8rem;
-	background: #fff;
-	padding: 0.9rem 1rem;
-	display: grid;
-	gap: 0.45rem;
-}
-
-.president-ev-header {
-	display: flex;
-	align-items: baseline;
-	justify-content: space-between;
-	gap: 0.6rem;
-}
-
-.president-ev-header h3 {
-	margin: 0;
-	font-size: 1.05rem;
-}
-
-.president-ev-bar-wrap {
-	position: relative;
-	padding-top: 1.15rem;
-}
-
-.president-ev-bar {
-	height: 1rem;
-	border-radius: 999px;
-	overflow: hidden;
-	position: relative;
-	border: 1px solid #d1d5db;
-	background: #f3f4f6;
-}
-
-.president-ev-segment {
-	height: 100%;
-	position: absolute;
-	top: 0;
-}
-
-.president-ev-segment-left {
-	left: 0;
-}
-
-.president-ev-segment-right {
-	right: 0;
-}
-
-.president-ev-segment-center {
-	position: absolute;
-}
-
-.president-ev-threshold {
-	position: absolute;
-	top: 1.2rem;
-	height: calc(100% - 1rem);
-	width: 0;
-	border-left: 2px dashed #111827;
-}
-
-.president-ev-threshold-label {
-	position: absolute;
-	top: -0.1rem;
-	transform: translateX(-50%);
-	font-size: 0.85rem;
-	font-weight: 600;
-	color: #111827;
-	white-space: nowrap;
-}
-
-.president-ev-summary {
-	margin: 0;
-	font-size: 0.92rem;
-	color: #111827;
-}
-
-.president-party-columns {
-	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 1rem;
-}
-
-.president-party-col {
-	display: grid;
-	gap: 0.1rem;
-}
-
-.president-party-col.right {
-	text-align: right;
-}
-
-.president-party-col.center {
-	text-align: center;
-}
-
-.president-party-ev {
-	margin: 0;
-	font-size: 1rem;
-	font-weight: 800;
-}
-
-.president-party-popular {
-	margin: 0;
-	font-size: 0.9rem;
-	font-weight: 700;
-}
-
-@media (max-width: 768px) {
-	.election-map-container {
-		height: 58vh;
-	}
-	.riding-bar-chart-overlay {
-		position: static;
-		width: 100%;
-		max-height: none;
-		margin-top: 0.55rem;
-	}
-}
-
-.auth-status {
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-	font-size: 0.88rem;
-	color: #374151;
-}
-
-.dot {
-	width: 0.55rem;
-	height: 0.55rem;
-	border-radius: 999px;
-	display: inline-block;
-}
-
-.dot.online {
-	background: #10b981;
-}
-
-.dot.offline {
-	background: #9ca3af;
-}
-
-.signout-link {
-	margin-left: auto;
-	font-size: 0.84rem;
-	color: #1d4ed8;
-}
-
-.signout-link:hover {
-	text-decoration: underline;
+header p {
+  margin: 0.4rem 0 0;
+  color: #4b5563;
 }
 
 label {
-	font-size: 0.9rem;
-	font-weight: 600;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 select,
 button,
 .auth-btn {
-	font-size: 0.95rem;
-	padding: 0.55rem 0.7rem;
-	border-radius: 0.5rem;
-	border: 1px solid #d1d5db;
+  font-size: 0.95rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
 }
 
 button {
-	cursor: pointer;
-	background: #1d4ed8;
-	border-color: #1d4ed8;
-	color: white;
+  cursor: pointer;
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  color: white;
 }
 
 button:disabled {
-	opacity: 0.6;
-	cursor: not-allowed;
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .auth-btn {
-	display: inline-block;
-	text-align: center;
-	background: #111827;
-	color: white;
-	border-color: #111827;
+  display: inline-block;
+  text-align: center;
+  background: #111827;
+  color: white;
+  border-color: #111827;
 }
 
-.error {
-	margin: 0;
-	color: #b91c1c;
-	font-size: 0.9rem;
+/* === Shared Component Primitives === */
+.dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.dot.online {
+  background: #10b981;
+}
+
+.dot.offline {
+  background: #9ca3af;
+}
+
+/* === Login Controls (used across pages) === */
+.controls-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  background: #fff;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.controls-card h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.auth-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  color: #374151;
+}
+
+.signout-link {
+  margin-left: auto;
+  font-size: 0.84rem;
+  color: #1d4ed8;
+}
+
+.signout-link:hover {
+  text-decoration: underline;
 }
 
 .vote-state,
 .selected-riding {
-	margin: 0;
-	color: #1f2937;
-	font-size: 0.95rem;
+  margin: 0;
+  color: #1f2937;
+  font-size: 0.95rem;
 }
 
-@media (max-width: 1080px) {
-	.regional-grid {
-		grid-template-columns: 1fr;
-	}
+/* === Map Container (global since it's used by Leaflet internals) === */
+.election-map-container {
+  width: 100%;
+  height: 620px;
+  border-radius: 0.75rem;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+}
 
-	.layout-grid {
-		grid-template-columns: 1fr;
-	}
-
-	.right-panel {
-		position: static;
-	}
+@media (max-width: 768px) {
+  .election-map-container {
+    height: 58vh;
+  }
 }

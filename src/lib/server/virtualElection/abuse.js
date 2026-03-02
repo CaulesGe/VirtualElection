@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 const WINDOW_MS = Number(process.env.VIRTUAL_ELECTION_RATE_WINDOW_MS ?? 60_000);
 const MAX_REQUESTS_PER_WINDOW = Number(process.env.VIRTUAL_ELECTION_RATE_MAX ?? 10);
 const BURST_WARN_THRESHOLD = Number(process.env.VIRTUAL_ELECTION_BURST_WARN_THRESHOLD ?? 25);
+const IP_SALT = process.env.IP_SALT ?? '';
 
 const recentByIpHash = new Map();
 
@@ -20,7 +21,10 @@ function prune(now, timestamps) {
 }
 
 export function hashIp(ip) {
-	return createHash('sha256').update(ip || 'unknown').digest('hex').substring(0, 32);
+	return createHash('sha256')
+		.update(`${IP_SALT}${ip || 'unknown'}`)
+		.digest('hex')
+		.substring(0, 32);
 }
 
 export function assertRateLimit(ipHash) {

@@ -1,0 +1,100 @@
+.controller {
+	display: grid;
+	gap: 0.75rem;
+}
+
+.title {
+	text-align: center;
+	font-size: 1.25rem;
+	font-weight: 700;
+}
+
+.searchWrap {
+	position: relative;
+	z-index: 500;
+	border: 1px solid #d1d5db;
+	border-radius: 0.5rem;
+	padding: 0.5rem;
+	background: #fff;
+}
+
+.searchWrap input {
+	width: 100%;
+	border: 0;
+	outline: none;
+	font-size: 0.95rem;
+}
+
+.searchWrap:focus-within {
+	border-color: #93c5fd;
+	box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+.searchResults {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	right: 0;
+	display: grid;
+	gap: 0;
+	max-height: 320px;
+	overflow-y: auto;
+	background: #fff;
+	border: 1px solid #d1d5db;
+	border-top: none;
+	border-radius: 0 0 0.5rem 0.5rem;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+	z-index: 510;
+}
+
+.searchResults button {
+	background: #fff;
+	color: #111827;
+	border: none;
+	border-bottom: 1px solid #f3f4f6;
+	text-align: left;
+	padding: 0.55rem 0.75rem;
+	font-size: 0.92rem;
+	cursor: pointer;
+	transition: background 0.1s;
+}
+
+.searchResults button:hover {
+	background: #eff6ff;
+}
+
+.searchResults button:last-child {
+	border-bottom: none;
+}
+
+.shell {
+	position: relative;
+}
+
+.chartOverlay {
+	position: absolute;
+	top: 0.75rem;
+	right: 0.75rem;
+	z-index: 450;
+	width: clamp(260px, 36vw, 420px);
+	max-height: calc(100% - 1.5rem);
+	overflow: auto;
+	padding: 0.55rem;
+	border-radius: 0.6rem;
+	background: rgba(255, 255, 255, 0.95);
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.chartMeta h4 {
+	margin: 0;
+	font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+	.chartOverlay {
+		position: static;
+		width: 100%;
+		max-height: none;
+		margin-top: 0.55rem;
+	}
+}

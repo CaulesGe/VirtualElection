@@ -1,4 +1,6 @@
 import { and, eq, sql } from 'drizzle-orm';
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
 import { DEFAULT_RIDINGS } from '@/lib/data/defaultRidings';
 import { db } from '@/lib/server/db/client';
 import {
@@ -9,6 +11,41 @@ import {
 	jurisdictions
 } from '@/lib/server/db/schema';
 import { getUsRidingsForScope } from '@/lib/server/virtualElection/usRidings';
+
+let canadaMapRidingsPromise = null;
+
+async function readCanadaRidingsFromMapAsset() {
+	const assetPath = path.join(process.cwd(), 'static', 'ridingMaps', 'canada2025.json');
+	const raw = await readFile(assetPath, 'utf8');
+	const parsed = JSON.parse(raw);
+	const objectName = Object.keys(parsed?.objects ?? {})[0];
+	const geometries = objectName ? parsed?.objects?.[objectName]?.geometries : null;
+	if (!Array.isArray(geometries) || geometries.length === 0) {
+		return [];
+	}
+
+	return geometries
+		.map((geometry) => ({
+			code: geometry?.properties?.FED_NUM,
+			name: geometry?.properties?.ED_NAMEE
+		}))
+		.filter((row) => row.code !== undefined && row.code !== null)
+		.map((row) => ({
+			code: String(row.code),
+			name: row.name ? String(row.name) : String(row.code),
+			subnational: ''
+		}));
+}
+
+async function getCanadaMapRidings() {
+	if (!canadaMapRidingsPromise) {
+		canadaMapRidingsPromise = readCanadaRidingsFromMapAsset().catch((error) => {
+			canadaMapRidingsPromise = null;
+			throw error;
+		});
+	}
+	return canadaMapRidingsPromise;
+}
 
 export async function getRidingsForScope(scope) {
 	try {
@@ -49,6 +86,18 @@ export async function getRidingsForScope(scope) {
 			return await getUsRidingsForScope(scope);
 		} catch {
 			return [];
+		}
+	}
+
+	if (
+		String(scope?.country).toLowerCase() === 'ca' &&
+		String(scope?.district).toLowerCase() === 'fed'
+	) {
+		try {
+			const mapRidings = await getCanadaMapRidings();
+			if (mapRidings.length > 0) return mapRidings;
+		} catch {
+			// Continue into legacy source fallback.
 		}
 	}
 

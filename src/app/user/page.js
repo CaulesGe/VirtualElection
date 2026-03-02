@@ -4,6 +4,7 @@ import { getServerAuthSession } from '@/lib/auth';
 import { getPartyShortName } from '@/lib/components/virtualElection/partyMeta';
 import { getUserIdFromSession } from '@/lib/server/virtualElection/identity';
 import { listVotesForUser } from '@/lib/server/virtualElection/service';
+import styles from './page.module.css';
 
 export const metadata = {
 	title: 'Your Vote History',
@@ -39,15 +40,15 @@ export default async function UserPage({ searchParams }) {
 	const votes = await listVotesForUser(userId);
 
 	return (
-		<main className="user-page">
-			<section className="user-page-card">
-				<div className="user-page-top-actions">
-					<Link href={backHref} className="user-action-btn">
+		<main className={styles.page}>
+			<section className={styles.card}>
+				<div className={styles.topActions}>
+					<Link href={backHref} className={styles.actionBtn}>
 						Back
 					</Link>
 				</div>
 
-				<header className="user-page-header">
+				<header className={styles.header}>
 					<h1>Your Votes</h1>
 					<p className="muted">Signed in as {session?.user?.email ?? session?.user?.name ?? userId}</p>
 				</header>
@@ -55,8 +56,8 @@ export default async function UserPage({ searchParams }) {
 				{votes.length === 0 ? (
 					<p className="muted">No votes yet — go vote in an election.</p>
 				) : (
-					<div className="user-votes-table-wrap">
-						<table className="user-votes-table">
+					<div className={styles.tableWrap}>
+						<table className={styles.table}>
 							<thead>
 								<tr>
 									<th>Country</th>
@@ -75,8 +76,8 @@ export default async function UserPage({ searchParams }) {
 					</div>
 				)}
 
-				<div className="user-page-bottom-actions">
-					<Link className="user-action-btn danger" href="/api/auth/signout?callbackUrl=%2F">
+				<div className={styles.bottomActions}>
+					<Link className={`${styles.actionBtn} ${styles.danger}`} href="/api/auth/signout?callbackUrl=%2F">
 						Logout
 					</Link>
 				</div>

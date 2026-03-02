@@ -1,0 +1,68 @@
+.page {
+	max-width: 900px;
+	margin: 2rem auto;
+	padding: 0 1rem 2rem;
+}
+
+.card {
+	background: #fff;
+	border: 1px solid #e5e7eb;
+	border-radius: 0.8rem;
+	padding: 1rem;
+	display: grid;
+	gap: 0.9rem;
+}
+
+.header h1 {
+	margin: 0;
+	font-size: 1.4rem;
+}
+
+.topActions {
+	display: inline-flex;
+	gap: 0.55rem;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+}
+
+.bottomActions {
+	display: inline-flex;
+	gap: 0.55rem;
+	flex-wrap: wrap;
+	justify-content: center;
+	padding-top: 0.35rem;
+	border-top: 1px solid #f1f5f9;
+	width: 100%;
+}
+
+.actionBtn {
+	display: inline-flex;
+	align-items: center;
+	padding: 0.4rem 0.72rem;
+	border: 1px solid #d1d5db;
+	border-radius: 0.45rem;
+	background: #fff;
+	color: #111827;
+}
+
+.danger {
+	border-color: #fca5a5;
+	color: #991b1b;
+}
+
+.tableWrap {
+	overflow-x: auto;
+}
+
+.table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.table th,
+.table td {
+	text-align: left;
+	padding: 0.55rem 0.5rem;
+	border-bottom: 1px solid #e5e7eb;
+	font-size: 0.95rem;
+}

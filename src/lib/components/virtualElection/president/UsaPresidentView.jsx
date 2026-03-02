@@ -1,9 +1,14 @@
 'use client';
 
 import { useMemo } from 'react';
+import dynamic from 'next/dynamic';
 import VirtualElectionPage from '@/lib/components/virtualElection/VirtualElectionPage';
-import PresidentEvBar from '@/lib/components/virtualElection/president/PresidentEvBar';
 import { aggregateEvByStateWinners } from '@/lib/components/virtualElection/president/evAggregator';
+
+const PresidentEvBar = dynamic(
+	() => import('@/lib/components/virtualElection/president/PresidentEvBar'),
+	{ ssr: false }
+);
 
 export default function UsaPresidentView(props) {
 	const renderTopContent = useMemo(

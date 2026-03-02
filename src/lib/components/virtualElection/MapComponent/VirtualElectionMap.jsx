@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { select, geoPath, geoTransform } from 'd3';
+import { select } from 'd3-selection';
+import { geoPath, geoTransform } from 'd3-geo';
 
 export default function VirtualElectionMap({
 	adapter,
@@ -27,6 +28,7 @@ export default function VirtualElectionMap({
 	const tooltipRef = useRef(null);
 	const [features, setFeatures] = useState([]);
 	const [loadError, setLoadError] = useState('');
+	const [isMapReady, setIsMapReady] = useState(false);
 
 	const selectedDistrict = String(selectedDistrictId ?? '');
 	const isSelectionLocked = Boolean(selectedDistrict);
@@ -129,6 +131,7 @@ export default function VirtualElectionMap({
 			overlayRef.current = overlaySvg;
 			groupRef.current = group;
 			pathRef.current = pathGenerator;
+			setIsMapReady(true);
 		}
 
 		void initMap();
@@ -142,6 +145,7 @@ export default function VirtualElectionMap({
 				groupRef.current = null;
 				pathRef.current = null;
 			}
+			setIsMapReady(false);
 		};
 	}, [adapter]);
 
@@ -188,7 +192,7 @@ export default function VirtualElectionMap({
 	}, [zoomToDistrictId, features, adapter, onZoomComplete]);
 
 	useEffect(() => {
-		if (!groupRef.current || !pathRef.current) return;
+		if (!isMapReady || !groupRef.current || !pathRef.current) return;
 
 		const getOpacity = (featureLike) => {
 			const districtId = adapter.getDistrictId(featureLike);
@@ -204,24 +208,44 @@ export default function VirtualElectionMap({
 			tooltipRef.current.style.left = `${event.clientX + 12}px`;
 			tooltipRef.current.style.top = `${event.clientY - 16}px`;
 		};
-		const showTooltip = (event, text) => {
+		const showTooltip = (event, featureLike) => {
 			if (!tooltipRef.current) return;
-			tooltipRef.current.innerHTML = `<div>${text}</div>`;
-			tooltipRef.current.style.display = 'block';
-			moveTooltip(event);
-		};
-		const getTooltipHtml = (featureLike) => {
+			// Safe DOM construction — no innerHTML
+			const tooltip = tooltipRef.current;
+			tooltip.textContent = '';
+
 			const districtId = adapter.getDistrictId(featureLike);
 			const districtName = adapter.getDistrictName(featureLike);
-			if (!districtId) return districtName;
-			const meta = tooltipMetaMap.get(String(districtId));
-			const name = meta?.name || districtName;
-			const totalVotes = Number(meta?.totalVotes ?? 0);
-			const ev = Number(meta?.electoralVotes ?? 0);
-			const lines = [`<strong>${name}</strong>`];
-			if (ev > 0) lines.push(`${ev} EV`);
-			lines.push(totalVotes > 0 ? `${totalVotes} votes` : 'No votes yet');
-			return lines.map((line) => `<div>${line}</div>`).join('');
+
+			if (!districtId) {
+				const nameDiv = document.createElement('div');
+				nameDiv.textContent = districtName ?? '';
+				tooltip.appendChild(nameDiv);
+			} else {
+				const meta = tooltipMetaMap.get(String(districtId));
+				const name = meta?.name || districtName;
+				const totalVotes = Number(meta?.totalVotes ?? 0);
+				const ev = Number(meta?.electoralVotes ?? 0);
+
+				const nameEl = document.createElement('div');
+				const strong = document.createElement('strong');
+				strong.textContent = name ?? '';
+				nameEl.appendChild(strong);
+				tooltip.appendChild(nameEl);
+
+				if (ev > 0) {
+					const evEl = document.createElement('div');
+					evEl.textContent = `${ev} EV`;
+					tooltip.appendChild(evEl);
+				}
+
+				const votesEl = document.createElement('div');
+				votesEl.textContent = totalVotes > 0 ? `${totalVotes} votes` : 'No votes yet';
+				tooltip.appendChild(votesEl);
+			}
+
+			tooltip.style.display = 'block';
+			moveTooltip(event);
 		};
 		const resetFeatureStyle = (selection, featureLike) => {
 			selection.attr('fill-opacity', getOpacity(featureLike)).attr('stroke-width', 0.6);
@@ -269,7 +293,7 @@ export default function VirtualElectionMap({
 				if (!isSelectionLocked && selectedFeatureRef.current !== d) {
 					highlightFeature(select(event.currentTarget));
 				}
-				showTooltip(event, getTooltipHtml(d));
+				showTooltip(event, d);
 				if (!isSelectionLocked) {
 					onHoverDistrict?.({
 						districtId: String(districtId),
@@ -310,7 +334,7 @@ export default function VirtualElectionMap({
 					highlightFeature(select(event.currentTarget));
 				}
 
-				showTooltip(event, getTooltipHtml(d));
+				showTooltip(event, d);
 				onSelectDistrict?.({
 					districtId: String(districtId),
 					districtName: adapter.getDistrictName(d)
@@ -319,6 +343,7 @@ export default function VirtualElectionMap({
 	}, [
 		adapter,
 		features,
+		isMapReady,
 		isSelectionLocked,
 		onHoverDistrict,
 		onLeaveDistrict,

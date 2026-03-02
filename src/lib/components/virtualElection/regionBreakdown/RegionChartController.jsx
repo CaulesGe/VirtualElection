@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import RegionSeatChart from '@/lib/components/virtualElection/regionBreakdown/RegionSeatChart';
 import RegionVoteChart from '@/lib/components/virtualElection/regionBreakdown/RegionVoteChart';
 import { getRegionProfile } from '@/lib/components/virtualElection/regionBreakdown/profiles';
+import styles from './RegionChartController.module.css';
 
 export default function RegionChartController({
 	totals = [],
@@ -72,15 +73,16 @@ export default function RegionChartController({
 	}, [filteredTotalsByRegion]);
 
 	return (
-		<section className="regional-breakdown">
-			<div className="regional-header">
+		<section className={styles.breakdown}>
+			<div className={styles.header}>
 				<h2>Regional Breakdown</h2>
-				<div className="regional-controls">
-					<label htmlFor="virtual-region-selector" className="region-label">
+				<div className={styles.controls}>
+					<label htmlFor="virtual-region-selector" className={styles.regionLabel}>
 						Select a region
 					</label>
 					<select
 						id="virtual-region-selector"
+						className={styles.selector}
 						value={effectiveSelectedRegion}
 						onChange={(event) => setSelectedRegion(event.target.value)}
 					>
@@ -90,7 +92,7 @@ export default function RegionChartController({
 							</option>
 						))}
 					</select>
-					<div className="chart-mode-toggle" role="group" aria-label="Regional chart mode">
+					<div className={styles.modeToggle} role="group" aria-label="Regional chart mode">
 						<button
 							type="button"
 							className={chartMode === 'bar' ? 'active' : ''}
@@ -108,14 +110,14 @@ export default function RegionChartController({
 					</div>
 				</div>
 			</div>
-			<div className={`regional-grid ${mode === 'president' ? 'single-card' : ''}`}>
+			<div className={`${styles.grid} ${mode === 'president' ? styles.gridSingle : ''}`}>
 				{mode !== 'president' ? (
-					<section className="regional-card">
+					<section className={styles.card}>
 						<h3>Seat Distribution (Leads by Riding) - {effectiveSelectedRegion}</h3>
 						<RegionSeatChart seatSeries={regionSeatSeries} mode={chartMode} />
 					</section>
 				) : null}
-				<section className="regional-card">
+				<section className={styles.card}>
 					<h3>Vote Distribution (Virtual Votes) - {effectiveSelectedRegion}</h3>
 					<RegionVoteChart voteSeries={regionVoteSeries} mode={chartMode} />
 				</section>

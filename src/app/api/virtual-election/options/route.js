@@ -6,8 +6,8 @@ import {
 	VirtualElectionError
 } from '@/lib/server/virtualElection/service';
 
-function json(data, status = 200) {
-	return Response.json(data, { status });
+function json(data, status = 200, extraHeaders = {}) {
+	return Response.json(data, { status, headers: extraHeaders });
 }
 
 export async function GET(request) {
@@ -39,6 +39,8 @@ export async function GET(request) {
 				oneVotePerUser: true,
 				voteWindowLocked: false
 			}
+		}, 200, {
+			'Cache-Control': 'public, max-age=300'
 		});
 	} catch (error) {
 		if (error instanceof VirtualElectionError) {
