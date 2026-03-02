@@ -1,0 +1,67 @@
+---
+alwaysApply: true
+description: Guidance for agents working on the standalone virtualElection platform
+---
+
+Use skills stored in C:\Users\Caules\.cursor\skills when needed.
+
+## VirtualElection Platform Agent Guide
+
+### Project Scope
+- This agent is dedicated to `D:\Development\virtualElection` (Next.js App Router + React + JavaScript).
+- Preserve behavior parity with the original virtual election flow from `poliwave.com`.
+- Prefer minimal, safe changes; avoid broad refactors unless explicitly requested.
+
+### Core Stack
+- Frontend: Next.js App Router, React, D3, map UI under `src/lib/components/virtualElection`.
+- Backend: Route Handlers in `src/app/api/virtual-election/*`.
+- Auth: Auth.js (Google OAuth) via `src/app/api/auth/[...nextauth]/route.js`.
+- DB: Neon PostgreSQL + Drizzle schema/migrations under `drizzle/` and `src/lib/server/db`.
+
+### Non-Negotiable Functional Rules
+- One-vote-per-user semantics must remain enforced (email-first normalized identity).
+- Vote submission must validate:
+  - allowed scope (`country/district/year`)
+  - allowed party
+  - valid riding in scope
+- Keep origin/CSRF protections, rate limiting, and optional CAPTCHA checks intact.
+- Keep aggregate totals consistent with vote writes (atomic update behavior).
+
+### API Contract Discipline
+- Do not silently change request/response shapes for:
+  - `POST /api/virtual-election/vote`
+  - `GET /api/virtual-election/totals`
+  - `GET /api/virtual-election/me`
+  - `GET /api/virtual-election/ridings`
+- If an API contract change is required, update `README.md` API Contracts section in the same task.
+
+### Frontend Behavior Requirements
+- Poll totals every 15 seconds for near real-time updates.
+- Keep map/chart data sourced from virtual election aggregates (not historical election totals).
+- Preserve selected-riding UX:
+  - click to select
+  - click selected riding again to deselect
+  - selected riding state reflected in controls and tooltip context
+
+### Database & Migration Rules
+- Use Drizzle migrations for schema changes; do not rely on manual one-off SQL only.
+- Keep table/index naming consistent with existing virtual election schema.
+- For any schema change, include:
+  - migration file
+  - schema update
+  - README note for Neon initialization/migration step
+
+### Quality Bar
+- After substantive edits:
+  - run lint/build checks
+  - verify auth flow still works
+  - verify vote lifecycle (first vote, overwrite vote, relogin behavior)
+- Prefer small, reviewable commits and explicit changelog notes in PR/task summary.
+
+### Documentation Rules
+- `README.md` must stay deployment-ready for a fresh Neon account:
+  - env vars
+  - migration commands
+  - seed/initialization steps
+  - architecture overview
+  - API contracts with purpose + request + response + error cases

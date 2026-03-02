@@ -1,0 +1,27 @@
+{
+	"version": "7",
+	"dialect": "postgresql",
+	"entries": [
+		{
+			"idx": 0,
+			"version": "7",
+			"when": 1730000000000,
+			"tag": "0000_virtual_election",
+			"breakpoints": true
+		},
+		{
+			"idx": 1,
+			"version": "7",
+			"when": 1730000001000,
+			"tag": "0001_virtual_election_ip_hash",
+			"breakpoints": true
+		},
+		{
+			"idx": 2,
+			"version": "7",
+			"when": 1760000000000,
+			"tag": "0002_election_options_tables",
+			"breakpoints": true
+		}
+	]
+}
