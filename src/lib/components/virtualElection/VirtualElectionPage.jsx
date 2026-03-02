@@ -1,12 +1,13 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 import {
 	VIRTUAL_ELECTION_ALLOWED_PARTIES,
 	VIRTUAL_ELECTION_ALLOWED_SCOPES
 } from '@/lib/config/virtualElection';
 import RegionChartController from '@/lib/components/virtualElection/regionBreakdown/RegionChartController';
-import VirtualElectionControls from '@/lib/components/virtualElection/VirtualElectionControls';
+import LoginControl from '@/lib/components/virtualElection/LoginControl';
 import MapController from '@/lib/components/virtualElection/MapComponent/MapController';
 import { getPartyColor, getPartyShortName } from '@/lib/components/virtualElection/partyMeta';
 
@@ -16,7 +17,8 @@ export default function VirtualElectionPage({
 	initialTotals = [],
 	initialMe = { voted: false },
 	initialRidings = [],
-	mapMetadata
+	mapMetadata,
+	renderTopContent
 }) {
 	const [selectedRiding, setSelectedRiding] = useState(null);
 	const [selectedParty, setSelectedParty] = useState('');
@@ -57,10 +59,15 @@ export default function VirtualElectionPage({
 					setRidingResults(payload.ridings);
 				}
 				if (payload?.countryCode && payload?.mapVersion) {
-					setActiveMapMetadata({
+					setActiveMapMetadata((prev) => ({
+						...prev,
 						countryCode: payload.countryCode,
-						mapVersion: payload.mapVersion
-					});
+						mapVersion: payload.mapVersion,
+						mode: payload.mode,
+						regionKey: payload.regionKey,
+						allocationRule: payload.allocationRule,
+						electoralVotesVersion: payload.electoralVotesVersion
+					}));
 				}
 			} catch {
 				// Keep safe local defaults if options fetch fails.
@@ -87,7 +94,7 @@ export default function VirtualElectionPage({
 	useEffect(() => {
 		const intervalId = window.setInterval(() => {
 			void refreshTotals();
-		}, 15_000);
+		}, 60_000);  // 60 seconds
 		return () => window.clearInterval(intervalId);
 	}, [refreshTotals]);
 
@@ -149,18 +156,55 @@ export default function VirtualElectionPage({
 		() => totals.reduce((sum, row) => sum + (row.totalVotes ?? 0), 0),
 		[totals]
 	);
+	const isUsaScope = String(scope?.country ?? '').toLowerCase() === 'us';
+	const usaIsPresident = String(scope?.district ?? '').toLowerCase() === 'pres';
+	const countryTitle = useMemo(() => {
+		const code = String(activeMapMetadata?.countryCode ?? scope?.country ?? '').toUpperCase();
+		const district = String(scope?.district ?? '').toLowerCase();
+		if (code === 'US') {
+			if (district === 'pres') return 'USA - Presidential Election';
+			if (district === 'fed') return 'USA - House of Representatives';
+			return 'USA';
+		}
+		if (code === 'CA') return 'Canada';
+		return code || 'Virtual Election';
+	}, [activeMapMetadata?.countryCode, scope?.country, scope?.district]);
 
 	return (
 		<div className="virtual-election-page">
 			<header>
-				<h1>Virtual Election 2026</h1>
-				<p>Don&apos;t believe the poll? Show us your vote!</p>
+				<div className="page-title-row">
+					<h1>{countryTitle}</h1>
+					{isUsaScope ? (
+						<section className="usa-office-switcher" aria-label="Switch USA election office">
+							<Link href="/usa/president" className={usaIsPresident ? 'active' : ''}>
+								President
+							</Link>
+							<Link href="/usa/houseOfRepresentatives" className={!usaIsPresident ? 'active' : ''}>
+								House of Representatives
+							</Link>
+						</section>
+					) : null}
+				</div>
 				<h2 className="received-line">
 					{totalVotesReceived} vote{totalVotesReceived === 1 ? '' : 's'} have received so far.
 				</h2>
 			</header>
+			{typeof renderTopContent === 'function'
+				? renderTopContent({
+						scope,
+						totals,
+						ridingResults,
+						mapMetadata: activeMapMetadata
+					})
+				: null}
 
-			<RegionChartController totals={totals} ridingResults={ridingResults} />
+			<RegionChartController
+				totals={totals}
+				ridingResults={ridingResults}
+				countryCode={activeMapMetadata?.countryCode ?? String(scope?.country ?? 'ca').toUpperCase()}
+				mode={activeMapMetadata?.mode}
+			/>
 
 			<section className="layout-grid">
 				<div className="left-panel">
@@ -176,16 +220,16 @@ export default function VirtualElectionPage({
 					/>
 				</div>
 				<div className="right-panel">
-					<VirtualElectionControls
+					<LoginControl
 						allowedParties={allowedParties}
 						selectedParty={selectedParty}
 						selectedRiding={selectedRiding}
+						ridingResults={ridingResults}
 						userVote={userVote}
 						isAuthenticated={isAuthenticated}
 						userLabel={sessionUserLabel}
 						isSubmitting={isSubmitting}
 						errorMessage={errorMessage}
-						scope={scope}
 						onPartyChange={(party) => {
 							setSelectedParty(party);
 							setErrorMessage('');
@@ -198,7 +242,7 @@ export default function VirtualElectionPage({
 						{!selectedRiding ? (
 							<p className="muted">Select a riding to view totals.</p>
 						) : !selectedRidingTotals ? (
-							<p className="muted">No virtual votes recorded for this riding yet.</p>
+							<p className="muted">No votes recorded for this riding yet.</p>
 						) : (
 							<>
 								<p className="muted">

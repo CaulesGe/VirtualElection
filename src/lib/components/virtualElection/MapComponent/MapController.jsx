@@ -1,10 +1,30 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import VirtualElectionMap from '@/lib/components/virtualElection/MapComponent/VirtualElectionMap';
 import RidingBarChart from '@/lib/components/virtualElection/MapComponent/RidingBarChart';
 import { getPartyColor, getPartyShortName } from '@/lib/components/virtualElection/partyMeta';
 import { getMapAdapter } from '@/lib/components/virtualElection/MapComponent/adapters';
+
+function normalizeSearchText(value) {
+	return String(value ?? '')
+		.normalize('NFD')
+		.replace(/[\u0300-\u036f]/g, '')
+		.toLowerCase()
+		.trim();
+}
+
+const CANADA_ALIAS_TO_SUBNATIONAL = {
+	toronto: 'ON',
+	gta: 'ON',
+	quebec: 'QC',
+	montreal: 'QC',
+	ottawa: 'ON',
+	vancouver: 'BC',
+	calgary: 'AB',
+	edmonton: 'AB',
+	halifax: 'NS'
+};
 
 export default function MapController({
 	ridingResults,
@@ -14,8 +34,12 @@ export default function MapController({
 	mapMetadata
 }) {
 	const [searchQuery, setSearchQuery] = useState('');
+	const [searchOpen, setSearchOpen] = useState(false);
 	const [hoveredDistrict, setHoveredDistrict] = useState(null);
 	const [lastPreviewDistrict, setLastPreviewDistrict] = useState(null);
+	const [mapDistricts, setMapDistricts] = useState([]);
+	const blurTimeoutRef = useRef(null);
+	const [zoomToDistrictId, setZoomToDistrictId] = useState(null);
 
 	const countryCode = mapMetadata?.countryCode ?? 'CA';
 	const mapVersion = String(mapMetadata?.mapVersion ?? '2025');
@@ -70,16 +94,69 @@ export default function MapController({
 		return styleMap;
 	}, [ridingResults, totalsById]);
 
+	const districtTooltipMeta = useMemo(() => {
+		const byId = new Map();
+		const ids = new Set([
+			...(ridingResults ?? []).map((r) => String(r.code)),
+			...totalsById.keys()
+		]);
+		for (const ridingId of ids) {
+			const riding = ridingById.get(String(ridingId));
+			const row = totalsById.get(String(ridingId));
+			byId.set(String(ridingId), {
+				name: riding?.name,
+				electoralVotes: Number(riding?.electoralVotes ?? 0),
+				totalVotes: Number(row?.totalVotes ?? 0)
+			});
+		}
+		return byId;
+	}, [ridingById, ridingResults, totalsById]);
+
+	const searchableRidings = useMemo(() => {
+		const seen = new Set();
+		const merged = [];
+		for (const riding of ridingResults ?? []) {
+			seen.add(String(riding.code));
+			merged.push(riding);
+		}
+		for (const district of mapDistricts) {
+			if (!seen.has(String(district.code))) {
+				seen.add(String(district.code));
+				merged.push({ code: district.code, name: district.name, subnational: '' });
+			}
+		}
+		return merged;
+	}, [ridingResults, mapDistricts]);
+
 	const filteredRidings = useMemo(() => {
-		const query = searchQuery.trim().toLowerCase();
-		if (!query) return ridingResults ?? [];
-		return (ridingResults ?? []).filter((riding) => {
-			return (
-				String(riding.code).toLowerCase().includes(query) ||
-				String(riding.name).toLowerCase().includes(query)
-			);
-		});
-	}, [ridingResults, searchQuery]);
+		const query = normalizeSearchText(searchQuery);
+		if (!query) return searchableRidings;
+		const country = String(countryCode).toUpperCase();
+		const aliasSubnational = country === 'CA' ? CANADA_ALIAS_TO_SUBNATIONAL[query] ?? null : null;
+		const directMatches = searchableRidings
+			.map((riding) => {
+				const code = normalizeSearchText(riding.code);
+				const name = normalizeSearchText(riding.name);
+				const subnational = normalizeSearchText(riding.subnational);
+				let rank = Number.POSITIVE_INFINITY;
+				if (code === query) rank = 0;
+				else if (code.startsWith(query)) rank = 1;
+				else if (name.startsWith(query)) rank = 2;
+				else if (code.includes(query)) rank = 3;
+				else if (name.includes(query)) rank = 4;
+				else if (subnational.includes(query)) rank = 5;
+				return { riding, rank };
+			})
+			.filter((entry) => Number.isFinite(entry.rank))
+			.sort((a, b) => a.rank - b.rank || String(a.riding.name).localeCompare(String(b.riding.name)))
+			.map((entry) => entry.riding);
+		if (directMatches.length > 0 || !aliasSubnational) {
+			return directMatches;
+		}
+		return searchableRidings.filter(
+			(riding) => String(riding.subnational ?? '').toUpperCase() === aliasSubnational
+		);
+	}, [countryCode, searchableRidings, searchQuery]);
 
 	const handleSelectDistrict = useCallback(({ districtId, districtName }) => {
 		const resolvedDistrictId = String(districtId);
@@ -118,12 +195,26 @@ export default function MapController({
 	}, [selectedDistrictId]);
 
 	function handleSelectFromSearch(riding) {
-		if (selectedDistrictId && selectedDistrictId === String(riding.code)) {
+		const code = String(riding.code);
+		if (selectedDistrictId && selectedDistrictId === code) {
 			onSelectRiding(null);
+			setZoomToDistrictId(null);
 		} else {
 			onSelectRiding(riding);
+			setZoomToDistrictId(code);
 		}
 		setSearchQuery('');
+		setSearchOpen(false);
+	}
+
+	function handleSearchFocus() {
+		clearTimeout(blurTimeoutRef.current);
+		setSearchOpen(true);
+	}
+
+	function handleSearchBlur() {
+		// Small delay so a click on a result button registers before we close
+		blurTimeoutRef.current = setTimeout(() => setSearchOpen(false), 150);
 	}
 
 	return (
@@ -133,28 +224,34 @@ export default function MapController({
 				<input
 					value={searchQuery}
 					onChange={(event) => setSearchQuery(event.target.value)}
+					onFocus={handleSearchFocus}
+					onBlur={handleSearchBlur}
 					placeholder="Search riding by code or name..."
 				/>
+				{searchOpen && filteredRidings.length > 0 ? (
+					<div className="map-search-results">
+						{filteredRidings.map((riding) => (
+							<button key={riding.code} type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => handleSelectFromSearch(riding)}>
+								{riding.code} - {riding.name}
+							</button>
+						))}
+					</div>
+				) : null}
 			</div>
-			{searchQuery ? (
-				<div className="map-search-results">
-					{filteredRidings.slice(0, 8).map((riding) => (
-						<button key={riding.code} type="button" onClick={() => handleSelectFromSearch(riding)}>
-							{riding.code} - {riding.name}
-						</button>
-					))}
-				</div>
-			) : null}
 
 			<div className="map-shell">
 				<VirtualElectionMap
 					adapter={adapter}
 					mapVersion={mapVersion}
 					districtStyles={districtStyles}
+					districtTooltipMeta={districtTooltipMeta}
 					selectedDistrictId={selectedDistrictId}
+					zoomToDistrictId={zoomToDistrictId}
+					onZoomComplete={() => setZoomToDistrictId(null)}
 					onHoverDistrict={handleHoverDistrict}
 					onLeaveDistrict={handleLeaveDistrict}
 					onSelectDistrict={handleSelectDistrict}
+					onFeaturesLoaded={setMapDistricts}
 				/>
 				<div className="riding-bar-chart-overlay">
 					<RidingBarChart riding={chartRiding} ridingTotals={chartTotals} />

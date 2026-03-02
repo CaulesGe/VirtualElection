@@ -39,6 +39,6 @@ export const canadaMapAdapter = {
 		center: [56, -96],
 		zoom: 3.6,
 		minZoom: 3,
-		maxZoom: 9
+		maxZoom: 18
 	})
 };

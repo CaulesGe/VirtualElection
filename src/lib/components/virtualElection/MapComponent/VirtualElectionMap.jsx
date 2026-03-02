@@ -7,10 +7,14 @@ export default function VirtualElectionMap({
 	adapter,
 	mapVersion,
 	districtStyles,
+	districtTooltipMeta,
 	selectedDistrictId,
+	zoomToDistrictId,
+	onZoomComplete,
 	onHoverDistrict,
 	onLeaveDistrict,
-	onSelectDistrict
+	onSelectDistrict,
+	onFeaturesLoaded
 }) {
 	const containerRef = useRef(null);
 	const mapRef = useRef(null);
@@ -27,6 +31,7 @@ export default function VirtualElectionMap({
 	const selectedDistrict = String(selectedDistrictId ?? '');
 	const isSelectionLocked = Boolean(selectedDistrict);
 	const styleMap = useMemo(() => districtStyles ?? new Map(), [districtStyles]);
+	const tooltipMetaMap = useMemo(() => districtTooltipMeta ?? new Map(), [districtTooltipMeta]);
 
 	useEffect(() => {
 		let cancelled = false;
@@ -38,7 +43,19 @@ export default function VirtualElectionMap({
 				const raw = await response.json();
 				const geoJSON = adapter.toGeoJSON(raw);
 				if (!geoJSON?.features?.length) throw new Error('Invalid map asset content');
-				if (!cancelled) setFeatures(geoJSON.features);
+				if (!cancelled) {
+					setFeatures(geoJSON.features);
+					if (typeof onFeaturesLoaded === 'function') {
+						const districts = geoJSON.features
+							.map((f) => {
+								const id = adapter.getDistrictId(f);
+								if (!id) return null;
+								return { code: String(id), name: adapter.getDistrictName(f) };
+							})
+							.filter(Boolean);
+						onFeaturesLoaded(districts);
+					}
+				}
 			} catch (error) {
 				if (!cancelled) {
 					setFeatures([]);
@@ -50,7 +67,7 @@ export default function VirtualElectionMap({
 		return () => {
 			cancelled = true;
 		};
-	}, [adapter, mapVersion]);
+	}, [adapter, mapVersion, onFeaturesLoaded]);
 
 	useEffect(() => {
 		let mounted = true;
@@ -63,7 +80,8 @@ export default function VirtualElectionMap({
 			leafletRef.current = L;
 
 			const { center, zoom, minZoom, maxZoom } = adapter.getDefaultView();
-			map = L.map(containerRef.current, { zoomSnap: 0.25, minZoom, maxZoom }).setView(center, zoom);
+			map = L.map(containerRef.current, { zoomSnap: 0.25, minZoom, maxZoom, zoomControl: false }).setView(center, zoom);
+			L.control.zoom({ position: 'bottomright' }).addTo(map);
 			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 				attribution: '© OpenStreetMap'
 			}).addTo(map);
@@ -147,6 +165,29 @@ export default function VirtualElectionMap({
 	}, []);
 
 	useEffect(() => {
+		if (!zoomToDistrictId || !mapRef.current || !features.length) return;
+		const L = leafletRef.current;
+		if (!L) return;
+		const targetFeature = features.find(
+			(f) => String(adapter.getDistrictId(f)) === String(zoomToDistrictId)
+		);
+		if (!targetFeature) {
+			onZoomComplete?.();
+			return;
+		}
+		try {
+			const layer = L.geoJSON(targetFeature);
+			const bounds = layer.getBounds();
+			if (bounds.isValid()) {
+				mapRef.current.fitBounds(bounds, { padding: [40, 40], maxZoom: 12, animate: true });
+			}
+		} catch {
+			// Ignore invalid geometry
+		}
+		onZoomComplete?.();
+	}, [zoomToDistrictId, features, adapter, onZoomComplete]);
+
+	useEffect(() => {
 		if (!groupRef.current || !pathRef.current) return;
 
 		const getOpacity = (featureLike) => {
@@ -168,6 +209,19 @@ export default function VirtualElectionMap({
 			tooltipRef.current.innerHTML = `<div>${text}</div>`;
 			tooltipRef.current.style.display = 'block';
 			moveTooltip(event);
+		};
+		const getTooltipHtml = (featureLike) => {
+			const districtId = adapter.getDistrictId(featureLike);
+			const districtName = adapter.getDistrictName(featureLike);
+			if (!districtId) return districtName;
+			const meta = tooltipMetaMap.get(String(districtId));
+			const name = meta?.name || districtName;
+			const totalVotes = Number(meta?.totalVotes ?? 0);
+			const ev = Number(meta?.electoralVotes ?? 0);
+			const lines = [`<strong>${name}</strong>`];
+			if (ev > 0) lines.push(`${ev} EV`);
+			lines.push(totalVotes > 0 ? `${totalVotes} votes` : 'No votes yet');
+			return lines.map((line) => `<div>${line}</div>`).join('');
 		};
 		const resetFeatureStyle = (selection, featureLike) => {
 			selection.attr('fill-opacity', getOpacity(featureLike)).attr('stroke-width', 0.6);
@@ -209,29 +263,31 @@ export default function VirtualElectionMap({
 				return districtId && String(districtId) === selectedDistrict ? 2 : 0.6;
 			})
 			.on('mouseover', (event, d) => {
-				if (isMapMovingRef.current || isSelectionLocked) return;
+				if (isMapMovingRef.current) return;
 				const districtId = adapter.getDistrictId(d);
 				if (!districtId) return;
-				if (selectedFeatureRef.current !== d) {
+				if (!isSelectionLocked && selectedFeatureRef.current !== d) {
 					highlightFeature(select(event.currentTarget));
 				}
-				showTooltip(event, adapter.getDistrictName(d));
-				onHoverDistrict?.({
-					districtId: String(districtId),
-					districtName: adapter.getDistrictName(d)
-				});
+				showTooltip(event, getTooltipHtml(d));
+				if (!isSelectionLocked) {
+					onHoverDistrict?.({
+						districtId: String(districtId),
+						districtName: adapter.getDistrictName(d)
+					});
+				}
 			})
 			.on('mousemove', (event) => {
-				if (isMapMovingRef.current || isSelectionLocked) return;
+				if (isMapMovingRef.current) return;
 				moveTooltip(event);
 			})
 			.on('mouseout', (event, d) => {
-				if (isMapMovingRef.current || isSelectionLocked) return;
-				if (selectedFeatureRef.current !== d) {
+				if (isMapMovingRef.current) return;
+				if (!isSelectionLocked && selectedFeatureRef.current !== d) {
 					resetFeatureStyle(select(event.currentTarget), d);
 				}
 				hideTooltip();
-				onLeaveDistrict?.();
+				if (!isSelectionLocked) onLeaveDistrict?.();
 			})
 			.on('click', (event, d) => {
 				if (isMapMovingRef.current) return;
@@ -254,7 +310,7 @@ export default function VirtualElectionMap({
 					highlightFeature(select(event.currentTarget));
 				}
 
-				hideTooltip();
+				showTooltip(event, getTooltipHtml(d));
 				onSelectDistrict?.({
 					districtId: String(districtId),
 					districtName: adapter.getDistrictName(d)
@@ -268,7 +324,8 @@ export default function VirtualElectionMap({
 		onLeaveDistrict,
 		onSelectDistrict,
 		selectedDistrict,
-		styleMap
+		styleMap,
+		tooltipMetaMap
 	]);
 
 	return (

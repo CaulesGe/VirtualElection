@@ -45,7 +45,7 @@ npm run db:migrate
 npm run dev
 ```
 
-Open `http://localhost:3000/virtualElection/canada`.
+Open `http://localhost:3000/`.
 
 ---
 
@@ -124,7 +124,7 @@ truncate table virtual_election_riding_totals;
 
 ```mermaid
 flowchart LR
-  browserClient[BrowserClient] --> pageRoute[AppRoute ca/fed/virtualElection]
+  browserClient[BrowserClient] --> pageRoute[AppRoutes home-canada-usa]
   pageRoute --> apiVote[API vote]
   pageRoute --> apiTotals[API totals]
   pageRoute --> apiMe[API me]
@@ -144,6 +144,8 @@ flowchart LR
 
 - `virtual_election_votes`: canonical user vote row (`user_id + scope` unique)
 - `virtual_election_riding_totals`: pre-aggregated counters per riding/party/scope
+- USA district IDs use canonical keys: `us-fed-2025-<STATEFP>-<DISTRICT_OR_AL>`
+- USA presidential state IDs use canonical keys: `US-PRES-2025-<FIPS>`
 
 Vote API performs a single atomic SQL operation:
 
@@ -156,14 +158,22 @@ Vote API performs a single atomic SQL operation:
 
 ## Project map
 
-- `src/app/ca/fed/virtualElection/page.js`: server page bootstrap
+- `src/app/page.js`: intro homepage
+- `src/app/canada/page.js`: Canada election page bootstrap
+- `src/app/usa/page.js`: USA default route redirect to presidential page
+- `src/app/usa/houseOfRepresentatives/page.js`: USA house page bootstrap
+- `src/app/usa/president/page.js`: USA presidential page bootstrap
 - `src/lib/components/virtualElection/VirtualElectionPage.jsx`: client orchestrator
-- `src/lib/components/virtualElection/VirtualElectionControls.jsx`: auth-aware vote controls
-- `src/lib/components/virtualElection/VirtualElectionMap.jsx`: riding selector surface
-- `src/lib/components/virtualElection/RegionSeatChart.jsx`: seat chart
-- `src/lib/components/virtualElection/RegionVoteChart.jsx`: vote chart
+- `src/lib/components/virtualElection/Header.jsx`: shared country selector header
+- `src/lib/components/virtualElection/LoginControl.jsx`: auth-aware vote controls
+- `src/lib/components/virtualElection/MapComponent/VirtualElectionMap.jsx`: map surface
+- `src/lib/components/virtualElection/MapComponent/adapters/usa.js`: USA house + president map adapter (`USA.json` + `us-atlas`)
+- `src/lib/components/virtualElection/regionBreakdown/RegionSeatChart.jsx`: seat chart
+- `src/lib/components/virtualElection/regionBreakdown/RegionVoteChart.jsx`: vote chart
+- `src/lib/components/virtualElection/regionBreakdown/profiles/*`: country-aware region logic
 - `src/app/api/virtual-election/*`: API handlers
 - `src/lib/server/virtualElection/service.js`: domain logic + atomic SQL
+- `src/lib/server/virtualElection/loadElectionPageData.js`: shared page bootstrap loader
 - `src/lib/server/virtualElection/abuse.js`: abuse protections
 
 ---
@@ -206,6 +216,16 @@ GET /api/virtual-election/ridings
 Returns the list of ridings available in the selected scope (code, name, subnational) for map/selector rendering.
 GET /api/virtual-election/options
 Returns authoritative election bootstrap options for the selected scope (`scopeId`, `countryCode`, `mapVersion`, `districtIdNamespace`, `allowedParties`, `ridings`, and UI rules). Clients should use this to render allowed UI choices; server remains the source of truth for enforcement.
+For presidential scope, options also include `mode`, `regionKey`, `allocationRule`, and `electoralVotesVersion`.
+Current routes:
+
+- `/` intro page
+- `/canada` Canada federal virtual election
+- `/usa` USA election selector
+- `/usa/houseOfRepresentatives` USA House virtual election (`us/fed/2025`)
+- `/usa/president` USA presidential virtual election (`us/pres/2025`)
+
+Note: USA map currently uses direct AK/HI placement (insets can be added later).
 Error semantics are aligned with prior implementation:
 
 - `401` unauthenticated

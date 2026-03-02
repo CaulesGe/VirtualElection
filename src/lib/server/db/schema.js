@@ -65,6 +65,25 @@ export const electionParties = pgTable(
 	]
 );
 
+export const electionDistricts = pgTable(
+	'election_districts',
+	{
+		id: serial('id').primaryKey(),
+		electionId: integer('election_id').notNull(),
+		districtKey: text('district_key').notNull(),
+		name: text('name').notNull(),
+		subnationalCode: text('subnational_code'),
+		fips: text('fips'),
+		electoralVotes: integer('electoral_votes'),
+		sortOrder: integer('sort_order').notNull().default(0)
+	},
+	(table) => [
+		uniqueIndex('election_districts_election_key_unique').on(table.electionId, table.districtKey),
+		index('election_districts_election_idx').on(table.electionId),
+		index('election_districts_subnational_idx').on(table.subnationalCode)
+	]
+);
+
 export const virtualElectionVotes = pgTable(
 	'virtual_election_votes',
 	{

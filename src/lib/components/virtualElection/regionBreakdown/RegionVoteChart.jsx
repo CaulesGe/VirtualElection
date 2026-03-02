@@ -5,6 +5,7 @@ import {
 	BarChart,
 	CartesianGrid,
 	Cell,
+	LabelList,
 	Pie,
 	PieChart,
 	ResponsiveContainer,
@@ -92,6 +93,27 @@ export default function RegionVoteChart({ voteSeries, mode = 'bar' }) {
 						{data.map((row) => (
 							<Cell key={row.party} fill={getPartyColor(row.party)} />
 						))}
+						<LabelList
+							dataKey="percentageOfVote"
+							position="top"
+							formatter={(v) => `${v}%`}
+							style={{ fontWeight: 600, fontSize: 12 }}
+							content={({ x, y, width, value, index }) => {
+								const row = data[index];
+								return (
+									<text
+										x={x + width / 2}
+										y={y - 6}
+										textAnchor="middle"
+										fill={row ? getPartyColor(row.party) : '#1f2937'}
+										fontWeight={600}
+										fontSize={12}
+									>
+										{value}%
+									</text>
+								);
+							}}
+						/>
 					</Bar>
 				</BarChart>
 			</ResponsiveContainer>

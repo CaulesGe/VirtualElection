@@ -60,7 +60,27 @@ export default function RegionSeatChart({ seatSeries, mode = 'bar' }) {
 				<BarChart data={data} layout="vertical" margin={{ top: 8, right: 16, left: 8, bottom: 8 }}>
 					<CartesianGrid strokeDasharray="3 3" />
 					<XAxis type="number" allowDecimals={false} />
-					<YAxis dataKey="name" type="category" width={54} />
+					<YAxis
+						dataKey="name"
+						type="category"
+						width={54}
+						tick={(props) => {
+							const row = data.find((item) => item.name === props.payload.value);
+							return (
+								<text
+									x={props.x}
+									y={props.y}
+									dy={4}
+									textAnchor="end"
+									fill={row ? getPartyColor(row.party) : '#1f2937'}
+									fontWeight={600}
+									fontSize={13}
+								>
+									{props.payload.value}
+								</text>
+							);
+						}}
+					/>
 					<Tooltip />
 					<Bar dataKey="seats">
 						{data.map((row) => (

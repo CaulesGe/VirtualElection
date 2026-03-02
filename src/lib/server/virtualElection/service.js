@@ -1,10 +1,12 @@
-import { and, eq, sql } from 'drizzle-orm';
+import { and, desc, eq, sql } from 'drizzle-orm';
 import {
 	DEFAULT_SCOPE,
 	VIRTUAL_ELECTION_ALLOWED_SCOPES,
 	getAllowedPartiesForScope as getAllowedPartiesForScopeConfig
 } from '@/lib/config/virtualElection';
 import { db } from '@/lib/server/db/client';
+import { getMapMetadataForScope } from '@/lib/server/virtualElection/mapMetadata';
+import { getRidingsForScope } from '@/lib/server/virtualElection/ridings';
 import {
 	constituencies,
 	countries,
@@ -142,6 +144,13 @@ export function assertValidRidingId(ridingId) {
 }
 
 async function assertValidRidingForScope(ridingId, scope) {
+	if (scope.country === 'us') {
+		const ridings = await getRidingsForScope(scope);
+		const exists = ridings.some((riding) => String(riding.code) === String(ridingId));
+		if (exists) return;
+		throw new VirtualElectionError('INVALID_RIDING', 'Invalid riding ID.');
+	}
+
 	try {
 		const rows = await db
 			.select({ code: constituencies.code })
@@ -278,11 +287,16 @@ export async function castOrUpdateVote(input) {
 export async function getElectionOptionsForScope(scopeInput) {
 	const scope = assertAllowedScope(scopeInput);
 	const scopeId = `${scope.country}:${scope.district}:${scope.year}`;
+	const mapMeta = getMapMetadataForScope(scope);
 	const fallback = {
 		scopeId,
 		scope,
-		countryCode: String(scope.country).toUpperCase(),
-		mapVersion: String(scope.year),
+		countryCode: mapMeta.countryCode,
+		mapVersion: mapMeta.mapVersion,
+		mode: mapMeta.mode,
+		regionKey: mapMeta.regionKey,
+		allocationRule: mapMeta.allocationRule,
+		electoralVotesVersion: mapMeta.electoralVotesVersion,
 		districtIdNamespace: `${scope.country}:${scope.district}:riding-id`,
 		allowedParties: getAllowedPartiesForScopeConfig(scope)
 	};
@@ -396,4 +410,30 @@ export async function getUserVote(userId, scopeInput) {
 	const vote = rows[0];
 	if (!vote) return { voted: false };
 	return { voted: true, ridingId: vote.ridingId, party: vote.party };
+}
+
+export async function listVotesForUser(userId) {
+	if (!userId) return [];
+
+	const rows = await db
+		.select({
+			scopeCountry: virtualElectionVotes.country,
+			scopeDistrict: virtualElectionVotes.district,
+			scopeYear: virtualElectionVotes.year,
+			districtId: virtualElectionVotes.ridingId,
+			partyId: virtualElectionVotes.party,
+			updatedAt: virtualElectionVotes.updatedAt
+		})
+		.from(virtualElectionVotes)
+		.where(eq(virtualElectionVotes.userId, userId))
+		.orderBy(desc(virtualElectionVotes.updatedAt));
+
+	return rows.map((row) => ({
+		scopeCountry: String(row.scopeCountry ?? '').toLowerCase(),
+		scopeDistrict: String(row.scopeDistrict ?? '').toLowerCase(),
+		scopeYear: Number(row.scopeYear ?? 0),
+		districtId: String(row.districtId ?? ''),
+		partyId: String(row.partyId ?? ''),
+		updatedAt: row.updatedAt ?? null
+	}));
 }

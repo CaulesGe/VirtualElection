@@ -1,8 +1,10 @@
 import { canadaMapAdapter } from "./canada";
+import { usaMapAdapter } from "./usa";
 import { assertMapAdapter } from "./types";
 
 const registry = {
-	CA: assertMapAdapter(canadaMapAdapter)
+	CA: assertMapAdapter(canadaMapAdapter),
+	US: assertMapAdapter(usaMapAdapter)
 };
 
 export function getMapAdapter(countryCode) {

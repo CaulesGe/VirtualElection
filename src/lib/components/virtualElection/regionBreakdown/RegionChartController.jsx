@@ -3,123 +3,44 @@
 import { useMemo, useState } from 'react';
 import RegionSeatChart from '@/lib/components/virtualElection/regionBreakdown/RegionSeatChart';
 import RegionVoteChart from '@/lib/components/virtualElection/regionBreakdown/RegionVoteChart';
+import { getRegionProfile } from '@/lib/components/virtualElection/regionBreakdown/profiles';
 
-const REGION_OPTIONS = [
-	{ value: 'Total', label: 'Canada (Total)', codes: [] },
-	{ value: 'N.L.', label: 'Newfoundland and Labrador', codes: ['N.L.', 'NL'] },
-	{ value: 'P.E.I.', label: 'Prince Edward Island', codes: ['P.E.I.', 'PE', 'PEI'] },
-	{ value: 'N.S.', label: 'Nova Scotia', codes: ['N.S.', 'NS'] },
-	{ value: 'N.B.', label: 'New Brunswick', codes: ['N.B.', 'NB'] },
-	{ value: 'Que.', label: 'Quebec', codes: ['Que.', 'QC'] },
-	{ value: 'Ont.', label: 'Ontario', codes: ['Ont.', 'ON'] },
-	{ value: 'Man.', label: 'Manitoba', codes: ['Man.', 'MB'] },
-	{ value: 'Sask.', label: 'Saskatchewan', codes: ['Sask.', 'SK'] },
-	{ value: 'Alta.', label: 'Alberta', codes: ['Alta.', 'AB'] },
-	{ value: 'B.C.', label: 'British Columbia', codes: ['B.C.', 'BC'] },
-	{ value: 'Y.T.', label: 'Yukon', codes: ['Y.T.', 'YT'] },
-	{ value: 'N.W.T.', label: 'Northwest Territories', codes: ['N.W.T.', 'NT', 'NWT'] },
-	{ value: 'Nun.', label: 'Nunavut', codes: ['Nun.', 'NU'] }
-];
-
-const REGION_CODE_ALIASES = {
-	// Atlantic
-	NL: 'NL',
-	NEWFOUNDLAND: 'NL',
-	NEWFOUNDLANDANDLABRADOR: 'NL',
-	NFLD: 'NL',
-	PE: 'PEI',
-	PEI: 'PEI',
-	PRINCEEDWARDISLAND: 'PEI',
-	NS: 'NS',
-	NOVASCOTIA: 'NS',
-	NB: 'NB',
-	NEWBRUNSWICK: 'NB',
-	// Central
-	QC: 'QC',
-	QUE: 'QC',
-	QUEBEC: 'QC',
-	ON: 'ON',
-	ONT: 'ON',
-	ONTARIO: 'ON',
-	// Prairies
-	MB: 'MB',
-	MAN: 'MB',
-	MANITOBA: 'MB',
-	SK: 'SK',
-	SASK: 'SK',
-	SASKATCHEWAN: 'SK',
-	AB: 'AB',
-	ALTA: 'AB',
-	ALBERTA: 'AB',
-	BC: 'BC',
-	BRITISHCOLUMBIA: 'BC',
-	// Territories
-	YT: 'YT',
-	YUKON: 'YT',
-	YK: 'YT',
-	NT: 'NT',
-	NWT: 'NT',
-	NORTHWESTTERRITORIES: 'NT',
-	NU: 'NU',
-	NUN: 'NU',
-	NUNAVUT: 'NU'
-};
-
-function toCanonicalRegionCode(value) {
-	const normalized = String(value ?? '')
-		.toUpperCase()
-		.replace(/[^A-Z]/g, '');
-	return REGION_CODE_ALIASES[normalized] ?? normalized;
-}
-
-const RIDING_PREFIX_TO_REGION = {
-	10: 'NL',
-	11: 'PEI',
-	12: 'NS',
-	13: 'NB',
-	24: 'QC',
-	35: 'ON',
-	46: 'MB',
-	47: 'SK',
-	48: 'AB',
-	59: 'BC',
-	60: 'NT',
-	61: 'NU',
-	62: 'YT'
-};
-
-function inferRegionCodeFromRidingId(ridingId) {
-	const digits = String(ridingId ?? '').replace(/\D/g, '');
-	if (digits.length < 2) return '';
-	const prefix = Number(digits.slice(0, 2));
-	return RIDING_PREFIX_TO_REGION[prefix] ?? '';
-}
-
-export default function RegionChartController({ totals = [], ridingResults = [] }) {
+export default function RegionChartController({
+	totals = [],
+	ridingResults = [],
+	countryCode = 'CA',
+	mode = 'house'
+}) {
+	const profile = useMemo(() => getRegionProfile(countryCode), [countryCode]);
+	const regionOptions = useMemo(() => profile.getRegionOptions(ridingResults), [profile, ridingResults]);
 	const [selectedRegion, setSelectedRegion] = useState('Total');
 	const [chartMode, setChartMode] = useState('bar');
+	const hasSelectedRegion = regionOptions.some((option) => option.value === selectedRegion);
+	const effectiveSelectedRegion = hasSelectedRegion ? selectedRegion : 'Total';
 
 	const ridingById = useMemo(() => {
 		const map = new Map();
 		for (const riding of ridingResults) {
-			const code = riding?.code ?? riding?.id;
+			const code = riding?.code ?? riding?.id ?? riding?.ridingId;
 			if (code != null) map.set(String(code), riding);
 		}
 		return map;
 	}, [ridingResults]);
 
 	const filteredTotalsByRegion = useMemo(() => {
-		if (selectedRegion === 'Total') return totals;
-		const selected = REGION_OPTIONS.find((option) => option.value === selectedRegion);
+		if (effectiveSelectedRegion === 'Total') return totals;
+		const selected = regionOptions.find((option) => option.value === effectiveSelectedRegion);
 		if (!selected) return totals;
-		const selectedCodes = new Set(selected.codes.map((code) => toCanonicalRegionCode(code)));
+		const selectedCodes = new Set(
+			selected.codes.map((code) => profile.toCanonicalRegionCode(code))
+		);
 		return totals.filter((row) => {
 			const riding = ridingById.get(String(row.ridingId));
-			const rawSubnational = riding?.subnational || inferRegionCodeFromRidingId(row.ridingId);
-			const subnational = toCanonicalRegionCode(rawSubnational);
+			const resolved = profile.resolveRegionCode({ riding, row });
+			const subnational = profile.toCanonicalRegionCode(resolved);
 			return selectedCodes.has(subnational);
 		});
-	}, [selectedRegion, totals, ridingById]);
+	}, [effectiveSelectedRegion, totals, ridingById, profile, regionOptions]);
 
 	const regionSeatSeries = useMemo(() => {
 		const seatCounts = {};
@@ -153,17 +74,17 @@ export default function RegionChartController({ totals = [], ridingResults = [] 
 	return (
 		<section className="regional-breakdown">
 			<div className="regional-header">
-				<h2>Virtual Regional Breakdown</h2>
+				<h2>Regional Breakdown</h2>
 				<div className="regional-controls">
 					<label htmlFor="virtual-region-selector" className="region-label">
 						Select a region
 					</label>
 					<select
 						id="virtual-region-selector"
-						value={selectedRegion}
+						value={effectiveSelectedRegion}
 						onChange={(event) => setSelectedRegion(event.target.value)}
 					>
-						{REGION_OPTIONS.map((option) => (
+						{regionOptions.map((option) => (
 							<option key={option.value} value={option.value}>
 								{option.label}
 							</option>
@@ -187,13 +108,15 @@ export default function RegionChartController({ totals = [], ridingResults = [] 
 					</div>
 				</div>
 			</div>
-			<div className="regional-grid">
+			<div className={`regional-grid ${mode === 'president' ? 'single-card' : ''}`}>
+				{mode !== 'president' ? (
+					<section className="regional-card">
+						<h3>Seat Distribution (Leads by Riding) - {effectiveSelectedRegion}</h3>
+						<RegionSeatChart seatSeries={regionSeatSeries} mode={chartMode} />
+					</section>
+				) : null}
 				<section className="regional-card">
-					<h3>Seat Distribution (Leads by Riding) - {selectedRegion}</h3>
-					<RegionSeatChart seatSeries={regionSeatSeries} mode={chartMode} />
-				</section>
-				<section className="regional-card">
-					<h3>Vote Distribution (Virtual Votes) - {selectedRegion}</h3>
+					<h3>Vote Distribution (Virtual Votes) - {effectiveSelectedRegion}</h3>
 					<RegionVoteChart voteSeries={regionVoteSeries} mode={chartMode} />
 				</section>
 			</div>

@@ -1,12 +1,24 @@
 export const VIRTUAL_ELECTION_ALLOWED_PARTIES = ['LPC', 'CPC', 'GPC', 'PPC', 'BQ', 'NDP', 'OTH'];
+export const VIRTUAL_ELECTION_ALLOWED_PARTIES_US = ['DEM', 'REP', 'IND'];
 export const VIRTUAL_ELECTION_ALLOWED_PARTIES_BY_COUNTRY = {
-	CA: VIRTUAL_ELECTION_ALLOWED_PARTIES
+	CA: VIRTUAL_ELECTION_ALLOWED_PARTIES,
+	US: VIRTUAL_ELECTION_ALLOWED_PARTIES_US
 };
 
 export const VIRTUAL_ELECTION_ALLOWED_SCOPES = [
 	{
 		country: 'ca',
 		district: 'fed',
+		year: 2025
+	},
+	{
+		country: 'us',
+		district: 'fed',
+		year: 2025
+	},
+	{
+		country: 'us',
+		district: 'pres',
 		year: 2025
 	}
 ];
@@ -17,7 +29,7 @@ export const DEFAULT_SCOPE = {
 	year: 2025
 };
 
-// Default party configuration for Canadian federal elections
+// Default party presentation metadata used by map/charts/legend rendering.
 export const FEDERAL_PARTIES = {
 	LPC: {
 		name: 'Liberal Party',
@@ -81,6 +93,33 @@ export const FEDERAL_PARTIES = {
 		textColor: 'text-oth',
 		logo: '/party/ca/fed/OTH.svg',
 		colorGradient: ['#ABABAB', '#999999', '#8A8A8A', '#7A7A7A', '#616161', '#424242']
+	},
+	DEM: {
+		name: 'Democratic Party',
+		shortName: 'DEM',
+		color: '#2E74C0',
+		backgroundColor: 'bg-dem',
+		textColor: 'text-dem',
+		logo: '',
+		colorGradient: ['#A4CCF5', '#7CB1EB', '#5B98DE', '#3E81D1', '#2A67B0', '#1C4E8D']
+	},
+	REP: {
+		name: 'Republican Party',
+		shortName: 'REP',
+		color: '#C43E3E',
+		backgroundColor: 'bg-rep',
+		textColor: 'text-rep',
+		logo: '',
+		colorGradient: ['#F2A3A3', '#E98787', '#DD6C6C', '#D05252', '#B13A3A', '#8E2A2A']
+	},
+	IND: {
+		name: 'Independent',
+		shortName: 'IND',
+		color: '#6B7280',
+		backgroundColor: 'bg-ind',
+		textColor: 'text-ind',
+		logo: '',
+		colorGradient: ['#B6BDC8', '#9EA6B3', '#8A93A0', '#747D8A', '#5E6672', '#474E59']
 	}
 };
 
