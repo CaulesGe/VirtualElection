@@ -14,6 +14,7 @@ import {
 	YAxis
 } from 'recharts';
 import { getPartyColor, getPartyShortName } from '@/lib/components/virtualElection/partyMeta';
+import ChartTooltip from '@/lib/components/virtualElection/ChartTooltip';
 
 export default function RegionSeatChart({ seatSeries, mode = 'bar' }) {
 	const data = Object.entries(seatSeries)
@@ -46,8 +47,17 @@ export default function RegionSeatChart({ seatSeries, mode = 'bar' }) {
 								<Cell key={row.party} fill={getPartyColor(row.party)} />
 							))}
 						</Pie>
-						<Tooltip />
-					</PieChart>
+				<Tooltip content={
+					<ChartTooltip>
+						{(row) => (
+							<>
+								<div style={{ color: getPartyColor(row.party), fontWeight: 700 }}>{row.name}</div>
+								<div>Seats: {row.seats}</div>
+							</>
+						)}
+					</ChartTooltip>
+				} />
+			</PieChart>
 				</ResponsiveContainer>
 			</div>
 		);
@@ -81,8 +91,17 @@ export default function RegionSeatChart({ seatSeries, mode = 'bar' }) {
 							);
 						}}
 					/>
-					<Tooltip />
-					<Bar dataKey="seats">
+			<Tooltip content={
+				<ChartTooltip>
+					{(row) => (
+						<>
+							<div style={{ color: getPartyColor(row.party), fontWeight: 700 }}>{row.name}</div>
+							<div>Seats: {row.seats}</div>
+						</>
+					)}
+				</ChartTooltip>
+			} />
+			<Bar dataKey="seats">
 						{data.map((row) => (
 							<Cell key={row.party} fill={getPartyColor(row.party)} />
 						))}

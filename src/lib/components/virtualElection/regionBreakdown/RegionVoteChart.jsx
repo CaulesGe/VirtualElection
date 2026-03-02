@@ -14,19 +14,7 @@ import {
 	YAxis
 } from 'recharts';
 import { getPartyColor, getPartyShortName } from '@/lib/components/virtualElection/partyMeta';
-
-function VoteTooltip({ active, payload }) {
-	if (!active || !payload?.length) return null;
-	const row = payload[0]?.payload;
-	if (!row) return null;
-	return (
-		<div className="region-vote-tooltip">
-			<div style={{ color: getPartyColor(row.party), fontWeight: 700 }}>{row.name}</div>
-			<div>Votes: {row.numberOfVote}</div>
-			<div>Share: {row.percentageOfVote}%</div>
-		</div>
-	);
-}
+import ChartTooltip from '@/lib/components/virtualElection/ChartTooltip';
 
 export default function RegionVoteChart({ voteSeries, mode = 'bar' }) {
 	const data = Object.values(voteSeries)
@@ -54,8 +42,18 @@ export default function RegionVoteChart({ voteSeries, mode = 'bar' }) {
 								<Cell key={row.party} fill={getPartyColor(row.party)} />
 							))}
 						</Pie>
-						<Tooltip content={<VoteTooltip />} />
-					</PieChart>
+					<Tooltip content={
+						<ChartTooltip>
+							{(row) => (
+								<>
+									<div style={{ color: getPartyColor(row.party), fontWeight: 700 }}>{row.name}</div>
+									<div>Votes: {row.numberOfVote}</div>
+									<div>Share: {row.percentageOfVote}%</div>
+								</>
+							)}
+						</ChartTooltip>
+					} />
+				</PieChart>
 				</ResponsiveContainer>
 			</div>
 		);
@@ -88,8 +86,18 @@ export default function RegionVoteChart({ voteSeries, mode = 'bar' }) {
 						}}
 					/>
 					<YAxis tickFormatter={(value) => `${value}%`} />
-					<Tooltip content={<VoteTooltip />} />
-					<Bar dataKey="percentageOfVote">
+				<Tooltip content={
+					<ChartTooltip>
+						{(row) => (
+							<>
+								<div style={{ color: getPartyColor(row.party), fontWeight: 700 }}>{row.name}</div>
+								<div>Votes: {row.numberOfVote}</div>
+								<div>Share: {row.percentageOfVote}%</div>
+							</>
+						)}
+					</ChartTooltip>
+				} />
+				<Bar dataKey="percentageOfVote">
 						{data.map((row) => (
 							<Cell key={row.party} fill={getPartyColor(row.party)} />
 						))}

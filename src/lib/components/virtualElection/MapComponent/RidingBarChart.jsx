@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { getPartyColor, getPartyShortName } from '@/lib/components/virtualElection/partyMeta';
+import ChartTooltip from '@/lib/components/virtualElection/ChartTooltip';
 
 function buildSeries(ridingTotals, electoralVotes) {
 	if (!ridingTotals?.totals) return [];
@@ -14,20 +15,6 @@ function buildSeries(ridingTotals, electoralVotes) {
 			electoralVotes
 		}))
 		.sort((a, b) => b.votes - a.votes);
-}
-
-function RidingTooltip({ active, payload, ridingName }) {
-	if (!active || !payload?.length) return null;
-	const row = payload[0]?.payload;
-	if (!row) return null;
-	return (
-		<div className="region-vote-tooltip">
-			<div style={{ fontWeight: 700 }}>{ridingName}</div>
-			{Number(row?.electoralVotes ?? 0) > 0 ? <div>EV: {row.electoralVotes}</div> : null}
-			<div style={{ color: getPartyColor(row.party), fontWeight: 600 }}>{row.name}</div>
-			<div>Votes: {row.votes}</div>
-		</div>
-	);
 }
 
 export default function RidingBarChart({ riding, ridingTotals }) {
@@ -56,7 +43,18 @@ export default function RidingBarChart({ riding, ridingTotals }) {
 							<CartesianGrid strokeDasharray="3 3" />
 							<XAxis dataKey="name" />
 							<YAxis allowDecimals={false} />
-							<Tooltip content={<RidingTooltip ridingName={riding.name} />} />
+							<Tooltip content={
+							<ChartTooltip>
+								{(row) => (
+									<>
+										<div style={{ fontWeight: 700 }}>{riding.name}</div>
+										{Number(row?.electoralVotes ?? 0) > 0 ? <div>EV: {row.electoralVotes}</div> : null}
+										<div style={{ color: getPartyColor(row.party), fontWeight: 600 }}>{row.name}</div>
+										<div>Votes: {row.votes}</div>
+									</>
+								)}
+							</ChartTooltip>
+						} />
 							<Bar dataKey="votes">
 								{data.map((row) => (
 									<Cell key={row.party} fill={getPartyColor(row.party)} />

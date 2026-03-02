@@ -163,3 +163,14 @@ button:disabled {
     height: 58vh;
   }
 }
+
+/* === Chart Tooltip === */
+.region-vote-tooltip {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
