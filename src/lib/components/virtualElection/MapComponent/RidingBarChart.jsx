@@ -43,8 +43,8 @@ export default function RidingBarChart({ riding, ridingTotals }) {
 					Code: {riding.code} {riding.subnational ? `| ${riding.subnational}` : ''}
 				</p>
 			</div>
-			<div style={{ width: '100%', height: 240 }}>
-				<ResponsiveContainer>
+			<div style={{ width: '100%', height: 240, minHeight: 220 }}>
+				<ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={220}>
 					<BarChart data={data} margin={{ top: 10, right: 10, left: 2, bottom: 10 }}>
 						<CartesianGrid strokeDasharray="3 3" />
 						<XAxis dataKey="name" />

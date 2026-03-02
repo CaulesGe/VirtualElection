@@ -31,7 +31,7 @@ export default function RegionSeatChart({ seatSeries, mode = 'bar' }) {
 		return (
 			<div style={{ width: '100%', height: 300, minHeight: 240 }}>
 				<p className="chart-subtitle">{majoritySeats} seats for a majority</p>
-				<ResponsiveContainer width="100%" height="100%" minWidth={240} minHeight={220}>
+				<ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={220}>
 					<PieChart>
 						<Pie
 							data={data}
@@ -56,7 +56,7 @@ export default function RegionSeatChart({ seatSeries, mode = 'bar' }) {
 	return (
 		<div style={{ width: '100%', height: 300, minHeight: 240 }}>
 			<p className="chart-subtitle">{majoritySeats} seats for a majority</p>
-			<ResponsiveContainer width="100%" height="100%" minWidth={240} minHeight={220}>
+			<ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={220}>
 				<BarChart data={data} layout="vertical" margin={{ top: 8, right: 16, left: 8, bottom: 8 }}>
 					<CartesianGrid strokeDasharray="3 3" />
 					<XAxis type="number" allowDecimals={false} />

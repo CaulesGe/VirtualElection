@@ -38,7 +38,7 @@ export default function RegionVoteChart({ voteSeries, mode = 'bar' }) {
 	if (mode === 'pie') {
 		return (
 			<div style={{ width: '100%', height: 300, minHeight: 240 }}>
-				<ResponsiveContainer width="100%" height="100%" minWidth={240} minHeight={220}>
+				<ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={220}>
 					<PieChart>
 						<Pie
 							data={data}
@@ -62,7 +62,7 @@ export default function RegionVoteChart({ voteSeries, mode = 'bar' }) {
 
 	return (
 		<div style={{ width: '100%', height: 300, minHeight: 240 }}>
-			<ResponsiveContainer width="100%" height="100%" minWidth={240} minHeight={220}>
+			<ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={220}>
 				<BarChart data={data} margin={{ top: 8, right: 16, left: 8, bottom: 16 }}>
 					<CartesianGrid strokeDasharray="3 3" />
 					<XAxis

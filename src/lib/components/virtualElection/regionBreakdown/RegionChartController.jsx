@@ -22,15 +22,47 @@ const REGION_OPTIONS = [
 ];
 
 const REGION_CODE_ALIASES = {
+	// Atlantic
 	NL: 'NL',
 	NEWFOUNDLAND: 'NL',
 	NEWFOUNDLANDANDLABRADOR: 'NL',
 	NFLD: 'NL',
+	PE: 'PEI',
+	PEI: 'PEI',
+	PRINCEEDWARDISLAND: 'PEI',
+	NS: 'NS',
+	NOVASCOTIA: 'NS',
 	NB: 'NB',
 	NEWBRUNSWICK: 'NB',
+	// Central
+	QC: 'QC',
+	QUE: 'QC',
+	QUEBEC: 'QC',
+	ON: 'ON',
+	ONT: 'ON',
+	ONTARIO: 'ON',
+	// Prairies
+	MB: 'MB',
+	MAN: 'MB',
+	MANITOBA: 'MB',
+	SK: 'SK',
+	SASK: 'SK',
+	SASKATCHEWAN: 'SK',
+	AB: 'AB',
+	ALTA: 'AB',
+	ALBERTA: 'AB',
+	BC: 'BC',
+	BRITISHCOLUMBIA: 'BC',
+	// Territories
 	YT: 'YT',
 	YUKON: 'YT',
-	YK: 'YT'
+	YK: 'YT',
+	NT: 'NT',
+	NWT: 'NT',
+	NORTHWESTTERRITORIES: 'NT',
+	NU: 'NU',
+	NUN: 'NU',
+	NUNAVUT: 'NU'
 };
 
 function toCanonicalRegionCode(value) {
@@ -40,6 +72,29 @@ function toCanonicalRegionCode(value) {
 	return REGION_CODE_ALIASES[normalized] ?? normalized;
 }
 
+const RIDING_PREFIX_TO_REGION = {
+	10: 'NL',
+	11: 'PEI',
+	12: 'NS',
+	13: 'NB',
+	24: 'QC',
+	35: 'ON',
+	46: 'MB',
+	47: 'SK',
+	48: 'AB',
+	59: 'BC',
+	60: 'NT',
+	61: 'NU',
+	62: 'YT'
+};
+
+function inferRegionCodeFromRidingId(ridingId) {
+	const digits = String(ridingId ?? '').replace(/\D/g, '');
+	if (digits.length < 2) return '';
+	const prefix = Number(digits.slice(0, 2));
+	return RIDING_PREFIX_TO_REGION[prefix] ?? '';
+}
+
 export default function RegionChartController({ totals = [], ridingResults = [] }) {
 	const [selectedRegion, setSelectedRegion] = useState('Total');
 	const [chartMode, setChartMode] = useState('bar');
@@ -47,7 +102,8 @@ export default function RegionChartController({ totals = [], ridingResults = [] 
 	const ridingById = useMemo(() => {
 		const map = new Map();
 		for (const riding of ridingResults) {
-			map.set(String(riding.code), riding);
+			const code = riding?.code ?? riding?.id;
+			if (code != null) map.set(String(code), riding);
 		}
 		return map;
 	}, [ridingResults]);
@@ -59,7 +115,8 @@ export default function RegionChartController({ totals = [], ridingResults = [] 
 		const selectedCodes = new Set(selected.codes.map((code) => toCanonicalRegionCode(code)));
 		return totals.filter((row) => {
 			const riding = ridingById.get(String(row.ridingId));
-			const subnational = toCanonicalRegionCode(riding?.subnational);
+			const rawSubnational = riding?.subnational || inferRegionCodeFromRidingId(row.ridingId);
+			const subnational = toCanonicalRegionCode(rawSubnational);
 			return selectedCodes.has(subnational);
 		});
 	}, [selectedRegion, totals, ridingById]);
