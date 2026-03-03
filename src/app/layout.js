@@ -3,6 +3,7 @@ import "./globals.css";
 import "leaflet/dist/leaflet.css";
 import Header from "@/lib/components/virtualElection/Header";
 import { getServerAuthSession } from "@/lib/auth";
+import { Analytics } from "@vercel/analytics/next"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,6 +29,7 @@ export default async function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Header isAuthenticated={!!session?.user} userLabel={userLabel} />
         {children}
+        <Analytics />
       </body>
     </html>
   );
