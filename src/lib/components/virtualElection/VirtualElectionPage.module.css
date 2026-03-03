@@ -73,6 +73,13 @@
 	font-size: 1.05rem;
 }
 
+.totalsCardBody {
+	min-height: 210px;
+	display: grid;
+	align-content: start;
+	gap: 0.6rem;
+}
+
 .partyTotals {
 	display: grid;
 	gap: 0.45rem;

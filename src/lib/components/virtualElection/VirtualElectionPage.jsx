@@ -128,26 +128,34 @@ export default function VirtualElectionPage({
 
 					<section className={styles.totalsCard}>
 						<h3>Selected Riding Live Totals</h3>
-						{!selectedRiding ? (
-							<p className="muted">Select a riding to view totals.</p>
-						) : !selectedRidingTotals ? (
-							<p className="muted">No votes recorded for this riding yet.</p>
-						) : (
-							<>
-								<p className="muted">
-									Leader: <strong>{selectedRidingTotals.leader}</strong> (
-									{(selectedRidingTotals.intensity * 100).toFixed(1)}%)
-								</p>
-								<div className={styles.partyTotals}>
-									{Object.entries(selectedRidingTotals.totals).map(([party, votes]) => (
-										<div className={styles.totalsRow} key={party}>
-											<span>{getPartyShortName(party)}</span>
-											<strong>{votes}</strong>
-										</div>
-									))}
-								</div>
-							</>
-						)}
+						<div className={styles.totalsCardBody}>
+							{!selectedRiding ? (
+								<p className="muted">Select a riding to view totals.</p>
+							) : (
+								<>
+									<p className="muted">
+										{selectedRidingTotals ? (
+											<>
+												Leader: <strong>{selectedRidingTotals.leader}</strong> (
+												{(selectedRidingTotals.intensity * 100).toFixed(1)}%)
+											</>
+										) : (
+											'No votes recorded for this riding yet.'
+										)}
+									</p>
+									<div className={styles.partyTotals}>
+										{allowedParties.map((party) => (
+											<div className={styles.totalsRow} key={party}>
+												<span style={{ color: getPartyColor(party), fontWeight: 600 }}>
+													{getPartyShortName(party)}
+												</span>
+												<strong>{selectedRidingTotals?.totals?.[party] ?? 0}</strong>
+											</div>
+										))}
+									</div>
+								</>
+							)}
+						</div>
 					</section>
 
 					<section className={styles.totalsCard}>

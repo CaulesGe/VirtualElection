@@ -253,6 +253,14 @@ export default function VirtualElectionMap({
 		const highlightFeature = (selection) => {
 			selection.attr('fill-opacity', 0.9).attr('stroke-width', 2);
 		};
+		const isTransitioningToAnotherDistrict = (event) => {
+			const related = event?.relatedTarget;
+			return Boolean(
+				related &&
+				typeof related.closest === 'function' &&
+				related.closest('path.district')
+			);
+		};
 
 		const paths = groupRef.current
 			.selectAll('path.district')
@@ -307,11 +315,14 @@ export default function VirtualElectionMap({
 			})
 			.on('mouseout', (event, d) => {
 				if (isMapMovingRef.current) return;
+				const isInternalTransition = isTransitioningToAnotherDistrict(event);
 				if (!isSelectionLocked && selectedFeatureRef.current !== d) {
 					resetFeatureStyle(select(event.currentTarget), d);
 				}
-				hideTooltip();
-				if (!isSelectionLocked) onLeaveDistrict?.();
+				if (!isInternalTransition) {
+					hideTooltip();
+					if (!isSelectionLocked) onLeaveDistrict?.();
+				}
 			})
 			.on('click', (event, d) => {
 				if (isMapMovingRef.current) return;

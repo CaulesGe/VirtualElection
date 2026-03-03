@@ -61,6 +61,7 @@ export default function MapController({
 	const [lastPreviewDistrict, setLastPreviewDistrict] = useState(null);
 	const [mapDistricts, setMapDistricts] = useState([]);
 	const blurTimeoutRef = useRef(null);
+	const leaveTimeoutRef = useRef(null);
 	const [zoomToDistrictId, setZoomToDistrictId] = useState(null);
 
 	const countryCode = mapMetadata?.countryCode ?? 'CA';
@@ -199,6 +200,7 @@ export default function MapController({
 
 	const handleHoverDistrict = useCallback(({ districtId, districtName }) => {
 		if (selectedDistrictId) return;
+		clearTimeout(leaveTimeoutRef.current);
 		const id = String(districtId);
 		const hoverRiding =
 			ridingById.get(id) ??
@@ -213,7 +215,10 @@ export default function MapController({
 
 	const handleLeaveDistrict = useCallback(() => {
 		if (selectedDistrictId) return;
-		setHoveredDistrict((prev) => (prev === null ? prev : null));
+		clearTimeout(leaveTimeoutRef.current);
+		leaveTimeoutRef.current = setTimeout(() => {
+			setHoveredDistrict((prev) => (prev === null ? prev : null));
+		}, 60);
 	}, [selectedDistrictId]);
 
 	function handleSelectFromSearch(riding) {

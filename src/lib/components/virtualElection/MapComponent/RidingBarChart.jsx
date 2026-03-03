@@ -1,13 +1,13 @@
 'use client';
 
-import { useMemo } from 'react';
-import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import { Bar, BarChart, CartesianGrid, Cell, LabelList, Tooltip, XAxis, YAxis } from 'recharts';
 import { getPartyColor, getPartyShortName } from '@/lib/components/virtualElection/partyMeta';
 import ChartTooltip from '@/lib/components/virtualElection/ChartTooltip';
 
 function buildSeries(ridingTotals, electoralVotes) {
 	if (!ridingTotals?.totals) return [];
-	return Object.entries(ridingTotals.totals)
+	const rows = Object.entries(ridingTotals.totals)
 		.map(([party, votes]) => ({
 			party,
 			name: getPartyShortName(party),
@@ -15,11 +15,48 @@ function buildSeries(ridingTotals, electoralVotes) {
 			electoralVotes
 		}))
 		.sort((a, b) => b.votes - a.votes);
+	const totalVotes = rows.reduce((sum, row) => sum + row.votes, 0);
+	return rows.map((row) => ({
+		...row,
+		voteShare: totalVotes > 0 ? Number(((row.votes / totalVotes) * 100).toFixed(1)) : 0
+	}));
+}
+
+function useContainerSize() {
+	const [size, setSize] = useState(null);
+	const observerRef = useRef(null);
+
+	const callbackRef = useCallback((el) => {
+		if (observerRef.current) {
+			observerRef.current.disconnect();
+			observerRef.current = null;
+		}
+		if (!el) return;
+
+		const measure = () => {
+			const { width, height } = el.getBoundingClientRect();
+			if (width > 0 && height > 0) {
+				setSize((prev) =>
+					prev && prev.width === Math.round(width) && prev.height === Math.round(height)
+						? prev
+						: { width: Math.round(width), height: Math.round(height) }
+				);
+			}
+		};
+		measure();
+		const observer = new ResizeObserver(measure);
+		observer.observe(el);
+		observerRef.current = observer;
+	}, []);
+
+	return [callbackRef, size];
 }
 
 export default function RidingBarChart({ riding, ridingTotals }) {
 	const electoralVotes = Number(riding?.electoralVotes ?? 0);
 	const data = useMemo(() => buildSeries(ridingTotals, electoralVotes), [electoralVotes, ridingTotals]);
+	const [containerRef, size] = useContainerSize();
+	const hasData = Boolean(ridingTotals && data.length > 0);
 
 	if (!riding) {
 		return <p className="muted">Hover or select a riding to view party vote distribution.</p>;
@@ -34,16 +71,13 @@ export default function RidingBarChart({ riding, ridingTotals }) {
 					{electoralVotes > 0 ? ` | EV: ${electoralVotes}` : ''}
 				</p>
 			</div>
-			{!ridingTotals || data.length === 0 ? (
-				<p className="muted">No virtual votes recorded for this riding yet.</p>
-			) : (
-			<div style={{ width: '100%', height: 240, minWidth: 200, minHeight: 220 }}>
-				<ResponsiveContainer width="100%" height="100%" minWidth={200} minHeight={220} debounce={100}>
-						<BarChart data={data} margin={{ top: 10, right: 10, left: 2, bottom: 10 }}>
-							<CartesianGrid strokeDasharray="3 3" />
-							<XAxis dataKey="name" />
-							<YAxis allowDecimals={false} />
-							<Tooltip content={
+			<div ref={containerRef} style={{ width: '100%', height: 240, minWidth: 200, minHeight: 220 }}>
+				{size && hasData ? (
+					<BarChart width={size.width} height={size.height} data={data} margin={{ top: 22, right: 10, left: 2, bottom: 10 }}>
+						<CartesianGrid strokeDasharray="3 3" />
+						<XAxis dataKey="name" />
+						<YAxis allowDecimals={false} />
+						<Tooltip content={
 							<ChartTooltip>
 								{(row) => (
 									<>
@@ -55,15 +89,26 @@ export default function RidingBarChart({ riding, ridingTotals }) {
 								)}
 							</ChartTooltip>
 						} />
-							<Bar dataKey="votes">
-								{data.map((row) => (
-									<Cell key={row.party} fill={getPartyColor(row.party)} />
-								))}
-							</Bar>
-						</BarChart>
-					</ResponsiveContainer>
-				</div>
-			)}
+						<Bar dataKey="votes">
+							{data.map((row) => (
+								<Cell key={row.party} fill={getPartyColor(row.party)} />
+							))}
+							<LabelList dataKey="voteShare" position="top" formatter={(value) => `${value}%`} />
+						</Bar>
+					</BarChart>
+				) : (
+					<div
+						style={{
+							width: '100%',
+							height: '100%',
+							display: 'grid',
+							placeItems: 'center'
+						}}
+					>
+						<p className="muted">No virtual votes recorded for this riding yet.</p>
+					</div>
+				)}
+			</div>
 		</div>
 	);
 }
