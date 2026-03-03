@@ -37,8 +37,8 @@ export default function RidingBarChart({ riding, ridingTotals }) {
 			{!ridingTotals || data.length === 0 ? (
 				<p className="muted">No virtual votes recorded for this riding yet.</p>
 			) : (
-				<div style={{ width: '100%', height: 240, minHeight: 220 }}>
-					<ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={220}>
+			<div style={{ width: '100%', height: 240, minWidth: 200, minHeight: 220 }}>
+				<ResponsiveContainer width="100%" height="100%" minWidth={200} minHeight={220} debounce={100}>
 						<BarChart data={data} margin={{ top: 10, right: 10, left: 2, bottom: 10 }}>
 							<CartesianGrid strokeDasharray="3 3" />
 							<XAxis dataKey="name" />
