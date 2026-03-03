@@ -6,7 +6,7 @@ export default function Home() {
 	return (
 		<main className={styles.page}>
 			<section className={styles.hero}>
-				<p className={styles.kicker}>Who will you vote for if you live in ...?</p>
+				<p className={styles.kicker}>Which party will you vote for if you live in ...?</p>
 				<h1>Choose an election</h1>
 				<p className={styles.subtitle}>
 					VirtualElection is a multi-country interactive voting sandbox with live district totals,
