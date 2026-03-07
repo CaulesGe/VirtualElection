@@ -52,7 +52,7 @@ export default function Home() {
 							<span className={styles.badge}>Federal</span>
 						</div>
 						<p className={styles.cardSubtitle}>
-							Explore ridings, see live totals, and compare regional breakdowns.
+							Explore all Canadian federal ridings and watch the national map update live as votes shift the race.
 						</p>
 						<span className={styles.cta}>Open Canada election →</span>
 					</Link>
@@ -70,7 +70,7 @@ export default function Home() {
 							<span className={styles.badge}>House & President</span>
 						</div>
 						<p className={styles.cardSubtitle}>
-							Choose House districts or simulate the Electoral College by state.
+							Battle across House districts or flip states in the Electoral College and race to 270 electoral votes.
 						</p>
 						<span className={styles.cta}>Open USA elections →</span>
 					</Link>
@@ -95,7 +95,7 @@ export default function Home() {
 							<span className={styles.badge}>Parliament</span>
 						</div>
 						<p className={styles.cardSubtitle}>
-							Preview UK election support and future constituency-based voting flows.
+							Vote across UK constituencies and watch the race for Parliament unfold in real time.
 						</p>
 						<span className={styles.cta}>Open UK election →</span>
 					</Link>
