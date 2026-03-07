@@ -21,7 +21,41 @@
 
 .barWrap {
 	position: relative;
-	padding-top: 1.15rem;
+	padding-top: 3rem;
+}
+
+.barHeadlineRow {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 1rem;
+	pointer-events: none;
+}
+
+.barHeadline {
+	margin: 0;
+	display: grid;
+	gap: 0.05rem;
+	line-height: 1;
+}
+
+.barHeadlineRight {
+	text-align: right;
+}
+
+.barHeadlineParty {
+	font-size: 1rem;
+	font-weight: 800;
+	letter-spacing: 0.04em;
+}
+
+.barHeadlineValue {
+	font-size: 1.85rem;
+	font-weight: 900;
 }
 
 .bar {
@@ -53,15 +87,15 @@
 
 .threshold {
 	position: absolute;
-	top: 1.2rem;
-	height: calc(100% - 1rem);
+	top: 3.1rem;
+	height: calc(100% - 2.9rem);
 	width: 0;
 	border-left: 2px dashed #111827;
 }
 
 .thresholdLabel {
 	position: absolute;
-	top: -0.1rem;
+	top: 1.9rem;
 	transform: translateX(-50%);
 	font-size: 0.85rem;
 	font-weight: 600;

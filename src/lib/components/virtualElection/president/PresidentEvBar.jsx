@@ -39,6 +39,16 @@ export default function PresidentEvBar({
 				<p className="muted">Tied states are treated as uncalled.</p>
 			</div>
 			<div className={styles.barWrap}>
+				<div className={styles.barHeadlineRow}>
+					<p className={styles.barHeadline} style={{ color: getPartyColor('DEM') }}>
+						<span className={styles.barHeadlineParty}>DEM</span>
+						<span className={styles.barHeadlineValue}>{demEv} EV</span>
+					</p>
+					<p className={`${styles.barHeadline} ${styles.barHeadlineRight}`} style={{ color: getPartyColor('REP') }}>
+						<span className={styles.barHeadlineParty}>REP</span>
+						<span className={styles.barHeadlineValue}>{repEv} EV</span>
+					</p>
+				</div>
 				<div className={styles.threshold} style={{ left: markerLeft }} />
 				<div className={styles.thresholdLabel} style={{ left: markerLeft }}>
 					Need {threshold}
@@ -69,7 +79,6 @@ export default function PresidentEvBar({
 			</div>
 			<div className={styles.partyColumns}>
 				<div className={styles.partyCol} style={{ color: getPartyColor('DEM') }}>
-					<p className={styles.partyEv}>DEM {demEv}</p>
 					<p className={styles.partyPopular}>
 						{demPopularPct.toFixed(1)}% of popular vote
 						<br />({formatVotes(demPopularVotes)} votes)
@@ -85,7 +94,6 @@ export default function PresidentEvBar({
 					</p>
 				</div>
 				<div className={`${styles.partyCol} ${styles.partyColRight}`} style={{ color: getPartyColor('REP') }}>
-					<p className={styles.partyEv}>REP {repEv}</p>
 					<p className={styles.partyPopular}>
 						{repPopularPct.toFixed(1)}% of popular vote
 						<br />({formatVotes(repPopularVotes)} votes)

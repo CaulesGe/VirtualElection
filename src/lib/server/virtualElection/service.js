@@ -8,10 +8,11 @@ import { db } from '@/lib/server/db/client';
 import { getMapMetadataForScope } from '@/lib/server/virtualElection/mapMetadata';
 import { getRidingsForScope } from '@/lib/server/virtualElection/ridings';
 import {
+	canadaRidingResult,
 	electionParties,
 	elections,
 	parties,
-	virtualElectionRidingTotals,
+	usaRidingResult,
 	virtualElectionVotes
 } from '@/lib/server/db/schema';
 
@@ -36,6 +37,8 @@ export function isMissingVirtualElectionTableError(error) {
 		const message = (obj?.message ?? '').toLowerCase();
 		if (
 			(message.includes('relation') && message.includes('does not exist')) ||
+			message.includes('canada_riding_result') ||
+			message.includes('usa_riding_result') ||
 			message.includes('virtual_election_riding_totals') ||
 			message.includes('virtual_election_votes')
 		) {
@@ -61,12 +64,32 @@ function assertVoteWindowOpen() {
 	}
 }
 
+const RIDING_RESULT_TABLES = {
+	ca: {
+		name: 'canada_riding_result',
+		table: canadaRidingResult
+	},
+	us: {
+		name: 'usa_riding_result',
+		table: usaRidingResult
+	}
+};
+
 export function normalizeScope(scope) {
 	return {
 		country: String(scope.country ?? DEFAULT_SCOPE.country).toLowerCase(),
 		district: String(scope.district ?? DEFAULT_SCOPE.district).toLowerCase(),
 		year: Number(scope.year ?? DEFAULT_SCOPE.year)
 	};
+}
+
+function getRidingResultTableConfig(scopeInput) {
+	const scope = normalizeScope(scopeInput);
+	const config = RIDING_RESULT_TABLES[scope.country];
+	if (!config) {
+		throw new VirtualElectionError('INVALID_SCOPE', 'Unsupported result table scope.');
+	}
+	return config;
 }
 
 export function assertAllowedScope(scopeInput) {
@@ -160,6 +183,9 @@ export async function castOrUpdateVote(input) {
 	assertValidRidingId(input.ridingId);
 
 	const scope = assertAllowedScope(input);
+	const ridingResultTable = getRidingResultTableConfig(scope);
+	const ridingResultTableSql = sql.raw(`"${ridingResultTable.name}"`);
+	const ridingResultVotesSql = sql.raw(`"${ridingResultTable.name}".votes`);
 	await assertValidParty(input.party, scope);
 	await assertValidRidingForScope(input.ridingId, scope);
 
@@ -201,7 +227,7 @@ export async function castOrUpdateVote(input) {
 				LEFT JOIN previous_vote pv ON true
 			),
 			decrement_totals AS (
-				UPDATE virtual_election_riding_totals t
+				UPDATE ${ridingResultTableSql} t
 				SET votes = GREATEST(t.votes - 1, 0),
 					updated_at = now()
 				FROM change_flags cf
@@ -209,18 +235,17 @@ export async function castOrUpdateVote(input) {
 				  AND NOT cf.is_unchanged
 				  AND t.riding_id = cf.prev_riding_id
 				  AND t.party = cf.prev_party
-				  AND t.country = ${scope.country}
 				  AND t.district = ${scope.district}
 				  AND t.year = ${scope.year}
 			),
 			increment_totals AS (
-				INSERT INTO virtual_election_riding_totals (riding_id, party, country, district, year, votes)
-				SELECT cf.new_riding_id, cf.new_party, ${scope.country}, ${scope.district}, ${scope.year}, 1
+				INSERT INTO ${ridingResultTableSql} (riding_id, party, district, year, votes)
+				SELECT cf.new_riding_id, cf.new_party, ${scope.district}, ${scope.year}, 1
 				FROM change_flags cf
 				WHERE cf.is_created OR NOT cf.is_unchanged
-				ON CONFLICT (riding_id, party, country, district, year)
+				ON CONFLICT (riding_id, party, district, year)
 				DO UPDATE SET
-					votes = virtual_election_riding_totals.votes + 1,
+					votes = ${ridingResultVotesSql} + 1,
 					updated_at = now()
 			)
 			SELECT
@@ -313,18 +338,18 @@ export async function getElectionOptionsForScope(scopeInput) {
 
 export async function getTotals(scopeInput) {
 	const scope = normalizeScope(scopeInput);
+	const ridingResultTable = getRidingResultTableConfig(scope).table;
 	const rows = await db
 		.select({
-			ridingId: virtualElectionRidingTotals.ridingId,
-			party: virtualElectionRidingTotals.party,
-			votes: virtualElectionRidingTotals.votes
+			ridingId: ridingResultTable.ridingId,
+			party: ridingResultTable.party,
+			votes: ridingResultTable.votes
 		})
-		.from(virtualElectionRidingTotals)
+		.from(ridingResultTable)
 		.where(
 			and(
-				eq(virtualElectionRidingTotals.country, scope.country),
-				eq(virtualElectionRidingTotals.district, scope.district),
-				eq(virtualElectionRidingTotals.year, scope.year)
+				eq(ridingResultTable.district, scope.district),
+				eq(ridingResultTable.year, scope.year)
 			)
 		);
 

@@ -109,12 +109,11 @@ export const virtualElectionVotes = pgTable(
 	]
 );
 
-export const virtualElectionRidingTotals = pgTable(
-	'virtual_election_riding_totals',
+export const canadaRidingResult = pgTable(
+	'canada_riding_result',
 	{
 		ridingId: text('riding_id').notNull(),
 		party: text('party').notNull(),
-		country: text('country').notNull(),
 		district: text('district').notNull(),
 		year: integer('year').notNull(),
 		votes: integer('votes').notNull().default(0),
@@ -122,9 +121,28 @@ export const virtualElectionRidingTotals = pgTable(
 	},
 	(table) => [
 		primaryKey({
-			name: 'virtual_election_riding_totals_pk',
-			columns: [table.ridingId, table.party, table.country, table.district, table.year]
+			name: 'canada_riding_result_pk',
+			columns: [table.ridingId, table.party, table.district, table.year]
 		}),
-		index('virtual_election_riding_totals_scope_idx').on(table.country, table.district, table.year)
+		index('canada_riding_result_scope_idx').on(table.district, table.year)
+	]
+);
+
+export const usaRidingResult = pgTable(
+	'usa_riding_result',
+	{
+		ridingId: text('riding_id').notNull(),
+		party: text('party').notNull(),
+		district: text('district').notNull(),
+		year: integer('year').notNull(),
+		votes: integer('votes').notNull().default(0),
+		updatedAt: timestamp('updated_at').defaultNow().notNull()
+	},
+	(table) => [
+		primaryKey({
+			name: 'usa_riding_result_pk',
+			columns: [table.ridingId, table.party, table.district, table.year]
+		}),
+		index('usa_riding_result_scope_idx').on(table.district, table.year)
 	]
 );

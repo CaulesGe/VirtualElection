@@ -6,7 +6,7 @@ Standalone extraction of Poliwave Virtual Election into React + JavaScript + Nex
 
 - Authenticated one-vote-per-user virtual election flow
 - API routes: `vote`, `totals`, `me`, `ridings`
-- Atomic PostgreSQL aggregate updates (pre-aggregated totals table)
+- Atomic PostgreSQL aggregate updates (pre-aggregated country result tables)
 - Regional breakdown charts and 15s refresh polling
 - Security checks: origin check, rate limit, optional CAPTCHA
 
@@ -97,7 +97,8 @@ This seeds:
 This creates:
 
 - `virtual_election_votes`
-- `virtual_election_riding_totals`
+- `canada_riding_result`
+- `usa_riding_result`
 - `elections`
 - `parties`
 - `election_parties`
@@ -108,14 +109,16 @@ Run in Neon SQL editor:
 
 ```sql
 select * from virtual_election_votes limit 5;
-select * from virtual_election_riding_totals limit 5;
+select * from canada_riding_result limit 5;
+select * from usa_riding_result limit 5;
 ```
 
 ### 5) (Optional) clear virtual election data
 
 ```sql
 truncate table virtual_election_votes restart identity;
-truncate table virtual_election_riding_totals;
+truncate table canada_riding_result;
+truncate table usa_riding_result;
 ```
 
 ---
@@ -140,10 +143,41 @@ flowchart LR
   ridingsService --> postgresDb
 ```
 
+## Google OAuth workflow
+
+This project uses Auth.js/NextAuth with Google as the provider.  
+The sign-in button is rendered on the client, while session validation is enforced in server routes before vote operations.
+
+```mermaid
+flowchart TD
+  user[UserInBrowser] --> loginControl["LoginControl.jsx Sign in with Google"]
+  loginControl --> signInRoute["GET /api/auth/signin?callbackUrl=..."]
+  signInRoute --> googleOAuth[GoogleOAuthConsent]
+  googleOAuth --> callbackRoute["/api/auth/callback/google"]
+  callbackRoute --> nextAuthHandler["src/app/api/auth/[...nextauth]/route.js"]
+  nextAuthHandler --> authConfig["src/lib/auth.js GoogleProvider clientId/clientSecret"]
+  authConfig --> sessionIssued[SessionJWTCookieIssued]
+  sessionIssued --> callbackPage[ReturnToCallbackUrlPage]
+  callbackPage --> voteApi["POST /api/virtual-election/vote"]
+  voteApi --> sessionCheck["getServerAuthSession()"]
+  sessionCheck --> identity["getUserIdFromSession() email-first"]
+  identity --> voteService["castOrUpdateVote()"]
+  voteService --> db[(NeonPostgres)]
+```
+
+### File-level mapping
+
+1. Client sign-in link: `src/lib/components/virtualElection/LoginControl.jsx`
+2. Auth route handler: `src/app/api/auth/[...nextauth]/route.js`
+3. Google provider config: `src/lib/auth.js`
+4. Session enforcement in vote API: `src/app/api/virtual-election/vote/route.js`
+5. User identity normalization: `src/lib/server/virtualElection/identity.js`
+
 ## Data model
 
 - `virtual_election_votes`: canonical user vote row (`user_id + scope` unique)
-- `virtual_election_riding_totals`: pre-aggregated counters per riding/party/scope
+- `canada_riding_result`: pre-aggregated counters for Canada ridings by party/scope
+- `usa_riding_result`: pre-aggregated counters for USA districts/states by party/scope
 - USA district IDs use canonical keys: `us-fed-2025-<STATEFP>-<DISTRICT_OR_AL>`
 - USA presidential state IDs use canonical keys: `US-PRES-2025-<FIPS>`
 
