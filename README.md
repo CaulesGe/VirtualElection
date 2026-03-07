@@ -97,8 +97,8 @@ This seeds:
 This creates:
 
 - `virtual_election_votes`
-- `canada_riding_result`
-- `usa_riding_result`
+- `RidingResults.canada_riding_result`
+- `RidingResults.usa_riding_result`
 - `elections`
 - `parties`
 - `election_parties`
@@ -109,16 +109,16 @@ Run in Neon SQL editor:
 
 ```sql
 select * from virtual_election_votes limit 5;
-select * from canada_riding_result limit 5;
-select * from usa_riding_result limit 5;
+select * from "RidingResults".canada_riding_result limit 5;
+select * from "RidingResults".usa_riding_result limit 5;
 ```
 
 ### 5) (Optional) clear virtual election data
 
 ```sql
 truncate table virtual_election_votes restart identity;
-truncate table canada_riding_result;
-truncate table usa_riding_result;
+truncate table "RidingResults".canada_riding_result;
+truncate table "RidingResults".usa_riding_result;
 ```
 
 ---
@@ -176,8 +176,8 @@ flowchart TD
 ## Data model
 
 - `virtual_election_votes`: canonical user vote row (`user_id + scope` unique)
-- `canada_riding_result`: pre-aggregated counters for Canada ridings by party/scope
-- `usa_riding_result`: pre-aggregated counters for USA districts/states by party/scope
+- `RidingResults.canada_riding_result`: pre-aggregated counters for Canada ridings by party/scope
+- `RidingResults.usa_riding_result`: pre-aggregated counters for USA districts/states by party/scope
 - USA district IDs use canonical keys: `us-fed-2025-<STATEFP>-<DISTRICT_OR_AL>`
 - USA presidential state IDs use canonical keys: `US-PRES-2025-<FIPS>`
 

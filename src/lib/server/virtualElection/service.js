@@ -8,11 +8,9 @@ import { db } from '@/lib/server/db/client';
 import { getMapMetadataForScope } from '@/lib/server/virtualElection/mapMetadata';
 import { getRidingsForScope } from '@/lib/server/virtualElection/ridings';
 import {
-	canadaRidingResult,
 	electionParties,
 	elections,
 	parties,
-	usaRidingResult,
 	virtualElectionVotes
 } from '@/lib/server/db/schema';
 
@@ -66,12 +64,10 @@ function assertVoteWindowOpen() {
 
 const RIDING_RESULT_TABLES = {
 	ca: {
-		name: 'canada_riding_result',
-		table: canadaRidingResult
+		name: 'RidingResults.canada_riding_result'
 	},
 	us: {
-		name: 'usa_riding_result',
-		table: usaRidingResult
+		name: 'RidingResults.usa_riding_result'
 	}
 };
 
@@ -184,8 +180,9 @@ export async function castOrUpdateVote(input) {
 
 	const scope = assertAllowedScope(input);
 	const ridingResultTable = getRidingResultTableConfig(scope);
-	const ridingResultTableSql = sql.raw(`"${ridingResultTable.name}"`);
-	const ridingResultVotesSql = sql.raw(`"${ridingResultTable.name}".votes`);
+	const [schemaName, tableName] = ridingResultTable.name.split('.');
+	const ridingResultTableSql = sql.raw(`"${schemaName}"."${tableName}"`);
+	const ridingResultVotesSql = sql.raw(`"${schemaName}"."${tableName}".votes`);
 	await assertValidParty(input.party, scope);
 	await assertValidRidingForScope(input.ridingId, scope);
 
@@ -338,20 +335,15 @@ export async function getElectionOptionsForScope(scopeInput) {
 
 export async function getTotals(scopeInput) {
 	const scope = normalizeScope(scopeInput);
-	const ridingResultTable = getRidingResultTableConfig(scope).table;
-	const rows = await db
-		.select({
-			ridingId: ridingResultTable.ridingId,
-			party: ridingResultTable.party,
-			votes: ridingResultTable.votes
-		})
-		.from(ridingResultTable)
-		.where(
-			and(
-				eq(ridingResultTable.district, scope.district),
-				eq(ridingResultTable.year, scope.year)
-			)
-		);
+	const ridingResultTable = getRidingResultTableConfig(scope);
+	const [schemaName, tableName] = ridingResultTable.name.split('.');
+	const execution = await db.execute(sql`
+		SELECT riding_id, party, votes
+		FROM ${sql.raw(`"${schemaName}"."${tableName}"`)}
+		WHERE district = ${scope.district}
+		  AND year = ${scope.year}
+	`);
+	const rows = execution?.rows ?? [];
 
 	const ridingMap = new Map();
 	for (const row of rows) {

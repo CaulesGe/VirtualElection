@@ -10,9 +10,9 @@ const sql = neon(dbUrl);
 
 await sql`BEGIN`;
 try {
-	await sql`TRUNCATE TABLE canada_riding_result, usa_riding_result`;
+	await sql`TRUNCATE TABLE "RidingResults".canada_riding_result, "RidingResults".usa_riding_result`;
 	await sql`
-		INSERT INTO canada_riding_result (
+		INSERT INTO "RidingResults".canada_riding_result (
 			riding_id,
 			party,
 			district,
@@ -32,7 +32,7 @@ try {
 		GROUP BY riding_id, party, country, district, year
 	`;
 	await sql`
-		INSERT INTO usa_riding_result (
+		INSERT INTO "RidingResults".usa_riding_result (
 			riding_id,
 			party,
 			district,
@@ -59,15 +59,15 @@ try {
 
 const [{ vote_count }] = await sql`SELECT COUNT(*)::int AS vote_count FROM virtual_election_votes`;
 const [{ canada_total_rows }] = await sql`
-	SELECT COUNT(*)::int AS canada_total_rows FROM canada_riding_result
+	SELECT COUNT(*)::int AS canada_total_rows FROM "RidingResults".canada_riding_result
 `;
 const [{ usa_total_rows }] = await sql`
-	SELECT COUNT(*)::int AS usa_total_rows FROM usa_riding_result
+	SELECT COUNT(*)::int AS usa_total_rows FROM "RidingResults".usa_riding_result
 `;
 const [{ total_votes }] = await sql`
 	SELECT (
-		COALESCE((SELECT SUM(votes) FROM canada_riding_result), 0) +
-		COALESCE((SELECT SUM(votes) FROM usa_riding_result), 0)
+		COALESCE((SELECT SUM(votes) FROM "RidingResults".canada_riding_result), 0) +
+		COALESCE((SELECT SUM(votes) FROM "RidingResults".usa_riding_result), 0)
 	)::int AS total_votes
 `;
 

@@ -1,6 +1,7 @@
 import {
 	integer,
 	index,
+	pgSchema,
 	pgTable,
 	primaryKey,
 	serial,
@@ -8,6 +9,8 @@ import {
 	timestamp,
 	uniqueIndex
 } from 'drizzle-orm/pg-core';
+
+const ridingResultsSchema = pgSchema('RidingResults');
 
 export const countries = pgTable('countries', {
 	id: serial('id').primaryKey(),
@@ -109,7 +112,7 @@ export const virtualElectionVotes = pgTable(
 	]
 );
 
-export const canadaRidingResult = pgTable(
+export const canadaRidingResult = ridingResultsSchema.table(
 	'canada_riding_result',
 	{
 		ridingId: text('riding_id').notNull(),
@@ -128,7 +131,7 @@ export const canadaRidingResult = pgTable(
 	]
 );
 
-export const usaRidingResult = pgTable(
+export const usaRidingResult = ridingResultsSchema.table(
 	'usa_riding_result',
 	{
 		ridingId: text('riding_id').notNull(),
