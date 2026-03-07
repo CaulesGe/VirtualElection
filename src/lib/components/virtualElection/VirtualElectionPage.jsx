@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { VIRTUAL_ELECTION_ALLOWED_SCOPES } from '@/lib/config/virtualElection';
 import LoginControl from '@/lib/components/virtualElection/LoginControl';
 import MapController from '@/lib/components/virtualElection/MapComponent/MapController';
+import RidingResultTable from '@/lib/components/virtualElection/MapComponent/RidingResultTable';
 import { getPartyColor, getPartyShortName } from '@/lib/components/virtualElection/partyMeta';
 import useElectionState from '@/lib/components/virtualElection/useElectionState';
 import styles from './VirtualElectionPage.module.css';
@@ -55,6 +56,7 @@ export default function VirtualElectionPage({
 			if (district === 'fed') return 'USA - House of Representatives';
 			return 'USA';
 		}
+		if (code === 'UK') return 'United Kingdom';
 		if (code === 'CA') return 'Canada';
 		return code || 'Virtual Election';
 	}, [activeMapMetadata?.countryCode, scope?.country, scope?.district]);
@@ -126,37 +128,11 @@ export default function VirtualElectionPage({
 						onSubmitVote={submitVote}
 					/>
 
-					<section className={styles.totalsCard}>
-						<h3>Selected Riding Live Totals</h3>
-						<div className={styles.totalsCardBody}>
-							{!selectedRiding ? (
-								<p className="muted">Select a riding to view totals.</p>
-							) : (
-								<>
-									<p className="muted">
-										{selectedRidingTotals ? (
-											<>
-												Leader: <strong>{selectedRidingTotals.leader}</strong> (
-												{(selectedRidingTotals.intensity * 100).toFixed(1)}%)
-											</>
-										) : (
-											'No votes recorded for this riding yet.'
-										)}
-									</p>
-									<div className={styles.partyTotals}>
-										{allowedParties.map((party) => (
-											<div className={styles.totalsRow} key={party}>
-												<span style={{ color: getPartyColor(party), fontWeight: 600 }}>
-													{getPartyShortName(party)}
-												</span>
-												<strong>{selectedRidingTotals?.totals?.[party] ?? 0}</strong>
-											</div>
-										))}
-									</div>
-								</>
-							)}
-						</div>
-					</section>
+					<RidingResultTable
+						selectedRiding={selectedRiding}
+						selectedRidingTotals={selectedRidingTotals}
+						allowedParties={allowedParties}
+					/>
 
 					<section className={styles.totalsCard}>
 						<h3>Map Legend</h3>

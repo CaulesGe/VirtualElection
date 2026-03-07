@@ -10,7 +10,7 @@ const sql = neon(dbUrl);
 
 await sql`BEGIN`;
 try {
-	await sql`TRUNCATE TABLE "RidingResults".canada_riding_result, "RidingResults".usa_riding_result`;
+	await sql`TRUNCATE TABLE "RidingResults".canada_riding_result, "RidingResults".usa_riding_result, "RidingResults".uk_riding_result`;
 	await sql`
 		INSERT INTO "RidingResults".canada_riding_result (
 			riding_id,
@@ -51,6 +51,26 @@ try {
 		WHERE lower(country) = 'us'
 		GROUP BY riding_id, party, country, district, year
 	`;
+	await sql`
+		INSERT INTO "RidingResults".uk_riding_result (
+			riding_id,
+			party,
+			district,
+			year,
+			votes,
+			updated_at
+		)
+		SELECT
+			riding_id,
+			party,
+			district,
+			year,
+			COUNT(*)::int AS votes,
+			now() AS updated_at
+		FROM virtual_election_votes
+		WHERE lower(country) = 'uk'
+		GROUP BY riding_id, party, country, district, year
+	`;
 	await sql`COMMIT`;
 } catch (error) {
 	await sql`ROLLBACK`;
@@ -64,14 +84,19 @@ const [{ canada_total_rows }] = await sql`
 const [{ usa_total_rows }] = await sql`
 	SELECT COUNT(*)::int AS usa_total_rows FROM "RidingResults".usa_riding_result
 `;
+const [{ uk_total_rows }] = await sql`
+	SELECT COUNT(*)::int AS uk_total_rows FROM "RidingResults".uk_riding_result
+`;
 const [{ total_votes }] = await sql`
 	SELECT (
 		COALESCE((SELECT SUM(votes) FROM "RidingResults".canada_riding_result), 0) +
-		COALESCE((SELECT SUM(votes) FROM "RidingResults".usa_riding_result), 0)
+		COALESCE((SELECT SUM(votes) FROM "RidingResults".usa_riding_result), 0) +
+		COALESCE((SELECT SUM(votes) FROM "RidingResults".uk_riding_result), 0)
 	)::int AS total_votes
 `;
 
 console.log(`Votes rows: ${vote_count}`);
 console.log(`Canada totals rows: ${canada_total_rows}`);
 console.log(`USA totals rows: ${usa_total_rows}`);
+console.log(`UK totals rows: ${uk_total_rows}`);
 console.log(`Summed votes in totals: ${total_votes}`);

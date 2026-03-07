@@ -36,6 +36,13 @@
 			"when": 1760000002000,
 			"tag": "0004_split_riding_results_by_country",
 			"breakpoints": true
+		},
+		{
+			"idx": 5,
+			"version": "7",
+			"when": 1760000003000,
+			"tag": "0005_add_uk_riding_result",
+			"breakpoints": true
 		}
 	]
 }

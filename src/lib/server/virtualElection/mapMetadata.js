@@ -23,6 +23,15 @@ export function getMapMetadataForScope(scope) {
 		};
 	}
 
+	if (countryCode === 'UK') {
+		return {
+			countryCode: 'UK',
+			mapVersion: `uk-${year}`,
+			mode: 'house',
+			regionKey: 'constituency'
+		};
+	}
+
 	return {
 		countryCode,
 		mapVersion: year,

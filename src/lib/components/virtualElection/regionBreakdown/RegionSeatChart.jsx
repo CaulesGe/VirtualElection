@@ -25,7 +25,7 @@ export default function RegionSeatChart({ seatSeries, mode = 'bar' }) {
 			seats
 		}))
 		.sort((a, b) => b.seats - a.seats);
-	const totalSeats = data.reduce((sum, row) => sum + row.seats, 0);
+	const totalSeats = Number(seatSeries?.Total ?? data.reduce((sum, row) => sum + row.seats, 0));
 	const majoritySeats = totalSeats > 0 ? Math.floor(totalSeats / 2) + 1 : 0;
 
 	if (mode === 'pie') {

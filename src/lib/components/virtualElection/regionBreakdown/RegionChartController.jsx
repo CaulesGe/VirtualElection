@@ -43,15 +43,29 @@ export default function RegionChartController({
 		});
 	}, [effectiveSelectedRegion, totals, ridingById, profile, regionOptions]);
 
+	const filteredRidingsByRegion = useMemo(() => {
+		if (effectiveSelectedRegion === 'Total') return ridingResults;
+		const selected = regionOptions.find((option) => option.value === effectiveSelectedRegion);
+		if (!selected) return ridingResults;
+		const selectedCodes = new Set(
+			selected.codes.map((code) => profile.toCanonicalRegionCode(code))
+		);
+		return (ridingResults ?? []).filter((riding) => {
+			const resolved = profile.resolveRegionCode({ riding, row: null });
+			const subnational = profile.toCanonicalRegionCode(resolved);
+			return selectedCodes.has(subnational);
+		});
+	}, [effectiveSelectedRegion, ridingResults, profile, regionOptions]);
+
 	const regionSeatSeries = useMemo(() => {
 		const seatCounts = {};
 		for (const row of filteredTotalsByRegion) {
 			if (!row.leader || (row.totalVotes ?? 0) <= 0) continue;
 			seatCounts[row.leader] = (seatCounts[row.leader] ?? 0) + 1;
 		}
-		const totalSeats = Object.values(seatCounts).reduce((sum, value) => sum + value, 0);
+		const totalSeats = filteredRidingsByRegion.length;
 		return { ...seatCounts, Total: totalSeats };
-	}, [filteredTotalsByRegion]);
+	}, [filteredTotalsByRegion, filteredRidingsByRegion]);
 
 	const regionVoteSeries = useMemo(() => {
 		const byPartyVotes = {};

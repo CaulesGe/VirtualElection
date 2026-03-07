@@ -37,6 +37,7 @@ export function isMissingVirtualElectionTableError(error) {
 			(message.includes('relation') && message.includes('does not exist')) ||
 			message.includes('canada_riding_result') ||
 			message.includes('usa_riding_result') ||
+			message.includes('uk_riding_result') ||
 			message.includes('virtual_election_riding_totals') ||
 			message.includes('virtual_election_votes')
 		) {
@@ -68,6 +69,9 @@ const RIDING_RESULT_TABLES = {
 	},
 	us: {
 		name: 'RidingResults.usa_riding_result'
+	},
+	uk: {
+		name: 'RidingResults.uk_riding_result'
 	}
 };
 

@@ -1,8 +1,10 @@
 import { canadaRegionProfile } from './canada';
+import { ukRegionProfile } from './uk';
 import { usaRegionProfile } from './usa';
 
 const PROFILE_REGISTRY = {
 	CA: canadaRegionProfile,
+	UK: ukRegionProfile,
 	US: usaRegionProfile
 };
 

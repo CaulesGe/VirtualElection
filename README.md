@@ -99,6 +99,7 @@ This creates:
 - `virtual_election_votes`
 - `RidingResults.canada_riding_result`
 - `RidingResults.usa_riding_result`
+- `RidingResults.uk_riding_result`
 - `elections`
 - `parties`
 - `election_parties`
@@ -111,6 +112,7 @@ Run in Neon SQL editor:
 select * from virtual_election_votes limit 5;
 select * from "RidingResults".canada_riding_result limit 5;
 select * from "RidingResults".usa_riding_result limit 5;
+select * from "RidingResults".uk_riding_result limit 5;
 ```
 
 ### 5) (Optional) clear virtual election data
@@ -119,6 +121,7 @@ select * from "RidingResults".usa_riding_result limit 5;
 truncate table virtual_election_votes restart identity;
 truncate table "RidingResults".canada_riding_result;
 truncate table "RidingResults".usa_riding_result;
+truncate table "RidingResults".uk_riding_result;
 ```
 
 ---
@@ -217,6 +220,7 @@ flowchart TD
 - `virtual_election_votes`: canonical user vote row (`user_id + scope` unique)
 - `RidingResults.canada_riding_result`: pre-aggregated counters for Canada ridings by party/scope
 - `RidingResults.usa_riding_result`: pre-aggregated counters for USA districts/states by party/scope
+- `RidingResults.uk_riding_result`: pre-aggregated counters for UK constituencies by party/scope
 - USA district IDs use canonical keys: `us-fed-2025-<STATEFP>-<DISTRICT_OR_AL>`
 - USA presidential state IDs use canonical keys: `US-PRES-2025-<FIPS>`
 
@@ -297,6 +301,7 @@ Current routes:
 - `/usa` USA election selector
 - `/usa/houseOfRepresentatives` USA House virtual election (`us/fed/2025`)
 - `/usa/president` USA presidential virtual election (`us/pres/2025`)
+- `/uk` UK parliament virtual election (`uk/fed/2025`)
 
 Note: USA map currently uses direct AK/HI placement (insets can be added later).
 Error semantics are aligned with prior implementation:

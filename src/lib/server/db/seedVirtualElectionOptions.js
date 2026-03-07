@@ -1,5 +1,7 @@
 import 'dotenv/config';
 import { and, eq } from 'drizzle-orm';
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
 import { feature } from 'topojson-client';
 import statesTopology from 'us-atlas/states-10m.json' with { type: 'json' };
 import {
@@ -68,6 +70,30 @@ function getUsPresidentDistrictRows(scope) {
 		}));
 }
 
+async function getUkDistrictRows() {
+	const assetPath = path.join(process.cwd(), 'static', 'ridingMaps', 'UK.json');
+	const raw = await readFile(assetPath, 'utf8');
+	const topology = JSON.parse(raw);
+	const objectName = Object.keys(topology?.objects ?? {})[0];
+	if (!objectName) return [];
+
+	const collection = feature(topology, topology.objects[objectName]);
+	const features = Array.isArray(collection?.features) ? collection.features : [];
+	return features
+		.map((item) => ({
+			districtKey: item?.properties?.GSScode ?? item?.properties?.['3CODE'],
+			name: item?.properties?.Name,
+			subnationalCode: item?.properties?.CTR_REG ?? item?.properties?.Country
+		}))
+		.filter((row) => row.districtKey)
+		.map((row, index) => ({
+			districtKey: String(row.districtKey),
+			name: row.name ? String(row.name) : String(row.districtKey),
+			subnationalCode: row.subnationalCode ? String(row.subnationalCode) : '',
+			sortOrder: index
+		}));
+}
+
 async function seed() {
 	const partyEntries = Object.entries(FEDERAL_PARTIES).map(([id, meta]) => ({
 		id,
@@ -97,6 +123,21 @@ async function seed() {
 				subnationalCode: row.subnationalCode,
 				fips: row.fips,
 				electoralVotes: row.electoralVotes,
+				sortOrder: row.sortOrder
+			}));
+			if (rows.length > 0) {
+				await db.insert(electionDistricts).values(rows);
+			}
+			continue;
+		}
+
+		if (scope.country === 'uk' && scope.district === 'fed') {
+			await db.delete(electionDistricts).where(eq(electionDistricts.electionId, electionId));
+			const rows = (await getUkDistrictRows()).map((row) => ({
+				electionId,
+				districtKey: row.districtKey,
+				name: row.name,
+				subnationalCode: row.subnationalCode,
 				sortOrder: row.sortOrder
 			}));
 			if (rows.length > 0) {

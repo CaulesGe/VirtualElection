@@ -7,12 +7,14 @@ import styles from './Header.module.css';
 function getCountryNameFromPath(pathname) {
 	if (pathname?.startsWith('/usa')) return 'USA';
 	if (pathname?.startsWith('/canada')) return 'Canada';
+	if (pathname?.startsWith('/uk')) return 'United Kingdom';
 	return '...';
 }
 
 function getCountryRouteFromPath(pathname) {
 	if (pathname?.startsWith('/canada')) return '/canada';
 	if (pathname?.startsWith('/usa')) return '/usa/president';
+	if (pathname?.startsWith('/uk')) return '/uk';
 	return '/canada';
 }
 
@@ -61,6 +63,7 @@ export default function Header({ isAuthenticated = false, userLabel = '' }) {
 					>
 						<option value="/canada">Canada</option>
 						<option value="/usa/president">USA</option>
+						<option value="/uk">United Kingdom</option>
 					</select>
 				</div>
 				<div className={styles.userSlot}>

@@ -149,3 +149,22 @@ export const usaRidingResult = ridingResultsSchema.table(
 		index('usa_riding_result_scope_idx').on(table.district, table.year)
 	]
 );
+
+export const ukRidingResult = ridingResultsSchema.table(
+	'uk_riding_result',
+	{
+		ridingId: text('riding_id').notNull(),
+		party: text('party').notNull(),
+		district: text('district').notNull(),
+		year: integer('year').notNull(),
+		votes: integer('votes').notNull().default(0),
+		updatedAt: timestamp('updated_at').defaultNow().notNull()
+	},
+	(table) => [
+		primaryKey({
+			name: 'uk_riding_result_pk',
+			columns: [table.ridingId, table.party, table.district, table.year]
+		}),
+		index('uk_riding_result_scope_idx').on(table.district, table.year)
+	]
+);

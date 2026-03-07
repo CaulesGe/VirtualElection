@@ -1,13 +1,36 @@
 export const VIRTUAL_ELECTION_ALLOWED_PARTIES = ['LPC', 'CPC', 'GPC', 'PPC', 'BQ', 'NDP', 'OTH'];
 export const VIRTUAL_ELECTION_ALLOWED_PARTIES_US = ['DEM', 'REP', 'IND'];
+export const VIRTUAL_ELECTION_ALLOWED_PARTIES_UK = [
+	'Labour Party',
+	'Conservative Party',
+	'Liberal Democrats',
+	'Scottish National Party',
+	'Sinn Féin',
+	'Independent',
+	'Reform UK',
+	'Democratic Unionist Party',
+	'Green Party of England and Wales',
+	'Plaid Cymru',
+	'Social Democratic and Labour Party',
+	'Alliance Party of Northern Ireland',
+	'Ulster Unionist Party',
+	'Traditional Unionist Voice',
+	'Restore Britain'
+];
 export const VIRTUAL_ELECTION_ALLOWED_PARTIES_BY_COUNTRY = {
 	CA: VIRTUAL_ELECTION_ALLOWED_PARTIES,
-	US: VIRTUAL_ELECTION_ALLOWED_PARTIES_US
+	US: VIRTUAL_ELECTION_ALLOWED_PARTIES_US,
+	UK: VIRTUAL_ELECTION_ALLOWED_PARTIES_UK
 };
 
 export const VIRTUAL_ELECTION_ALLOWED_SCOPES = [
 	{
 		country: 'ca',
+		district: 'fed',
+		year: 2025
+	},
+	{
+		country: 'uk',
 		district: 'fed',
 		year: 2025
 	},
@@ -120,6 +143,141 @@ export const FEDERAL_PARTIES = {
 		textColor: 'text-ind',
 		logo: '',
 		colorGradient: ['#B6BDC8', '#9EA6B3', '#8A93A0', '#747D8A', '#5E6672', '#474E59']
+	},
+	'Labour Party': {
+		name: 'Labour Party',
+		shortName: 'Labour',
+		color: '#E4003B',
+		backgroundColor: 'bg-lab',
+		textColor: 'text-lab',
+		logo: '',
+		colorGradient: ['#FF8AA8', '#FF668D', '#F24577', '#E4003B', '#B3002E', '#7A001F']
+	},
+	'Conservative Party': {
+		name: 'Conservative Party',
+		shortName: 'Conservative',
+		color: '#0087DC',
+		backgroundColor: 'bg-con-uk',
+		textColor: 'text-con-uk',
+		logo: '',
+		colorGradient: ['#8FD4FF', '#5CC1FF', '#2AAAF2', '#0087DC', '#006AAE', '#004C7D']
+	},
+	'Liberal Democrats': {
+		name: 'Liberal Democrats',
+		shortName: 'Liberal Democrats',
+		color: '#FDBB30',
+		backgroundColor: 'bg-ld',
+		textColor: 'text-ld',
+		logo: '',
+		colorGradient: ['#FFE09A', '#FFD36F', '#FFC650', '#FDBB30', '#D69518', '#9F6D0B']
+	},
+	'Scottish National Party': {
+		name: 'Scottish National Party',
+		shortName: 'Scottish National',
+		color: '#FFF95D',
+		backgroundColor: 'bg-snp',
+		textColor: 'text-snp',
+		logo: '',
+		colorGradient: ['#FFFDA6', '#FFF98A', '#FFF56E', '#FFF95D', '#E4D84A', '#B5A82F']
+	},
+	'Sinn Féin': {
+		name: 'Sinn Féin',
+		shortName: 'Sinn Féin',
+		color: '#326760',
+		backgroundColor: 'bg-sf',
+		textColor: 'text-sf',
+		logo: '',
+		colorGradient: ['#7EA9A3', '#5E9088', '#4A7F76', '#326760', '#234C46', '#15312D']
+	},
+	Independent: {
+		name: 'Independent',
+		shortName: 'Independent',
+		color: '#6B7280',
+		backgroundColor: 'bg-ind-uk',
+		textColor: 'text-ind-uk',
+		logo: '',
+		colorGradient: ['#B6BDC8', '#9EA6B3', '#8A93A0', '#747D8A', '#5E6672', '#474E59']
+	},
+	'Reform UK': {
+		name: 'Reform UK',
+		shortName: 'Reform UK',
+		color: '#12B6CF',
+		backgroundColor: 'bg-ref',
+		textColor: 'text-ref',
+		logo: '',
+		colorGradient: ['#8BE6F2', '#5DD7EA', '#37CADF', '#12B6CF', '#0E8EA2', '#096875']
+	},
+	'Democratic Unionist Party': {
+		name: 'Democratic Unionist Party',
+		shortName: 'Democratic Unionist',
+		color: '#D46A00',
+		backgroundColor: 'bg-dup',
+		textColor: 'text-dup',
+		logo: '',
+		colorGradient: ['#F5B77A', '#ED9B52', '#E4832C', '#D46A00', '#A65300', '#783B00']
+	},
+	'Green Party of England and Wales': {
+		name: 'Green Party of England and Wales',
+		shortName: 'Green Party of England and Wales',
+		color: '#6AB023',
+		backgroundColor: 'bg-grn-uk',
+		textColor: 'text-grn-uk',
+		logo: '',
+		colorGradient: ['#A8D981', '#8CC85A', '#7ABD3E', '#6AB023', '#4F8617', '#365D0E']
+	},
+	'Plaid Cymru': {
+		name: 'Plaid Cymru',
+		shortName: 'Plaid Cymru',
+		color: '#008142',
+		backgroundColor: 'bg-pc',
+		textColor: 'text-pc',
+		logo: '',
+		colorGradient: ['#77C89D', '#4FB57F', '#2EA566', '#008142', '#006334', '#004626']
+	},
+	'Social Democratic and Labour Party': {
+		name: 'Social Democratic and Labour Party',
+		shortName: 'Social Democratic and Labour',
+		color: '#3CB371',
+		backgroundColor: 'bg-sdlp',
+		textColor: 'text-sdlp',
+		logo: '',
+		colorGradient: ['#96D8B0', '#73CB97', '#57C182', '#3CB371', '#2E8A56', '#20603B']
+	},
+	'Alliance Party of Northern Ireland': {
+		name: 'Alliance Party of Northern Ireland',
+		shortName: 'Alliance of Northern Ireland',
+		color: '#F6C100',
+		backgroundColor: 'bg-apni',
+		textColor: 'text-apni',
+		logo: '',
+		colorGradient: ['#FFE38C', '#FFD95E', '#FFD133', '#F6C100', '#C79C00', '#927200']
+	},
+	'Ulster Unionist Party': {
+		name: 'Ulster Unionist Party',
+		shortName: 'Ulster Unionist',
+		color: '#2B4EA2',
+		backgroundColor: 'bg-uup',
+		textColor: 'text-uup',
+		logo: '',
+		colorGradient: ['#91A6D8', '#6F88CB', '#5573BE', '#2B4EA2', '#1F3A7A', '#14284F']
+	},
+	'Traditional Unionist Voice': {
+		name: 'Traditional Unionist Voice',
+		shortName: 'Traditional Unionist Voice',
+		color: '#0D5BA6',
+		backgroundColor: 'bg-tuv',
+		textColor: 'text-tuv',
+		logo: '',
+		colorGradient: ['#7FAED8', '#5996CA', '#3A80BD', '#0D5BA6', '#09457F', '#053058']
+	},
+	'Restore Britain': {
+		name: 'Restore Britain',
+		shortName: 'Restore Britain',
+		color: '#9B1C31',
+		backgroundColor: 'bg-rb',
+		textColor: 'text-rb',
+		logo: '',
+		colorGradient: ['#D58A98', '#C96579', '#B9475F', '#9B1C31', '#771524', '#520D18']
 	}
 };
 

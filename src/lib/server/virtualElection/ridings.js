@@ -13,6 +13,24 @@ import {
 import { getUsRidingsForScope } from '@/lib/server/virtualElection/usRidings';
 
 let canadaMapRidingsPromise = null;
+let ukMapRidingsPromise = null;
+
+function dedupeRidingsByCode(rows) {
+	const byCode = new Map();
+	for (const row of rows ?? []) {
+		const code = String(row?.code ?? '').trim();
+		if (!code) continue;
+		if (!byCode.has(code)) {
+			byCode.set(code, {
+				code,
+				name: row?.name ? String(row.name) : code,
+				subnational: row?.subnational ? String(row.subnational) : '',
+				electoralVotes: row?.electoralVotes ?? null
+			});
+		}
+	}
+	return Array.from(byCode.values());
+}
 
 async function readCanadaRidingsFromMapAsset() {
 	const assetPath = path.join(process.cwd(), 'static', 'ridingMaps', 'canada2025.json');
@@ -24,7 +42,8 @@ async function readCanadaRidingsFromMapAsset() {
 		return [];
 	}
 
-	return geometries
+	return dedupeRidingsByCode(
+		geometries
 		.map((geometry) => ({
 			code: geometry?.properties?.FED_NUM,
 			name: geometry?.properties?.ED_NAMEE
@@ -34,7 +53,8 @@ async function readCanadaRidingsFromMapAsset() {
 			code: String(row.code),
 			name: row.name ? String(row.name) : String(row.code),
 			subnational: ''
-		}));
+		}))
+	);
 }
 
 async function getCanadaMapRidings() {
@@ -45,6 +65,42 @@ async function getCanadaMapRidings() {
 		});
 	}
 	return canadaMapRidingsPromise;
+}
+
+async function readUkRidingsFromMapAsset() {
+	const assetPath = path.join(process.cwd(), 'static', 'ridingMaps', 'UK.json');
+	const raw = await readFile(assetPath, 'utf8');
+	const parsed = JSON.parse(raw);
+	const objectName = Object.keys(parsed?.objects ?? {})[0];
+	const geometries = objectName ? parsed?.objects?.[objectName]?.geometries : null;
+	if (!Array.isArray(geometries) || geometries.length === 0) {
+		return [];
+	}
+
+	return dedupeRidingsByCode(
+		geometries
+		.map((geometry) => ({
+			code: geometry?.properties?.GSScode ?? geometry?.properties?.['3CODE'],
+			name: geometry?.properties?.Name,
+			subnational: geometry?.properties?.CTR_REG ?? geometry?.properties?.Country
+		}))
+		.filter((row) => row.code !== undefined && row.code !== null)
+		.map((row) => ({
+			code: String(row.code),
+			name: row.name ? String(row.name) : String(row.code),
+			subnational: row.subnational ? String(row.subnational) : ''
+		}))
+	);
+}
+
+async function getUkMapRidings() {
+	if (!ukMapRidingsPromise) {
+		ukMapRidingsPromise = readUkRidingsFromMapAsset().catch((error) => {
+			ukMapRidingsPromise = null;
+			throw error;
+		});
+	}
+	return ukMapRidingsPromise;
 }
 
 export async function getRidingsForScope(scope) {
@@ -67,12 +123,14 @@ export async function getRidingsForScope(scope) {
 				)
 			);
 		if (scopedDistricts.length > 0) {
-			return scopedDistricts.map((row) => ({
+			return dedupeRidingsByCode(
+				scopedDistricts.map((row) => ({
 				code: String(row.code),
 				name: row.name || String(row.code),
 				subnational: row.subnational || '',
 				electoralVotes: row.electoralVotes ?? null
-			}));
+			}))
+			);
 		}
 	} catch {
 		// Continue into legacy source fallback.
@@ -101,6 +159,18 @@ export async function getRidingsForScope(scope) {
 		}
 	}
 
+	if (
+		String(scope?.country).toLowerCase() === 'uk' &&
+		String(scope?.district).toLowerCase() === 'fed'
+	) {
+		try {
+			const mapRidings = await getUkMapRidings();
+			if (mapRidings.length > 0) return mapRidings;
+		} catch {
+			// Continue into legacy source fallback.
+		}
+	}
+
 	try {
 		const rows = await db
 			.select({
@@ -119,11 +189,13 @@ export async function getRidingsForScope(scope) {
 			);
 
 		if (!rows?.length) return DEFAULT_RIDINGS;
-		return rows.map((row) => ({
+		return dedupeRidingsByCode(
+			rows.map((row) => ({
 			code: String(row.code),
 			name: row.name || String(row.code),
 			subnational: row.subnational || ''
-		}));
+		}))
+		);
 	} catch {
 		return DEFAULT_RIDINGS;
 	}

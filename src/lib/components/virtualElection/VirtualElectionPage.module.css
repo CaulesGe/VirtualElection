@@ -74,10 +74,13 @@
 }
 
 .totalsCardBody {
-	min-height: 210px;
 	display: grid;
 	align-content: start;
 	gap: 0.6rem;
+}
+
+.totalsCardBodyExpanded {
+	min-height: 210px;
 }
 
 .partyTotals {
