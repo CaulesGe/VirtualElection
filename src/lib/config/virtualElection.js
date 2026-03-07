@@ -146,7 +146,7 @@ export const FEDERAL_PARTIES = {
 	},
 	'Labour Party': {
 		name: 'Labour Party',
-		shortName: 'Labour',
+		shortName: 'LAB',
 		color: '#E4003B',
 		backgroundColor: 'bg-lab',
 		textColor: 'text-lab',
@@ -155,7 +155,7 @@ export const FEDERAL_PARTIES = {
 	},
 	'Conservative Party': {
 		name: 'Conservative Party',
-		shortName: 'Conservative',
+		shortName: 'CON',
 		color: '#0087DC',
 		backgroundColor: 'bg-con-uk',
 		textColor: 'text-con-uk',
@@ -164,7 +164,7 @@ export const FEDERAL_PARTIES = {
 	},
 	'Liberal Democrats': {
 		name: 'Liberal Democrats',
-		shortName: 'Liberal Democrats',
+		shortName: 'LD',
 		color: '#FDBB30',
 		backgroundColor: 'bg-ld',
 		textColor: 'text-ld',
@@ -173,7 +173,7 @@ export const FEDERAL_PARTIES = {
 	},
 	'Scottish National Party': {
 		name: 'Scottish National Party',
-		shortName: 'Scottish National',
+		shortName: 'SNP',
 		color: '#FFF95D',
 		backgroundColor: 'bg-snp',
 		textColor: 'text-snp',
@@ -182,7 +182,7 @@ export const FEDERAL_PARTIES = {
 	},
 	'Sinn Féin': {
 		name: 'Sinn Féin',
-		shortName: 'Sinn Féin',
+		shortName: 'SF',
 		color: '#326760',
 		backgroundColor: 'bg-sf',
 		textColor: 'text-sf',
@@ -191,7 +191,7 @@ export const FEDERAL_PARTIES = {
 	},
 	Independent: {
 		name: 'Independent',
-		shortName: 'Independent',
+		shortName: 'IND',
 		color: '#6B7280',
 		backgroundColor: 'bg-ind-uk',
 		textColor: 'text-ind-uk',
@@ -200,7 +200,7 @@ export const FEDERAL_PARTIES = {
 	},
 	'Reform UK': {
 		name: 'Reform UK',
-		shortName: 'Reform UK',
+		shortName: 'REF',
 		color: '#12B6CF',
 		backgroundColor: 'bg-ref',
 		textColor: 'text-ref',
@@ -209,7 +209,7 @@ export const FEDERAL_PARTIES = {
 	},
 	'Democratic Unionist Party': {
 		name: 'Democratic Unionist Party',
-		shortName: 'Democratic Unionist',
+		shortName: 'DUP',
 		color: '#D46A00',
 		backgroundColor: 'bg-dup',
 		textColor: 'text-dup',
@@ -218,7 +218,7 @@ export const FEDERAL_PARTIES = {
 	},
 	'Green Party of England and Wales': {
 		name: 'Green Party of England and Wales',
-		shortName: 'Green Party of England and Wales',
+		shortName: 'GRN',
 		color: '#6AB023',
 		backgroundColor: 'bg-grn-uk',
 		textColor: 'text-grn-uk',
@@ -227,7 +227,7 @@ export const FEDERAL_PARTIES = {
 	},
 	'Plaid Cymru': {
 		name: 'Plaid Cymru',
-		shortName: 'Plaid Cymru',
+		shortName: 'PC',
 		color: '#008142',
 		backgroundColor: 'bg-pc',
 		textColor: 'text-pc',
@@ -236,7 +236,7 @@ export const FEDERAL_PARTIES = {
 	},
 	'Social Democratic and Labour Party': {
 		name: 'Social Democratic and Labour Party',
-		shortName: 'Social Democratic and Labour',
+		shortName: 'SDLP',
 		color: '#3CB371',
 		backgroundColor: 'bg-sdlp',
 		textColor: 'text-sdlp',
@@ -245,7 +245,7 @@ export const FEDERAL_PARTIES = {
 	},
 	'Alliance Party of Northern Ireland': {
 		name: 'Alliance Party of Northern Ireland',
-		shortName: 'Alliance of Northern Ireland',
+		shortName: 'APNI',
 		color: '#F6C100',
 		backgroundColor: 'bg-apni',
 		textColor: 'text-apni',
@@ -254,7 +254,7 @@ export const FEDERAL_PARTIES = {
 	},
 	'Ulster Unionist Party': {
 		name: 'Ulster Unionist Party',
-		shortName: 'Ulster Unionist',
+		shortName: 'UUP',
 		color: '#2B4EA2',
 		backgroundColor: 'bg-uup',
 		textColor: 'text-uup',
@@ -263,7 +263,7 @@ export const FEDERAL_PARTIES = {
 	},
 	'Traditional Unionist Voice': {
 		name: 'Traditional Unionist Voice',
-		shortName: 'Traditional Unionist Voice',
+		shortName: 'TUV',
 		color: '#0D5BA6',
 		backgroundColor: 'bg-tuv',
 		textColor: 'text-tuv',
