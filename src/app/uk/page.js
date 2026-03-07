@@ -8,8 +8,18 @@ const UK_SCOPE = {
 };
 
 export const metadata = {
-	title: 'Virtual Election UK 2025',
-	description: 'Participate in the UK virtual election and view live constituency-level totals.'
+	title: 'UK Parliament Virtual Election',
+	description:
+		'Explore the UK constituency map, cast a virtual vote, and follow live seat and vote distribution updates across England, Scotland, Wales, and Northern Ireland.',
+	alternates: {
+		canonical: '/uk'
+	},
+	openGraph: {
+		title: 'UK Parliament Virtual Election',
+		description:
+			'Explore the UK constituency map, cast a virtual vote, and follow live seat and vote distribution updates across England, Scotland, Wales, and Northern Ireland.',
+		url: '/uk'
+	}
 };
 
 export default async function UkPage() {
@@ -17,13 +27,24 @@ export default async function UkPage() {
 		await loadElectionPageData(UK_SCOPE);
 
 	return (
-		<VirtualElectionPage
-			session={session}
-			scope={UK_SCOPE}
-			initialTotals={initialTotals}
-			initialMe={initialMe}
-			initialRidings={initialRidings}
-			mapMetadata={mapMetadata}
-		/>
+		<>
+			<section
+				aria-label="UK election overview"
+				style={{ maxWidth: 1400, margin: '0 auto', padding: '0 1rem', color: '#4b5563' }}
+			>
+				<p style={{ margin: '0.5rem 0 0' }}>
+					View UK parliament virtual election results by constituency, compare regional trends across
+					the constituent countries, and interact with the live UK map.
+				</p>
+			</section>
+			<VirtualElectionPage
+				session={session}
+				scope={UK_SCOPE}
+				initialTotals={initialTotals}
+				initialMe={initialMe}
+				initialRidings={initialRidings}
+				mapMetadata={mapMetadata}
+			/>
+		</>
 	);
 }

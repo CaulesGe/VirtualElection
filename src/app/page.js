@@ -2,6 +2,26 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styles from './page.module.css';
 
+export const metadata = {
+	title: 'Interactive Election Map and Virtual Voting',
+	description:
+		'Choose Canada, USA, or United Kingdom election simulations with live riding totals, regional breakdowns, and map-driven exploration.',
+	alternates: {
+		canonical: '/'
+	},
+	openGraph: {
+		title: 'VirtualElection - Interactive Election Map and Virtual Voting',
+		description:
+			'Choose Canada, USA, or United Kingdom election simulations with live riding totals, regional breakdowns, and map-driven exploration.',
+		url: '/'
+	},
+	twitter: {
+		title: 'VirtualElection - Interactive Election Map and Virtual Voting',
+		description:
+			'Choose Canada, USA, or United Kingdom election simulations with live riding totals, regional breakdowns, and map-driven exploration.'
+	}
+};
+
 export default function Home() {
 	return (
 		<main className={styles.page}>

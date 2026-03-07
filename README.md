@@ -236,6 +236,8 @@ Vote API performs a single atomic SQL operation:
 ## Project map
 
 - `src/app/page.js`: intro homepage
+- `src/app/sitemap.js`: XML sitemap route for search engine discovery
+- `src/app/robots.js`: robots.txt route for crawler directives
 - `src/app/canada/page.js`: Canada election page bootstrap
 - `src/app/usa/page.js`: USA default route redirect to presidential page
 - `src/app/usa/houseOfRepresentatives/page.js`: USA house page bootstrap
