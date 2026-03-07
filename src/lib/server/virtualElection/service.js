@@ -338,7 +338,10 @@ export async function getTotals(scopeInput) {
 	const ridingResultTable = getRidingResultTableConfig(scope);
 	const [schemaName, tableName] = ridingResultTable.name.split('.');
 	const execution = await db.execute(sql`
-		SELECT riding_id, party, votes
+		SELECT
+			riding_id AS "ridingId",
+			party AS "party",
+			votes AS "votes"
 		FROM ${sql.raw(`"${schemaName}"."${tableName}"`)}
 		WHERE district = ${scope.district}
 		  AND year = ${scope.year}
@@ -347,10 +350,15 @@ export async function getTotals(scopeInput) {
 
 	const ridingMap = new Map();
 	for (const row of rows) {
-		const key = String(row.ridingId);
+		const ridingId = row?.ridingId ?? row?.riding_id;
+		if (!ridingId) continue;
+		const key = String(ridingId);
+		const party = String(row?.party ?? '');
+		const votes = Number(row?.votes ?? 0);
+		if (!party) continue;
 		const entry = ridingMap.get(key) ?? { totals: {}, totalVotes: 0 };
-		entry.totals[row.party] = row.votes;
-		entry.totalVotes += row.votes;
+		entry.totals[party] = votes;
+		entry.totalVotes += votes;
 		ridingMap.set(key, entry);
 	}
 

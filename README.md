@@ -125,42 +125,81 @@ truncate table "RidingResults".usa_riding_result;
 
 ## Architecture
 
+### End-to-End Request Flow
+
 ```mermaid
 flowchart LR
-  browserClient[BrowserClient] --> pageRoute[AppRoutes home-canada-usa]
-  pageRoute --> apiVote[API vote]
-  pageRoute --> apiTotals[API totals]
-  pageRoute --> apiMe[API me]
-  pageRoute --> apiRidings[API ridings]
-  pageRoute --> mapMeta[MapMetadata countryCode+mapVersion]
-  apiVote --> authCheck[AuthSession]
-  apiVote --> abuseGuard[OriginRateCaptcha]
-  apiVote --> voteService[VirtualElectionService]
-  apiTotals --> voteService
-  apiMe --> voteService
-  apiRidings --> ridingsService[RidingsService]
-  voteService --> postgresDb[NeonPostgres]
-  ridingsService --> postgresDb
+  browser[BrowserClient] --> appRoutes[AppRoutes]
+  appRoutes --> pageBootstrap["ServerPage + loadElectionPageData()"]
+  pageBootstrap --> virtualPage[VirtualElectionPage]
+  virtualPage --> mapUi[MapController + VirtualElectionMap]
+  virtualPage --> regionUi[RegionChartController]
+  virtualPage --> loginUi[LoginControl]
+  virtualPage --> totalsApi["GET /api/virtual-election/totals"]
+  virtualPage --> meApi["GET /api/virtual-election/me"]
+  virtualPage --> ridingsApi["GET /api/virtual-election/ridings"]
+  virtualPage --> optionsApi["GET /api/virtual-election/options"]
+  loginUi --> voteApi["POST /api/virtual-election/vote"]
+  totalsApi --> service[virtualElection/service.js]
+  meApi --> service
+  optionsApi --> service
+  voteApi --> service
+  ridingsApi --> ridingsService[virtualElection/ridings.js]
+  service --> postgres[(NeonPostgres)]
+  ridingsService --> postgres
+```
+
+### Server Layering
+
+```mermaid
+flowchart TD
+  apiRoutes["src/app/api/virtual-election/*"] --> service["src/lib/server/virtualElection/service.js"]
+  apiRoutes --> ridingsService["src/lib/server/virtualElection/ridings.js"]
+  service --> abuse["abuse.js"]
+  service --> identity["identity.js"]
+  service --> mapMeta["mapMetadata.js"]
+  service --> ridingsService
+  service --> dbClient["db/client.js"]
+  service --> dbSchema["db/schema.js"]
+  ridingsService --> dbClient
+  ridingsService --> dbSchema
+  dbClient --> neon[(Neon + Drizzle)]
+  dbSchema --> neon
+```
+
+### Frontend Composition
+
+```mermaid
+flowchart TD
+  entry["canada/page.js or usa/*/page.js"] --> loader["loadElectionPageData()"]
+  loader --> page["VirtualElectionPage.jsx"]
+  page --> state["useElectionState.js"]
+  page --> map["MapComponent/MapController.jsx"]
+  page --> region["regionBreakdown/RegionChartController.jsx"]
+  page --> login["LoginControl.jsx"]
+  map --> mapSurface["VirtualElectionMap.jsx"]
+  map --> barChart["RidingBarChart.jsx"]
+  page --> presidentView["president/UsaPresidentView.jsx"]
+  presidentView --> evBar["president/PresidentEvBar.jsx"]
 ```
 
 ## Google OAuth workflow
 
-This project uses Auth.js/NextAuth with Google as the provider.  
-The sign-in button is rendered on the client, while session validation is enforced in server routes before vote operations.
+This project uses Auth.js/NextAuth with Google as the provider. The sign-in button is rendered on the client, while session validation is enforced in server routes before vote operations.
 
 ```mermaid
 flowchart TD
-  user[UserInBrowser] --> loginControl["LoginControl.jsx Sign in with Google"]
+  user[UserInBrowser] --> loginControl["LoginControl.jsx"]
   loginControl --> signInRoute["GET /api/auth/signin?callbackUrl=..."]
   signInRoute --> googleOAuth[GoogleOAuthConsent]
   googleOAuth --> callbackRoute["/api/auth/callback/google"]
   callbackRoute --> nextAuthHandler["src/app/api/auth/[...nextauth]/route.js"]
-  nextAuthHandler --> authConfig["src/lib/auth.js GoogleProvider clientId/clientSecret"]
+  nextAuthHandler --> authConfig["src/lib/auth.js"]
   authConfig --> sessionIssued[SessionJWTCookieIssued]
   sessionIssued --> callbackPage[ReturnToCallbackUrlPage]
   callbackPage --> voteApi["POST /api/virtual-election/vote"]
   voteApi --> sessionCheck["getServerAuthSession()"]
-  sessionCheck --> identity["getUserIdFromSession() email-first"]
+  sessionCheck --> identity["getUserIdFromSession()"]
   identity --> voteService["castOrUpdateVote()"]
   voteService --> db[(NeonPostgres)]
 ```
