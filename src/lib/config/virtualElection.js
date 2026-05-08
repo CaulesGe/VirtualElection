@@ -55,7 +55,7 @@ export const DEFAULT_SCOPE = {
 // Default party presentation metadata used by map/charts/legend rendering.
 export const FEDERAL_PARTIES = {
 	LPC: {
-		name: 'Liberal Party',
+		name: 'Liberal Party of Canada',
 		color: '#CF3434',
 		backgroundColor: 'bg-lib',
 		textColor: 'text-lib',
@@ -64,7 +64,7 @@ export const FEDERAL_PARTIES = {
 		logo: '/party/ca/fed/LPC.svg'
 	},
 	CPC: {
-		name: 'Conservative Party',
+		name: 'Conservative Party of Canada',
 		color: '#1A4782',
 		backgroundColor: 'bg-con',
 		textColor: 'text-con',
@@ -82,7 +82,7 @@ export const FEDERAL_PARTIES = {
 		colorGradient: ['#FFA85C', '#FF9135', '#E8801E', '#C4651A', '#A0520F', '#7A3F0A']
 	},
 	GPC: {
-		name: 'Green Party',
+		name: 'Green Party of Canada',
 		shortName: 'GPC',
 		color: '#5D9C4C',
 		backgroundColor: 'bg-grn',
@@ -91,7 +91,7 @@ export const FEDERAL_PARTIES = {
 		colorGradient: ['#5FE070', '#4DD65D', '#2BBF42', '#259A35', '#1A7A28', '#0A5518']
 	},
 	PPC: {
-		name: "People's Party",
+		name: "People's Party of Canada",
 		shortName: 'PPC',
 		color: '#800080',
 		backgroundColor: 'bg-ppc',

@@ -7,7 +7,7 @@ import { VIRTUAL_ELECTION_ALLOWED_SCOPES } from '@/lib/config/virtualElection';
 import LoginControl from '@/lib/components/virtualElection/LoginControl';
 import MapController from '@/lib/components/virtualElection/MapComponent/MapController';
 import RidingResultTable from '@/lib/components/virtualElection/MapComponent/RidingResultTable';
-import { getPartyColor, getPartyShortName } from '@/lib/components/virtualElection/partyMeta';
+import { getPartyColor, getPartyFullName } from '@/lib/components/virtualElection/partyMeta';
 import useElectionState from '@/lib/components/virtualElection/useElectionState';
 import styles from './VirtualElectionPage.module.css';
 
@@ -140,7 +140,7 @@ export default function VirtualElectionPage({
 							{allowedParties.map((party) => (
 								<div className={styles.legendRow} key={party}>
 									<span className={styles.swatch} style={{ background: getPartyColor(party) }} />
-									<span>{getPartyShortName(party)}</span>
+									<span>{getPartyFullName(party)}</span>
 								</div>
 							))}
 							<div className={styles.legendRow}>

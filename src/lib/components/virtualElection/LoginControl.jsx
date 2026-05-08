@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname, useSearchParams } from 'next/navigation';
-import { getPartyShortName } from '@/lib/components/virtualElection/partyMeta';
+import { getPartyFullName, getPartyShortName } from '@/lib/components/virtualElection/partyMeta';
 
 export default function LoginControl({
 	allowedParties,
@@ -72,7 +72,7 @@ export default function LoginControl({
 						<option value="">Choose one</option>
 						{allowedParties.map((party) => (
 							<option key={party} value={party}>
-								{getPartyShortName(party)}
+								{getPartyFullName(party)}
 							</option>
 						))}
 					</select>

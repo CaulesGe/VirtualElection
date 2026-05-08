@@ -17,6 +17,10 @@ export function getPartyShortName(code) {
 	return PARTY_META[code]?.name ?? code;
 }
 
+export function getPartyFullName(code) {
+	return FEDERAL_PARTIES[code]?.name ?? code;
+}
+
 export function getPartyColor(code) {
 	return PARTY_META[code]?.color ?? '#6b7280';
 }

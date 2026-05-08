@@ -13,7 +13,7 @@ import {
 	XAxis,
 	YAxis
 } from 'recharts';
-import { getPartyColor, getPartyShortName } from '@/lib/components/virtualElection/partyMeta';
+import { getPartyColor, getPartyFullName, getPartyShortName } from '@/lib/components/virtualElection/partyMeta';
 import ChartTooltip from '@/lib/components/virtualElection/ChartTooltip';
 
 export default function RegionVoteChart({ voteSeries, mode = 'bar' }) {
@@ -46,7 +46,7 @@ export default function RegionVoteChart({ voteSeries, mode = 'bar' }) {
 						<ChartTooltip>
 							{(row) => (
 								<>
-									<div style={{ color: getPartyColor(row.party), fontWeight: 700 }}>{row.name}</div>
+									<div style={{ color: getPartyColor(row.party), fontWeight: 700 }}>{getPartyFullName(row.party)}</div>
 									<div>Votes: {row.numberOfVote}</div>
 									<div>Share: {row.percentageOfVote}%</div>
 								</>
@@ -90,7 +90,7 @@ export default function RegionVoteChart({ voteSeries, mode = 'bar' }) {
 					<ChartTooltip>
 						{(row) => (
 							<>
-								<div style={{ color: getPartyColor(row.party), fontWeight: 700 }}>{row.name}</div>
+								<div style={{ color: getPartyColor(row.party), fontWeight: 700 }}>{getPartyFullName(row.party)}</div>
 								<div>Votes: {row.numberOfVote}</div>
 								<div>Share: {row.percentageOfVote}%</div>
 							</>
