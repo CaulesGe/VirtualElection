@@ -43,7 +43,6 @@ export default function RegionChartController({
 		});
 	}, [effectiveSelectedRegion, totals, ridingById, profile, regionOptions]);
 
-	
 	const filteredRidingsByRegion = useMemo(() => {
 		if (effectiveSelectedRegion === 'Total') return ridingResults;
 		const selected = regionOptions.find((option) => option.value === effectiveSelectedRegion);
@@ -113,14 +112,16 @@ export default function RegionChartController({
 					<div className={styles.modeToggle} role="group" aria-label="Regional chart mode">
 						<button
 							type="button"
-							className={chartMode === 'bar' ? 'active' : ''}
+							className={`${styles.modeToggleOption} ${chartMode === 'bar' ? styles.modeToggleOptionActive : ''}`}
+							aria-pressed={chartMode === 'bar'}
 							onClick={() => setChartMode('bar')}
 						>
 							Bar
 						</button>
 						<button
 							type="button"
-							className={chartMode === 'pie' ? 'active' : ''}
+							className={`${styles.modeToggleOption} ${chartMode === 'pie' ? styles.modeToggleOptionActive : ''}`}
+							aria-pressed={chartMode === 'pie'}
 							onClick={() => setChartMode('pie')}
 						>
 							Pie
