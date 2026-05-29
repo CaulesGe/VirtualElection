@@ -67,14 +67,22 @@ export default function VirtualElectionPage({
 				<div className={styles.titleRow}>
 					<h1>{countryTitle}</h1>
 					{isUsaScope ? (
-						<section className={styles.officeSwitcher} aria-label="Switch USA election office">
-							<Link href="/usa/president" className={usaIsPresident ? 'active' : ''}>
+						<nav className={styles.officeToggle} aria-label="Switch USA election office">
+							<Link
+								href="/usa/president"
+								className={`${styles.officeToggleOption} ${usaIsPresident ? styles.officeToggleOptionActive : ''}`}
+								aria-current={usaIsPresident ? 'page' : undefined}
+							>
 								President
 							</Link>
-							<Link href="/usa/houseOfRepresentatives" className={!usaIsPresident ? 'active' : ''}>
+							<Link
+								href="/usa/houseOfRepresentatives"
+								className={`${styles.officeToggleOption} ${!usaIsPresident ? styles.officeToggleOptionActive : ''}`}
+								aria-current={!usaIsPresident ? 'page' : undefined}
+							>
 								House of Representatives
 							</Link>
-						</section>
+						</nav>
 					) : null}
 				</div>
 				<h2 className={styles.receivedLine}>

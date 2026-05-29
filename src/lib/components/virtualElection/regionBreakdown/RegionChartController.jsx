@@ -43,6 +43,7 @@ export default function RegionChartController({
 		});
 	}, [effectiveSelectedRegion, totals, ridingById, profile, regionOptions]);
 
+	
 	const filteredRidingsByRegion = useMemo(() => {
 		if (effectiveSelectedRegion === 'Total') return ridingResults;
 		const selected = regionOptions.find((option) => option.value === effectiveSelectedRegion);

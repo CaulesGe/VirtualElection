@@ -20,28 +20,44 @@
 	font-weight: 600;
 }
 
-.officeSwitcher {
+.officeToggle {
 	display: inline-flex;
-	gap: 0.4rem;
-	padding: 0.35rem;
-	border: 1px solid #e5e7eb;
-	border-radius: 0.6rem;
-	background: #fff;
+	padding: 0.25rem;
+	border: 1px solid #bfdbfe;
+	border-radius: 999px;
+	background: #eff6ff;
 	align-self: start;
+	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.65);
 }
 
-.officeSwitcher a {
-	padding: 0.38rem 0.68rem;
-	border: 1px solid #d1d5db;
-	border-radius: 0.45rem;
+.officeToggleOption {
+	padding: 0.45rem 0.85rem;
+	border-radius: 999px;
 	font-size: 0.88rem;
+	font-weight: 700;
 	color: #1f2937;
-	background: #fff;
+	text-decoration: none;
+	transition:
+		background 150ms ease,
+		color 150ms ease,
+		box-shadow 150ms ease;
 }
 
-.officeSwitcher a.active {
+.officeToggleOption:hover,
+.officeToggleOption:focus-visible {
+	background: rgba(255, 255, 255, 0.85);
+	color: #1d4ed8;
+}
+
+.officeToggleOptionActive {
 	background: #1d4ed8;
-	border-color: #1d4ed8;
+	color: #fff;
+	box-shadow: 0 1px 4px rgba(37, 99, 235, 0.25);
+}
+
+.officeToggleOptionActive:hover,
+.officeToggleOptionActive:focus-visible {
+	background: #1d4ed8;
 	color: #fff;
 }
 
