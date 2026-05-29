@@ -63,7 +63,10 @@ export default function RegionChartController({
 			if (!row.leader || (row.totalVotes ?? 0) <= 0) continue;
 			seatCounts[row.leader] = (seatCounts[row.leader] ?? 0) + 1;
 		}
-		const totalSeats = filteredRidingsByRegion.length;
+		// Prefer riding metadata when available, but fall back to totals rows
+		// so regional majority thresholds still work if ridings aren't fully hydrated.
+		const totalSeats =
+			filteredRidingsByRegion.length > 0 ? filteredRidingsByRegion.length : filteredTotalsByRegion.length;
 		return { ...seatCounts, Total: totalSeats };
 	}, [filteredTotalsByRegion, filteredRidingsByRegion]);
 
