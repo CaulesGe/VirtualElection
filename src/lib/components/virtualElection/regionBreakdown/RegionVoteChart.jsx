@@ -66,6 +66,7 @@ export default function RegionVoteChart({ voteSeries, mode = 'bar' }) {
 					<CartesianGrid strokeDasharray="3 3" />
 					<XAxis
 						dataKey="name"
+						interval={0}
 						angle={-25}
 						textAnchor="end"
 						height={60}

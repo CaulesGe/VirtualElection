@@ -73,6 +73,7 @@ export default function RegionSeatChart({ seatSeries, mode = 'bar' }) {
 					<YAxis
 						dataKey="name"
 						type="category"
+						interval={0}
 						width={54}
 						tick={(props) => {
 							const row = data.find((item) => item.name === props.payload.value);

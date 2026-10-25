@@ -41,7 +41,7 @@ const uk = {
 		'Alliance Party of Northern Ireland': party('Alliance Party of Northern Ireland', 'APNI', '#F6C100', 'apni', ['#FFE38C', '#FFD95E', '#FFD133', '#F6C100', '#C79C00', '#927200']),
 		'Ulster Unionist Party': party('Ulster Unionist Party', 'UUP', '#2B4EA2', 'uup', ['#91A6D8', '#6F88CB', '#5573BE', '#2B4EA2', '#1F3A7A', '#14284F']),
 		'Traditional Unionist Voice': party('Traditional Unionist Voice', 'TUV', '#0D5BA6', 'tuv', ['#7FAED8', '#5996CA', '#3A80BD', '#0D5BA6', '#09457F', '#053058']),
-		'Restore Britain': party('Restore Britain', 'Restore Britain', '#9B1C31', 'rb', ['#D58A98', '#C96579', '#B9475F', '#9B1C31', '#771524', '#520D18'])
+		'Restore Britain': party('Restore Britain', 'RB', '#9B1C31', 'rb', ['#D58A98', '#C96579', '#B9475F', '#9B1C31', '#771524', '#520D18'])
 	},
 
 	map: {
