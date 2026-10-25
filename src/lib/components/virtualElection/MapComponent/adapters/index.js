@@ -1,4 +1,4 @@
-import { ELECTION_COUNTRIES, getDivisions } from '@/lib/config/electionCountries';
+import { DEFAULT_COUNTRY, ELECTION_COUNTRIES, getDivisions } from '@/lib/config/electionCountries';
 import { createPmtilesAdapter } from './createPmtilesAdapter';
 import { createTopoJsonAdapter } from './createTopoJsonAdapter';
 import { assertMapAdapter } from './types';
@@ -27,7 +27,7 @@ const registry = Object.fromEntries(
 		assertMapAdapter(createAdapter(country))
 	])
 );
-const defaultAdapter = registry[ELECTION_COUNTRIES[0].code.toUpperCase()];
+const defaultAdapter = registry[DEFAULT_COUNTRY.code.toUpperCase()];
 
 export function getMapAdapter(countryCode) {
 	const normalized = String(countryCode ?? '').trim().toUpperCase();

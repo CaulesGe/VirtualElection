@@ -2,7 +2,11 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { ELECTION_COUNTRIES, getElectionCountryFromPath } from '@/lib/config/electionCountries';
+import {
+	DEFAULT_COUNTRY,
+	ELECTION_COUNTRIES,
+	getElectionCountryFromPath
+} from '@/lib/config/electionCountries';
 import styles from './Header.module.css';
 
 function getRouteContext(pathname, fromParam) {
@@ -20,7 +24,7 @@ export default function Header({ isAuthenticated = false, userLabel = '' }) {
 	const routeContext = getRouteContext(pathname, fromParam);
 	const currentCountry = getElectionCountryFromPath(routeContext);
 	const countryName = currentCountry?.name ?? '...';
-	const currentCountryRoute = currentCountry?.entryRoute ?? ELECTION_COUNTRIES[0].entryRoute;
+	const currentCountryRoute = currentCountry?.entryRoute ?? DEFAULT_COUNTRY.entryRoute;
 	const query = searchParams?.toString();
 	const currentPathWithQuery = `${pathname}${query ? `?${query}` : ''}`;
 	const from = pathname === '/user' ? '/' : currentPathWithQuery;

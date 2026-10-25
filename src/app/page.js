@@ -3,26 +3,30 @@ import Link from 'next/link';
 import { ELECTION_COUNTRIES } from '@/lib/config/electionCountries';
 import styles from './page.module.css';
 
-// Regions in display order, derived from the country registry.
-const REGIONS = [...new Set(ELECTION_COUNTRIES.map((country) => country.region))];
+// Regions (alphabetical) derived from the country registry; countries inside keep registry order.
+const REGIONS = [...new Set(ELECTION_COUNTRIES.map((country) => country.region))].sort((a, b) =>
+	a.localeCompare(b, 'en')
+);
+
+const COUNTRY_LIST = new Intl.ListFormat('en', { type: 'disjunction' }).format(
+	ELECTION_COUNTRIES.map((country) => country.name)
+);
+const DESCRIPTION = `Choose ${COUNTRY_LIST} election simulations with live riding totals, regional breakdowns, and map-driven exploration.`;
 
 export const metadata = {
 	title: 'Interactive Election Map and Virtual Voting',
-	description:
-		'Choose Canada, USA, United Kingdom, Germany, or Australia election simulations with live riding totals, regional breakdowns, and map-driven exploration.',
+	description: DESCRIPTION,
 	alternates: {
 		canonical: '/'
 	},
 	openGraph: {
 		title: 'VirtualElection - Interactive Election Map and Virtual Voting',
-		description:
-			'Choose Canada, USA, United Kingdom, Germany, or Australia election simulations with live riding totals, regional breakdowns, and map-driven exploration.',
+		description: DESCRIPTION,
 		url: '/'
 	},
 	twitter: {
 		title: 'VirtualElection - Interactive Election Map and Virtual Voting',
-		description:
-			'Choose Canada, USA, United Kingdom, Germany, or Australia election simulations with live riding totals, regional breakdowns, and map-driven exploration.'
+		description: DESCRIPTION
 	}
 };
 

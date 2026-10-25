@@ -1,4 +1,4 @@
-import { ELECTION_COUNTRIES } from '@/lib/config/electionCountries';
+import { DEFAULT_COUNTRY, ELECTION_COUNTRIES } from '@/lib/config/electionCountries';
 import { createConfiguredRegionProfile } from './createRegionProfile';
 import { usaRegionProfile } from './usa';
 
@@ -17,7 +17,7 @@ const PROFILE_REGISTRY = Object.fromEntries(
 		return [countryCode, profile];
 	})
 );
-const defaultProfile = PROFILE_REGISTRY[ELECTION_COUNTRIES[0].code.toUpperCase()];
+const defaultProfile = PROFILE_REGISTRY[DEFAULT_COUNTRY.code.toUpperCase()];
 
 export function getRegionProfile(countryCode) {
 	const normalized = String(countryCode ?? '').toUpperCase();

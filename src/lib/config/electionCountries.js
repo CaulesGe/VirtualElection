@@ -5,12 +5,18 @@
 // Relative imports with explicit extensions only: this module is also loaded by Node scripts.
 import australia from './countries/australia.js';
 import canada from './countries/canada.js';
+import france from './countries/france.js';
 import germany from './countries/germany.js';
 import uk from './countries/uk.js';
 import usa from './countries/usa.js';
 
-// Display order (home page, header, history page).
-export const ELECTION_COUNTRIES = [canada, usa, uk, germany, australia];
+// Fallback for unknown scopes/routes and the default election view.
+export const DEFAULT_COUNTRY = canada;
+
+// Display order (home page, header, history page): alphabetical by country name.
+export const ELECTION_COUNTRIES = [australia, canada, france, germany, uk, usa].sort((a, b) =>
+	a.name.localeCompare(b.name, 'en', { sensitivity: 'base' })
+);
 
 // One entry per election page, with its full scope.
 export const ELECTION_SITES = ELECTION_COUNTRIES.flatMap((country) =>

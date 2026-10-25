@@ -17,11 +17,17 @@ function firstPresent(properties, names = []) {
 async function readTopoDistricts(map) {
 	const assetPath = path.join(process.cwd(), ...map.asset.split('/').filter(Boolean));
 	const parsed = JSON.parse(await readFile(assetPath, 'utf8'));
-	const objectName = Object.keys(parsed?.objects ?? {})[0];
-	const geometries = objectName ? parsed?.objects?.[objectName]?.geometries : null;
-	if (!Array.isArray(geometries) || geometries.length === 0) return [];
+	// TopoJSON (first object's geometries) or a plain GeoJSON FeatureCollection.
+	let items = null;
+	if (Array.isArray(parsed?.features)) {
+		items = parsed.features;
+	} else {
+		const objectName = Object.keys(parsed?.objects ?? {})[0];
+		items = objectName ? parsed?.objects?.[objectName]?.geometries : null;
+	}
+	if (!Array.isArray(items) || items.length === 0) return [];
 
-	return geometries
+	return items
 		.map((geometry) => {
 			const properties = geometry?.properties;
 			const code = firstPresent(properties, map.idProperties);

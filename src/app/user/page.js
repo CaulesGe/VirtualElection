@@ -24,8 +24,8 @@ function resolveBackHref(rawFrom) {
 	return from.startsWith('/') ? from : '/';
 }
 
-// Display order follows ELECTION_SITES (same as the home page: North America, Europe, Oceania),
-// so related scopes such as the two USA elections stay next to each other.
+// Display order follows ELECTION_SITES (alphabetical by country, like the header), so related
+// scopes such as the two USA elections stay next to each other.
 function getSiteEntry(vote) {
 	const site = getElectionSite({ country: vote?.scopeCountry, district: vote?.scopeDistrict });
 	if (!site) return null;

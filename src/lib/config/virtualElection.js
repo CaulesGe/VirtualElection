@@ -3,6 +3,7 @@
 //
 // Relative import (not "@/"): this module is also loaded by Node scripts outside Next.js.
 import {
+	DEFAULT_COUNTRY,
 	ELECTION_COUNTRIES,
 	ELECTION_SITES,
 	PARTY_CATALOGUE
@@ -33,9 +34,11 @@ export function isPreferentialScope(scope) {
 	return PREFERENTIAL_COUNTRIES.includes(countryCode);
 }
 
-// Every scope that has an election page, in registry order (the first one is the default view).
+// Every scope that has an election page; the default country's first page is the default view.
 export const VIRTUAL_ELECTION_ALLOWED_SCOPES = ELECTION_SITES.map((site) => site.scope);
-export const DEFAULT_SCOPE = VIRTUAL_ELECTION_ALLOWED_SCOPES[0];
+export const DEFAULT_SCOPE = VIRTUAL_ELECTION_ALLOWED_SCOPES.find(
+	(scope) => scope.country === DEFAULT_COUNTRY.code
+);
 
 // Party presentation metadata (name, short name, colors, logo) used by map/charts/legend rendering.
 export const FEDERAL_PARTIES = PARTY_CATALOGUE;

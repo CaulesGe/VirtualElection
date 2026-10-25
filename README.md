@@ -264,6 +264,8 @@ The USA is the only country with custom code (`map.renderer`, `districts.source`
 ### Party display order (all countries)
 
 The written order of `parties` in a country config is irrelevant. `sortPartiesForDisplay()` (used by `getAllowedPartiesForScope()` and by the server when reading `election_parties`) orders every list the same way: alphabetical by full name (accent-insensitive), with independents (`IND`, `Independent`) and then `OTH` last. The IRV tie-break order is a separate `irvTieBreakOrder` so display ordering never affects counting.
+
+Countries are listed alphabetically by name everywhere (header selector, home page cards, history page); the home page groups them by region, also alphabetical. The order of the imports in `electionCountries.js` does not matter. `DEFAULT_COUNTRY` (Canada) is the fallback for unknown routes/scopes and the default scope.
 ### Germany: constituency vote (FPTP)
 
 - Scope `de/fed/2025`, map `static/ridingMaps/Germany.pmtiles` (layer `fed`, 299 Bundestag constituencies, 16 states), rendered by the same `PmtilesMap` as Australia but with plain single-choice voting like Canada/UK.
@@ -271,6 +273,13 @@ The written order of `parties` in a country config is irrelevant. `sortPartiesFo
 - Parties: `CDU` (CDU and CSU merged; short name "CDU/CSU"), `AFD`, `SPD`, `GRUNE`, `LINKE`, `BSW`, `FDP`, `SSW`, `OTH`. Party names are shown in German (for example "Bündnis 90/Die Grünen", "Südschleswigscher Wählerverband").
 - Constituency IDs are the `code` values (the official constituency number as a string, `"1"`..`"299"`). Names, states and zoom bounding boxes live in `src/lib/data/deDivisions.json`. After replacing the pmtiles file run `node scripts/extract-de-divisions.mjs --write` to regenerate it and `node scripts/extract-de-divisions.mjs --check` to verify it against the tiles.
 - API request/response shapes are unchanged; use `country=de&district=fed&year=2025`. Existing databases need `npm run db:migrate` (migrations `0007` and `0008`) and `npm run db:seed:options` before Germany works.
+
+### France: Assemblée nationale, first round (FPTP)
+
+- Scope `fr/fed/2024`, route `/france`, 567 circonscriptions (539 metropolitan + 28 overseas), plain single-choice voting; the bloc with the most votes in a circonscription leads it (284 seats for a majority). Only the first round is simulated, not the runoff.
+- Blocs (2024 first-round nuances): `RN`, `NFP`, `ENS`, `LR`, `DVD`, `DVG`, `OTH`; names are French.
+- Map: Leaflet reads `static/ridingMaps/France.json`, generated from the full-resolution `static/ridingMaps/France.geojson` by `node scripts/build-fr-map.mjs` (simplified; overseas constituencies are moved into inset boxes in the Atlantic west of Brittany, so their drawn position is not geographic). Re-run the script after replacing the GeoJSON; it also assigns names (`<département>, <n>e circonscription`) and the 13 metropolitan regions + `Outre-mer` used by the region dropdown.
+- Constituency IDs are the `circ_id` values (e.g. `0101`, `97101`). Districts are read from the map file and seeded with `npm run db:seed:options`. No new migration (uses the generic result tables from `0008`); use `country=fr&district=fed&year=2024`.
 
 ---
 
@@ -374,6 +383,7 @@ Current routes:
 - `/uk` UK parliament virtual election (`uk/fed/2025`)
 - `/australia` Australia House of Representatives virtual election (`au/fed/2025`, ranked ballot)
 - `/germany` Germany Bundestag constituency vote (`de/fed/2025`, FPTP)
+- `/france` France Assemblée nationale first round (`fr/fed/2024`, FPTP)
 
 Note: USA map currently uses direct AK/HI placement (insets can be added later).
 Error semantics are aligned with prior implementation:
