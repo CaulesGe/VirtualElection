@@ -5,20 +5,20 @@ import styles from './page.module.css';
 export const metadata = {
 	title: 'Interactive Election Map and Virtual Voting',
 	description:
-		'Choose Canada, USA, United Kingdom, or Australia election simulations with live riding totals, regional breakdowns, and map-driven exploration.',
+		'Choose Canada, USA, United Kingdom, Germany, or Australia election simulations with live riding totals, regional breakdowns, and map-driven exploration.',
 	alternates: {
 		canonical: '/'
 	},
 	openGraph: {
 		title: 'VirtualElection - Interactive Election Map and Virtual Voting',
 		description:
-			'Choose Canada, USA, United Kingdom, or Australia election simulations with live riding totals, regional breakdowns, and map-driven exploration.',
+			'Choose Canada, USA, United Kingdom, Germany, or Australia election simulations with live riding totals, regional breakdowns, and map-driven exploration.',
 		url: '/'
 	},
 	twitter: {
 		title: 'VirtualElection - Interactive Election Map and Virtual Voting',
 		description:
-			'Choose Canada, USA, United Kingdom, or Australia election simulations with live riding totals, regional breakdowns, and map-driven exploration.'
+			'Choose Canada, USA, United Kingdom, Germany, or Australia election simulations with live riding totals, regional breakdowns, and map-driven exploration.'
 	}
 };
 
@@ -98,6 +98,24 @@ export default function Home() {
 							Vote across UK constituencies and watch the race for Parliament unfold in real time.
 						</p>
 						<span className={styles.cta}>Open UK election →</span>
+					</Link>
+
+					<Link href="/germany" className={styles.card}>
+						<div className={styles.cardTitle}>
+							<Image
+								src="/static/flags/Germany.svg"
+								alt="Germany flag"
+								width={28}
+								height={20}
+								className={styles.flag}
+							/>
+							<span>Germany</span>
+							<span className={styles.badge}>Bundestag</span>
+						</div>
+						<p className={styles.cardSubtitle}>
+							Pick the party for your constituency and watch the race across all 299 Bundestag constituencies.
+						</p>
+						<span className={styles.cta}>Open Germany election →</span>
 					</Link>
 				</div>
 			</section>

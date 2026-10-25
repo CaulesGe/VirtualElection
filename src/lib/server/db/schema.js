@@ -171,6 +171,25 @@ export const ukRidingResult = ridingResultsSchema.table(
 	]
 );
 
+export const germanyRidingResult = ridingResultsSchema.table(
+	'germany_riding_result',
+	{
+		ridingId: text('riding_id').notNull(),
+		party: text('party').notNull(),
+		district: text('district').notNull(),
+		year: integer('year').notNull(),
+		votes: integer('votes').notNull().default(0),
+		updatedAt: timestamp('updated_at').defaultNow().notNull()
+	},
+	(table) => [
+		primaryKey({
+			name: 'germany_riding_result_pk',
+			columns: [table.ridingId, table.party, table.district, table.year]
+		}),
+		index('germany_riding_result_scope_idx').on(table.district, table.year)
+	]
+);
+
 export const australiaRidingResult = ridingResultsSchema.table(
 	'australia_riding_result',
 	{

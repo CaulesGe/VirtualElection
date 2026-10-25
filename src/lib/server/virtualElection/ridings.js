@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { DEFAULT_RIDINGS } from '@/lib/data/defaultRidings';
 import auDivisions from '@/lib/data/auDivisions.json';
+import deDivisions from '@/lib/data/deDivisions.json';
 import { db } from '@/lib/server/db/client';
 import {
 	constituencies,
@@ -168,6 +169,21 @@ export async function getRidingsForScope(scope) {
 		// scripts/extract-au-divisions.mjs --check); there is no legacy DB fallback for AU.
 		return dedupeRidingsByCode(
 			auDivisions.map((division) => ({
+				code: division.code,
+				name: division.name,
+				subnational: division.state
+			}))
+		);
+	}
+
+	if (
+		String(scope?.country).toLowerCase() === 'de' &&
+		String(scope?.district).toLowerCase() === 'fed'
+	) {
+		// Constituencies come from the committed list that mirrors Germany.pmtiles (see
+		// scripts/extract-de-divisions.mjs --check); there is no legacy DB fallback for DE.
+		return dedupeRidingsByCode(
+			deDivisions.map((division) => ({
 				code: division.code,
 				name: division.name,
 				subnational: division.state

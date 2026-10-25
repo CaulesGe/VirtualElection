@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getServerAuthSession } from '@/lib/auth';
@@ -18,15 +19,35 @@ function resolveBackHref(rawFrom) {
 	return from.startsWith('/') ? from : '/';
 }
 
-function toCountryLabel(vote) {
+// Display order follows the home page (North America, Europe, Oceania) so that related
+// scopes, such as the two USA elections, stay next to each other.
+const COUNTRY_ENTRIES = [
+	{ key: 'ca', label: 'Canada', flag: '/static/flags/Canada.svg.png' },
+	{ key: 'us-pres', label: 'USA-Presidential Election', flag: '/static/flags/USA.png' },
+	{ key: 'us-fed', label: 'USA-House of Representatives', flag: '/static/flags/USA.png' },
+	{ key: 'uk', label: 'UK', flag: '/static/flags/UK.svg.png' },
+	{ key: 'de', label: 'Germany', flag: '/static/flags/Germany.svg' },
+	{ key: 'au', label: 'Australia', flag: '/static/flags/Australia.svg' }
+];
+
+function getCountryEntry(vote) {
 	const country = String(vote?.scopeCountry ?? '').toLowerCase();
 	const district = String(vote?.scopeDistrict ?? '').toLowerCase();
-	if (country === 'us' && district === 'pres') return 'USA-Presidential Election';
-	if (country === 'us' && district === 'fed') return 'USA-House of Representatives';
-	if (country === 'ca') return 'Canada';
-	return String(vote?.scopeCountry ?? '').toUpperCase();
+	const key = country === 'us' ? `us-${district}` : country;
+	return COUNTRY_ENTRIES.find((entry) => entry.key === key) ?? null;
 }
 
+function toCountryLabel(vote) {
+	return getCountryEntry(vote)?.label ?? String(vote?.scopeCountry ?? '').toUpperCase();
+}
+
+function sortVotes(votes) {
+	const rank = (vote) => {
+		const entry = getCountryEntry(vote);
+		return entry ? COUNTRY_ENTRIES.indexOf(entry) : COUNTRY_ENTRIES.length;
+	};
+	return [...votes].sort((a, b) => rank(a) - rank(b));
+}
 export default async function UserPage({ searchParams }) {
 	const resolvedSearchParams = await Promise.resolve(searchParams);
 	const session = await getServerAuthSession();
@@ -37,7 +58,7 @@ export default async function UserPage({ searchParams }) {
 		redirect(`/api/auth/signin?callbackUrl=${encodeURIComponent(userPageUrl)}`);
 	}
 
-	const votes = await listVotesForUser(userId);
+	const votes = sortVotes(await listVotesForUser(userId));
 
 	return (
 		<main className={styles.page}>
@@ -65,12 +86,22 @@ export default async function UserPage({ searchParams }) {
 								</tr>
 							</thead>
 							<tbody>
-								{votes.map((vote, index) => (
+								{votes.map((vote, index) => {
+									const flagSrc = getCountryEntry(vote)?.flag;
+									return (
 									<tr key={`${vote.scopeCountry}-${vote.scopeDistrict}-${vote.scopeYear}-${index}`}>
-										<td>{toCountryLabel(vote)}</td>
+										<td>
+											<span className={styles.country}>
+												{flagSrc ? (
+													<Image src={flagSrc} alt="" width={28} height={20} className={styles.flag} />
+												) : null}
+												<span>{toCountryLabel(vote)}</span>
+											</span>
+										</td>
 										<td>{getPartyShortName(vote.partyId)}</td>
 									</tr>
-								))}
+								);
+								})}
 							</tbody>
 						</table>
 					</div>

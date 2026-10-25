@@ -47,6 +47,7 @@ export function isMissingVirtualElectionTableError(error) {
 			message.includes('usa_riding_result') ||
 			message.includes('uk_riding_result') ||
 			message.includes('australia_riding_result') ||
+			message.includes('germany_riding_result') ||
 			message.includes('australia_ballot_result') ||
 			(message.includes('ranking_key') && message.includes('does not exist')) ||
 			message.includes('virtual_election_riding_totals') ||
@@ -86,6 +87,9 @@ const RIDING_RESULT_TABLES = {
 	},
 	au: {
 		name: 'RidingResults.australia_riding_result'
+	},
+	de: {
+		name: 'RidingResults.germany_riding_result'
 	}
 };
 

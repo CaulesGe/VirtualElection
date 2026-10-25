@@ -66,3 +66,17 @@
 	border-bottom: 1px solid #e5e7eb;
 	font-size: 0.95rem;
 }
+.country {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.flag {
+	width: 28px;
+	height: 20px;
+	border-radius: 3px;
+	object-fit: cover;
+	flex-shrink: 0;
+	border: 1px solid #e5e7eb;
+}

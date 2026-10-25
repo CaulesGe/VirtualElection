@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Protocol } from 'pmtiles';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import auDivisions from '@/lib/data/auDivisions.json';
 
 const SOURCE_ID = 'divisions';
 const FILL_LAYER_ID = 'division-fill';
@@ -13,16 +12,16 @@ const DEFAULT_FILL = '#d1d5db';
 const DEFAULT_OPACITY = 0.35;
 const HIGHLIGHT_OPACITY = 0.9;
 
-const BBOX_BY_CODE = new Map(auDivisions.map((division) => [division.code, division.bbox]));
-const DISTRICT_LIST = auDivisions.map((division) => ({ code: division.code, name: division.name }));
-
 let protocolRegistered = false;
 
 /**
- * Australia map: renders Austrilia.pmtiles (vector tiles) with MapLibre GL.
+ * Vector-tile map (PMTiles + MapLibre GL) shared by every country whose adapter has
+ * `renderer: 'maplibre'` (Australia, Germany). The adapter supplies the PMTiles URL, the
+ * vector layer name (`sourceLayer`, features carry a `code` and `name`), the default view and
+ * the `divisions` list ({ code, name, bbox }) used for search and zooming.
  * Same prop contract as VirtualElectionMap so MapController can swap between them.
  */
-export default function AustraliaMap({
+export default function PmtilesMap({
 	adapter,
 	districtStyles,
 	districtTooltipMeta,
@@ -46,7 +45,16 @@ export default function AustraliaMap({
 	const selectedDistrict = selectedDistrictId ? String(selectedDistrictId) : '';
 	const styleMap = useMemo(() => districtStyles ?? new Map(), [districtStyles]);
 	const tooltipMetaMap = useMemo(() => districtTooltipMeta ?? new Map(), [districtTooltipMeta]);
-	const sourceLayer = adapter.sourceLayer ?? 'au-gen';
+	const sourceLayer = adapter.sourceLayer;
+	const divisions = useMemo(() => adapter.divisions ?? [], [adapter]);
+	const bboxByCode = useMemo(
+		() => new Map(divisions.map((division) => [String(division.code), division.bbox])),
+		[divisions]
+	);
+	const districtList = useMemo(
+		() => divisions.map((division) => ({ code: division.code, name: division.name })),
+		[divisions]
+	);
 
 	// Keep the latest props available to long-lived map event handlers.
 	useEffect(() => {
@@ -60,8 +68,8 @@ export default function AustraliaMap({
 	});
 
 	useEffect(() => {
-		onFeaturesLoaded?.(DISTRICT_LIST);
-	}, [onFeaturesLoaded]);
+		onFeaturesLoaded?.(districtList);
+	}, [onFeaturesLoaded, districtList]);
 
 	// Tooltip element (same look as the Leaflet maps).
 	useEffect(() => {
@@ -218,7 +226,7 @@ export default function AustraliaMap({
 					if (!feature) return;
 					const id = String(feature.properties?.code ?? '');
 					if (!id) return;
-					const name = feature.properties?.name;
+					const name = adapter.getDistrictName(feature);
 					const locked = Boolean(handlersRef.current.selectedDistrict);
 					map.getCanvas().style.cursor = 'pointer';
 
@@ -248,7 +256,7 @@ export default function AustraliaMap({
 					const feature = event.features?.[0];
 					const id = String(feature?.properties?.code ?? '');
 					if (!id) return;
-					const name = feature.properties?.name;
+					const name = adapter.getDistrictName(feature);
 					// The parent toggles: selecting the already selected division deselects it.
 					handlersRef.current.onSelectDistrict?.({
 						districtId: id,
@@ -289,17 +297,17 @@ export default function AustraliaMap({
 	useEffect(() => {
 		const map = mapRef.current;
 		if (!isMapReady || !map) return;
-		for (const division of auDivisions) {
+		for (const division of divisions) {
 			const style = styleMap.get(String(division.code));
 			map.setFeatureState(
-				{ source: SOURCE_ID, sourceLayer, id: division.code },
+				{ source: SOURCE_ID, sourceLayer, id: String(division.code) },
 				{
 					fill: style?.fill ?? DEFAULT_FILL,
 					opacity: style?.fillOpacity ?? DEFAULT_OPACITY
 				}
 			);
 		}
-	}, [isMapReady, styleMap, sourceLayer]);
+	}, [isMapReady, styleMap, sourceLayer, divisions]);
 
 	// Selected division highlight.
 	useEffect(() => {
@@ -320,7 +328,7 @@ export default function AustraliaMap({
 	useEffect(() => {
 		const map = mapRef.current;
 		if (!zoomToDistrictId || !isMapReady || !map) return;
-		const bbox = BBOX_BY_CODE.get(String(zoomToDistrictId));
+		const bbox = bboxByCode.get(String(zoomToDistrictId));
 		if (Array.isArray(bbox) && bbox.length === 4) {
 			map.fitBounds(
 				[
@@ -331,7 +339,7 @@ export default function AustraliaMap({
 			);
 		}
 		onZoomComplete?.();
-	}, [zoomToDistrictId, isMapReady, onZoomComplete]);
+	}, [zoomToDistrictId, isMapReady, onZoomComplete, bboxByCode]);
 
 	return (
 		<div className="election-map-root">

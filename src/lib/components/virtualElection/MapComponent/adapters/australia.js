@@ -1,13 +1,16 @@
+import auDivisions from '@/lib/data/auDivisions.json';
+
 function getMapAssetPath() {
 	return '/static/ridingMaps/Austrilia.pmtiles';
 }
 
-// Australia is rendered from vector tiles (PMTiles, layer "au-gen") by AustraliaMap,
+// Australia is rendered from vector tiles (PMTiles, layer "au-gen") by PmtilesMap,
 // so there is no GeoJSON conversion step like the other adapters.
 export const australiaMapAdapter = {
 	countryCode: 'AU',
 	renderer: 'maplibre',
 	sourceLayer: 'au-gen',
+	divisions: auDivisions,
 	getAssetUrl: () => getMapAssetPath(),
 	toGeoJSON: () => null,
 	getDistrictId: (featureLike) => {

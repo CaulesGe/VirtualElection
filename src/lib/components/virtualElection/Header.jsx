@@ -9,6 +9,7 @@ function getCountryNameFromPath(pathname) {
 	if (pathname?.startsWith('/canada')) return 'Canada';
 	if (pathname?.startsWith('/uk')) return 'United Kingdom';
 	if (pathname?.startsWith('/australia')) return 'Australia';
+	if (pathname?.startsWith('/germany')) return 'Germany';
 	return '...';
 }
 
@@ -17,6 +18,7 @@ function getCountryRouteFromPath(pathname) {
 	if (pathname?.startsWith('/usa')) return '/usa/president';
 	if (pathname?.startsWith('/uk')) return '/uk';
 	if (pathname?.startsWith('/australia')) return '/australia';
+	if (pathname?.startsWith('/germany')) return '/germany';
 	return '/canada';
 }
 
@@ -67,6 +69,7 @@ export default function Header({ isAuthenticated = false, userLabel = '' }) {
 						<option value="/usa/president">USA</option>
 						<option value="/uk">United Kingdom</option>
 						<option value="/australia">Australia</option>
+						<option value="/germany">Germany</option>
 					</select>
 				</div>
 				<div className={styles.userSlot}>

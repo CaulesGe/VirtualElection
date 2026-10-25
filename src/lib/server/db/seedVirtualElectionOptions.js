@@ -5,6 +5,7 @@ import path from 'node:path';
 import { feature } from 'topojson-client';
 import statesTopology from 'us-atlas/states-10m.json' with { type: 'json' };
 import auDivisions from '../../data/auDivisions.json' with { type: 'json' };
+import deDivisions from '../../data/deDivisions.json' with { type: 'json' };
 import {
 	FEDERAL_PARTIES,
 	VIRTUAL_ELECTION_ALLOWED_SCOPES,
@@ -144,9 +145,12 @@ async function seed() {
 			continue;
 		}
 
-		if (scope.country === 'au' && scope.district === 'fed') {
+		// Countries rendered from a pmtiles file: districts come from the committed division lists.
+		const divisionList =
+			scope.district === 'fed' ? { au: auDivisions, de: deDivisions }[scope.country] : null;
+		if (divisionList) {
 			await db.delete(electionDistricts).where(eq(electionDistricts.electionId, electionId));
-			const rows = auDivisions.map((division, index) => ({
+			const rows = divisionList.map((division, index) => ({
 				electionId,
 				districtKey: String(division.code),
 				name: String(division.name),

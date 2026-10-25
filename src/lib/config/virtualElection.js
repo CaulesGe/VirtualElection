@@ -31,8 +31,23 @@ export const VIRTUAL_ELECTION_ALLOWED_PARTIES_AU = [
 	'OTH'
 ];
 
+// Germany (Bundestag, first vote / Erststimme only): CDU and CSU are one entry. Ordered by
+// the national vote share of the last result; OTH collects every remaining party.
+export const VIRTUAL_ELECTION_ALLOWED_PARTIES_DE = [
+	'CDU',
+	'AFD',
+	'SPD',
+	'GRUNE',
+	'LINKE',
+	'BSW',
+	'FDP',
+	'SSW',
+	'OTH'
+];
+
 export const VIRTUAL_ELECTION_ALLOWED_PARTIES_BY_COUNTRY = {
 	CA: VIRTUAL_ELECTION_ALLOWED_PARTIES,
+	DE: VIRTUAL_ELECTION_ALLOWED_PARTIES_DE,
 	US: VIRTUAL_ELECTION_ALLOWED_PARTIES_US,
 	UK: VIRTUAL_ELECTION_ALLOWED_PARTIES_UK,
 	AU: VIRTUAL_ELECTION_ALLOWED_PARTIES_AU
@@ -59,6 +74,11 @@ export const VIRTUAL_ELECTION_ALLOWED_SCOPES = [
 	},
 	{
 		country: 'au',
+		district: 'fed',
+		year: 2025
+	},
+	{
+		country: 'de',
 		district: 'fed',
 		year: 2025
 	},
@@ -352,6 +372,79 @@ export const FEDERAL_PARTIES = {
 		textColor: 'text-afp',
 		logo: '',
 		colorGradient: ['#FBEF8A', '#F9E65C', '#F7DE2E', '#F5D800', '#C4AD00', '#8A7900']
+	},
+	// Germany. Party names are German; OTH is shared with the Canada definition above.
+	CDU: {
+		name: 'Christlich Demokratische Union/Christlich-Soziale Union',
+		shortName: 'CDU/CSU',
+		color: '#262626',
+		backgroundColor: 'bg-cdu',
+		textColor: 'text-cdu',
+		logo: '',
+		colorGradient: ['#A6A6A6', '#808080', '#595959', '#262626', '#1A1A1A', '#0D0D0D']
+	},
+	AFD: {
+		name: 'Alternative für Deutschland',
+		shortName: 'AfD',
+		color: '#009EE0',
+		backgroundColor: 'bg-afd',
+		textColor: 'text-afd',
+		logo: '',
+		colorGradient: ['#99D8F3', '#66C5EC', '#33B1E6', '#009EE0', '#007AAE', '#00557A']
+	},
+	SPD: {
+		name: 'Sozialdemokratische Partei Deutschlands',
+		shortName: 'SPD',
+		color: '#E3000F',
+		backgroundColor: 'bg-spd',
+		textColor: 'text-spd',
+		logo: '',
+		colorGradient: ['#F59AA1', '#EF6670', '#E93341', '#E3000F', '#B1000C', '#7C0008']
+	},
+	GRUNE: {
+		name: 'Bündnis 90/Die Grünen',
+		shortName: 'Grüne',
+		color: '#46962B',
+		backgroundColor: 'bg-grune',
+		textColor: 'text-grune',
+		logo: '',
+		colorGradient: ['#A9D49A', '#88C275', '#67AF50', '#46962B', '#367421', '#264F17']
+	},
+	LINKE: {
+		name: 'Die Linke',
+		shortName: 'Linke',
+		color: '#BE3075',
+		backgroundColor: 'bg-linke',
+		textColor: 'text-linke',
+		logo: '',
+		colorGradient: ['#E5A0C0', '#D870A0', '#CB4F8A', '#BE3075', '#95265C', '#6A1B42']
+	},
+	BSW: {
+		name: 'Bündnis Sahra Wagenknecht',
+		shortName: 'BSW',
+		color: '#792350',
+		backgroundColor: 'bg-bsw',
+		textColor: 'text-bsw',
+		logo: '',
+		colorGradient: ['#C79BB3', '#A8678A', '#8F416C', '#792350', '#5D1B3E', '#40122B']
+	},
+	FDP: {
+		name: 'Freie Demokratische Partei',
+		shortName: 'FDP',
+		color: '#FFD700',
+		backgroundColor: 'bg-fdp',
+		textColor: 'text-fdp',
+		logo: '',
+		colorGradient: ['#FFEE99', '#FFE466', '#FFDC33', '#FFD700', '#CCAC00', '#8F7800']
+	},
+	SSW: {
+		name: 'Südschleswigscher Wählerverband',
+		shortName: 'SSW',
+		color: '#003C8F',
+		backgroundColor: 'bg-ssw',
+		textColor: 'text-ssw',
+		logo: '',
+		colorGradient: ['#8CA6CF', '#5A7DB5', '#2D5A9F', '#003C8F', '#002E6E', '#001F4A']
 	}
 };
 

@@ -1,0 +1,3590 @@
+[
+	{
+		"code": "1",
+		"name": "Flensburg – Schleswig",
+		"state": "SH",
+		"stateName": "Schleswig-Holstein",
+		"bbox": [
+			9.0623,
+			54.2716,
+			10.0432,
+			54.8869
+		]
+	},
+	{
+		"code": "2",
+		"name": "Nordfriesland – Dithmarschen Nord",
+		"state": "SH",
+		"stateName": "Schleswig-Holstein",
+		"bbox": [
+			8.2785,
+			54.1192,
+			9.4445,
+			55.0583
+		]
+	},
+	{
+		"code": "3",
+		"name": "Steinburg – Dithmarschen Süd",
+		"state": "SH",
+		"stateName": "Schleswig-Holstein",
+		"bbox": [
+			8.6789,
+			53.7077,
+			10.0621,
+			54.2068
+		]
+	},
+	{
+		"code": "4",
+		"name": "Rendsburg-Eckernförde",
+		"state": "SH",
+		"stateName": "Schleswig-Holstein",
+		"bbox": [
+			9.304,
+			54.0088,
+			10.1994,
+			54.647
+		]
+	},
+	{
+		"code": "5",
+		"name": "Kiel",
+		"state": "SH",
+		"stateName": "Schleswig-Holstein",
+		"bbox": [
+			10.0326,
+			54.2508,
+			10.2187,
+			54.4329
+		]
+	},
+	{
+		"code": "6",
+		"name": "Plön – Neumünster",
+		"state": "SH",
+		"stateName": "Schleswig-Holstein",
+		"bbox": [
+			9.9258,
+			53.9298,
+			10.7292,
+			54.4359
+		]
+	},
+	{
+		"code": "7",
+		"name": "Pinneberg",
+		"state": "SH",
+		"stateName": "Schleswig-Holstein",
+		"bbox": [
+			7.8693,
+			53.5576,
+			9.9849,
+			54.193
+		]
+	},
+	{
+		"code": "8",
+		"name": "Segeberg – Stormarn-Mitte",
+		"state": "SH",
+		"stateName": "Schleswig-Holstein",
+		"bbox": [
+			9.8266,
+			53.6473,
+			10.5637,
+			54.1077
+		]
+	},
+	{
+		"code": "9",
+		"name": "Ostholstein – Stormarn-Nord",
+		"state": "SH",
+		"stateName": "Schleswig-Holstein",
+		"bbox": [
+			10.3917,
+			53.7534,
+			11.3128,
+			54.536
+		]
+	},
+	{
+		"code": "10",
+		"name": "Herzogtum Lauenburg – Stormarn-Süd",
+		"state": "SH",
+		"stateName": "Schleswig-Holstein",
+		"bbox": [
+			10.1476,
+			53.3598,
+			10.9551,
+			53.8274
+		]
+	},
+	{
+		"code": "11",
+		"name": "Lübeck",
+		"state": "SH",
+		"stateName": "Schleswig-Holstein",
+		"bbox": [
+			10.3968,
+			53.6308,
+			10.9685,
+			53.994
+		]
+	},
+	{
+		"code": "12",
+		"name": "Schwerin – Ludwigslust-Parchim I – Nordwestmecklenburg I",
+		"state": "MV",
+		"stateName": "Mecklenburg-Vorpommern",
+		"bbox": [
+			10.5936,
+			53.1103,
+			11.8536,
+			53.985
+		]
+	},
+	{
+		"code": "13",
+		"name": "Ludwigslust-Parchim II – Nordwestmecklenburg II – Landkreis Rostock I",
+		"state": "MV",
+		"stateName": "Mecklenburg-Vorpommern",
+		"bbox": [
+			10.9757,
+			53.2482,
+			12.3665,
+			54.1727
+		]
+	},
+	{
+		"code": "14",
+		"name": "Rostock – Landkreis Rostock II",
+		"state": "MV",
+		"stateName": "Mecklenburg-Vorpommern",
+		"bbox": [
+			11.9706,
+			53.86,
+			12.6593,
+			54.2748
+		]
+	},
+	{
+		"code": "15",
+		"name": "Vorpommern-Rügen – Vorpommern-Greifswald I",
+		"state": "MV",
+		"stateName": "Mecklenburg-Vorpommern",
+		"bbox": [
+			12.2783,
+			53.9652,
+			13.7672,
+			54.6849
+		]
+	},
+	{
+		"code": "16",
+		"name": "Mecklenburgische Seenplatte I – Vorpommern-Greifswald II",
+		"state": "MV",
+		"stateName": "Mecklenburg-Vorpommern",
+		"bbox": [
+			12.9869,
+			53.2426,
+			14.4123,
+			54.2516
+		]
+	},
+	{
+		"code": "17",
+		"name": "Mecklenburgische Seenplatte II – Landkreis Rostock III",
+		"state": "MV",
+		"stateName": "Mecklenburg-Vorpommern",
+		"bbox": [
+			11.7564,
+			53.1624,
+			13.4325,
+			54.0465
+		]
+	},
+	{
+		"code": "18",
+		"name": "Hamburg-Mitte",
+		"state": "HH",
+		"stateName": "Hamburg",
+		"bbox": [
+			8.42,
+			53.5001,
+			10.1668,
+			53.9644
+		]
+	},
+	{
+		"code": "19",
+		"name": "Hamburg-Altona",
+		"state": "HH",
+		"stateName": "Hamburg",
+		"bbox": [
+			9.7301,
+			53.5415,
+			9.977,
+			53.6275
+		]
+	},
+	{
+		"code": "20",
+		"name": "Hamburg-Eimsbüttel",
+		"state": "HH",
+		"stateName": "Hamburg",
+		"bbox": [
+			9.8698,
+			53.557,
+			10.0082,
+			53.6554
+		]
+	},
+	{
+		"code": "21",
+		"name": "Hamburg-Nord",
+		"state": "HH",
+		"stateName": "Hamburg",
+		"bbox": [
+			9.9564,
+			53.5754,
+			10.1936,
+			53.7384
+		]
+	},
+	{
+		"code": "22",
+		"name": "Hamburg-Wandsbek",
+		"state": "HH",
+		"stateName": "Hamburg",
+		"bbox": [
+			10.0319,
+			53.5595,
+			10.2217,
+			53.676
+		]
+	},
+	{
+		"code": "23",
+		"name": "Hamburg-Bergedorf – Harburg",
+		"state": "HH",
+		"stateName": "Hamburg",
+		"bbox": [
+			9.7638,
+			53.395,
+			10.3261,
+			53.5436
+		]
+	},
+	{
+		"code": "24",
+		"name": "Aurich – Emden",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			6.8534,
+			53.3202,
+			7.8154,
+			53.7359
+		]
+	},
+	{
+		"code": "25",
+		"name": "Unterems",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			6.6399,
+			52.5884,
+			7.8858,
+			53.6178
+		]
+	},
+	{
+		"code": "26",
+		"name": "Friesland – Wilhelmshaven – Wittmund",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			7.4079,
+			53.3046,
+			8.2071,
+			53.7948
+		]
+	},
+	{
+		"code": "27",
+		"name": "Oldenburg – Ammerland",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			7.6976,
+			53.0596,
+			8.3146,
+			53.354
+		]
+	},
+	{
+		"code": "28",
+		"name": "Delmenhorst – Wesermarsch – Oldenburg-Land",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			8.0509,
+			52.7978,
+			8.7115,
+			53.6163
+		]
+	},
+	{
+		"code": "29",
+		"name": "Cuxhaven – Stade II",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			8.4828,
+			53.2812,
+			9.508,
+			53.8922
+		]
+	},
+	{
+		"code": "30",
+		"name": "Stade I – Rotenburg II",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			8.8965,
+			53.1441,
+			9.7837,
+			53.6912
+		]
+	},
+	{
+		"code": "31",
+		"name": "Mittelems",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			6.6811,
+			52.2413,
+			7.7151,
+			52.7988
+		]
+	},
+	{
+		"code": "32",
+		"name": "Cloppenburg – Vechta",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			7.6118,
+			52.433,
+			8.4735,
+			53.1853
+		]
+	},
+	{
+		"code": "33",
+		"name": "Diepholz – Nienburg I",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			8.294,
+			52.3878,
+			9.3257,
+			53.0534
+		]
+	},
+	{
+		"code": "34",
+		"name": "Osterholz – Verden",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			8.4811,
+			52.7677,
+			9.464,
+			53.3956
+		]
+	},
+	{
+		"code": "35",
+		"name": "Rotenburg I – Heidekreis",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			9.1451,
+			52.5995,
+			10.2372,
+			53.2591
+		]
+	},
+	{
+		"code": "36",
+		"name": "Harburg",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			9.5612,
+			53.1291,
+			10.471,
+			53.5052
+		]
+	},
+	{
+		"code": "37",
+		"name": "Lüchow-Dannenberg – Lüneburg",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			10.036,
+			52.8457,
+			11.5981,
+			53.3858
+		]
+	},
+	{
+		"code": "38",
+		"name": "Osnabrück-Land",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			7.6039,
+			52.0354,
+			8.5175,
+			52.7093
+		]
+	},
+	{
+		"code": "39",
+		"name": "Stadt Osnabrück",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			7.8999,
+			52.1674,
+			8.2078,
+			52.3787
+		]
+	},
+	{
+		"code": "40",
+		"name": "Nienburg II – Schaumburg",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			8.8708,
+			52.0943,
+			9.5378,
+			52.7695
+		]
+	},
+	{
+		"code": "41",
+		"name": "Stadt Hannover I",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			9.6048,
+			52.3383,
+			9.9186,
+			52.4537
+		]
+	},
+	{
+		"code": "42",
+		"name": "Stadt Hannover II",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			9.6364,
+			52.306,
+			9.8839,
+			52.3986
+		]
+	},
+	{
+		"code": "43",
+		"name": "Hannover-Land I",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			9.2381,
+			52.3624,
+			10.103,
+			52.677
+		]
+	},
+	{
+		"code": "44",
+		"name": "Celle – Uelzen",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			9.726,
+			52.4882,
+			10.8926,
+			53.2038
+		]
+	},
+	{
+		"code": "45",
+		"name": "Gifhorn – Peine",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			9.9952,
+			52.175,
+			10.9029,
+			52.8343
+		]
+	},
+	{
+		"code": "46",
+		"name": "Hameln-Pyrmont – Holzminden",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			9.1547,
+			51.5521,
+			9.8949,
+			52.2742
+		]
+	},
+	{
+		"code": "47",
+		"name": "Hannover-Land II",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			9.3985,
+			52.1284,
+			10.3035,
+			52.5256
+		]
+	},
+	{
+		"code": "48",
+		"name": "Hildesheim",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			9.6288,
+			51.8968,
+			10.264,
+			52.2969
+		]
+	},
+	{
+		"code": "49",
+		"name": "Salzgitter – Wolfenbüttel",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			10.0655,
+			51.8088,
+			10.8892,
+			52.3032
+		]
+	},
+	{
+		"code": "50",
+		"name": "Braunschweig",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			10.4123,
+			52.1868,
+			10.643,
+			52.3576
+		]
+	},
+	{
+		"code": "51",
+		"name": "Helmstedt – Wolfsburg",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			10.6011,
+			52.0476,
+			11.0862,
+			52.6329
+		]
+	},
+	{
+		"code": "52",
+		"name": "Goslar – Northeim – Göttingen II",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			9.5794,
+			51.5583,
+			10.7014,
+			52.006
+		]
+	},
+	{
+		"code": "53",
+		"name": "Göttingen I",
+		"state": "NI",
+		"stateName": "Lower Saxony",
+		"bbox": [
+			9.5485,
+			51.2952,
+			10.5929,
+			51.7081
+		]
+	},
+	{
+		"code": "54",
+		"name": "Bremen I",
+		"state": "HB",
+		"stateName": "Bremen",
+		"bbox": [
+			8.707,
+			53.0111,
+			8.9909,
+			53.1521
+		]
+	},
+	{
+		"code": "55",
+		"name": "Bremen II – Bremerhaven",
+		"state": "HB",
+		"stateName": "Bremen",
+		"bbox": [
+			8.4818,
+			53.067,
+			8.8649,
+			53.61
+		]
+	},
+	{
+		"code": "56",
+		"name": "Prignitz – Ostprignitz-Ruppin – Havelland I",
+		"state": "BB",
+		"stateName": "Brandenburg",
+		"bbox": [
+			11.2658,
+			52.4993,
+			13.0569,
+			53.3714
+		]
+	},
+	{
+		"code": "57",
+		"name": "Uckermark – Barnim I",
+		"state": "BB",
+		"stateName": "Brandenburg",
+		"bbox": [
+			13.2396,
+			52.6356,
+			14.4505,
+			53.5587
+		]
+	},
+	{
+		"code": "58",
+		"name": "Oberhavel – Havelland II",
+		"state": "BB",
+		"stateName": "Brandenburg",
+		"bbox": [
+			12.7345,
+			52.4502,
+			13.5211,
+			53.251
+		]
+	},
+	{
+		"code": "59",
+		"name": "Märkisch-Oderland – Barnim II",
+		"state": "BB",
+		"stateName": "Brandenburg",
+		"bbox": [
+			13.4675,
+			52.3739,
+			14.6396,
+			52.9033
+		]
+	},
+	{
+		"code": "60",
+		"name": "Brandenburg an der Havel – Potsdam-Mittelmark I – Havelland III – Teltow-Fläming I",
+		"state": "BB",
+		"stateName": "Brandenburg",
+		"bbox": [
+			12.142,
+			51.8674,
+			13.233,
+			52.6716
+		]
+	},
+	{
+		"code": "61",
+		"name": "Potsdam – Potsdam-Mittelmark II – Teltow-Fläming II",
+		"state": "BB",
+		"stateName": "Brandenburg",
+		"bbox": [
+			12.8523,
+			52.2253,
+			13.393,
+			52.5148
+		]
+	},
+	{
+		"code": "62",
+		"name": "Dahme-Spreewald – Teltow-Fläming III",
+		"state": "BB",
+		"stateName": "Brandenburg",
+		"bbox": [
+			12.9515,
+			51.727,
+			14.4535,
+			52.4206
+		]
+	},
+	{
+		"code": "63",
+		"name": "Frankfurt (Oder) – Oder-Spree",
+		"state": "BB",
+		"stateName": "Brandenburg",
+		"bbox": [
+			13.667,
+			51.9999,
+			14.7591,
+			52.5026
+		]
+	},
+	{
+		"code": "64",
+		"name": "Cottbus – Spree-Neiße",
+		"state": "BB",
+		"stateName": "Brandenburg",
+		"bbox": [
+			14.0731,
+			51.5049,
+			14.7656,
+			52.0578
+		]
+	},
+	{
+		"code": "65",
+		"name": "Elbe-Elster – Oberspreewald-Lausitz",
+		"state": "BB",
+		"stateName": "Brandenburg",
+		"bbox": [
+			13.0511,
+			51.3589,
+			14.2177,
+			51.903
+		]
+	},
+	{
+		"code": "66",
+		"name": "Altmark – Jerichower Land",
+		"state": "ST",
+		"stateName": "Saxony-Anhalt",
+		"bbox": [
+			10.7553,
+			52.0007,
+			12.3308,
+			53.0416
+		]
+	},
+	{
+		"code": "67",
+		"name": "Börde – Salzlandkreis",
+		"state": "ST",
+		"stateName": "Saxony-Anhalt",
+		"bbox": [
+			10.9338,
+			51.6289,
+			11.9044,
+			52.5081
+		]
+	},
+	{
+		"code": "68",
+		"name": "Harz",
+		"state": "ST",
+		"stateName": "Saxony-Anhalt",
+		"bbox": [
+			10.5613,
+			51.566,
+			11.6349,
+			52.0597
+		]
+	},
+	{
+		"code": "69",
+		"name": "Magdeburg",
+		"state": "ST",
+		"stateName": "Saxony-Anhalt",
+		"bbox": [
+			11.5185,
+			51.8375,
+			12.0201,
+			52.2284
+		]
+	},
+	{
+		"code": "70",
+		"name": "Anhalt – Dessau – Wittenberg",
+		"state": "ST",
+		"stateName": "Saxony-Anhalt",
+		"bbox": [
+			11.8834,
+			51.582,
+			13.187,
+			52.104
+		]
+	},
+	{
+		"code": "71",
+		"name": "Halle",
+		"state": "ST",
+		"stateName": "Saxony-Anhalt",
+		"bbox": [
+			11.857,
+			51.4028,
+			12.3438,
+			51.716
+		]
+	},
+	{
+		"code": "72",
+		"name": "Burgenland – Saalekreis",
+		"state": "ST",
+		"stateName": "Saxony-Anhalt",
+		"bbox": [
+			11.365,
+			50.9381,
+			12.294,
+			51.4386
+		]
+	},
+	{
+		"code": "73",
+		"name": "Mansfeld",
+		"state": "ST",
+		"stateName": "Saxony-Anhalt",
+		"bbox": [
+			10.882,
+			51.2353,
+			12.1965,
+			51.8807
+		]
+	},
+	{
+		"code": "74",
+		"name": "Berlin-Mitte",
+		"state": "BE",
+		"stateName": "Berlin",
+		"bbox": [
+			13.3017,
+			52.4987,
+			13.4294,
+			52.5676
+		]
+	},
+	{
+		"code": "75",
+		"name": "Berlin-Pankow",
+		"state": "BE",
+		"stateName": "Berlin",
+		"bbox": [
+			13.3477,
+			52.5271,
+			13.5231,
+			52.6753
+		]
+	},
+	{
+		"code": "76",
+		"name": "Berlin-Reinickendorf",
+		"state": "BE",
+		"stateName": "Berlin",
+		"bbox": [
+			13.2018,
+			52.5488,
+			13.3892,
+			52.6608
+		]
+	},
+	{
+		"code": "77",
+		"name": "Berlin-Spandau – Charlottenburg Nord",
+		"state": "BE",
+		"stateName": "Berlin",
+		"bbox": [
+			13.1094,
+			52.4393,
+			13.3292,
+			52.5989
+		]
+	},
+	{
+		"code": "78",
+		"name": "Berlin-Steglitz-Zehlendorf",
+		"state": "BE",
+		"stateName": "Berlin",
+		"bbox": [
+			13.0885,
+			52.3869,
+			13.3717,
+			52.4719
+		]
+	},
+	{
+		"code": "79",
+		"name": "Berlin-Charlottenburg-Wilmersdorf",
+		"state": "BE",
+		"stateName": "Berlin",
+		"bbox": [
+			13.1867,
+			52.4665,
+			13.3415,
+			52.5315
+		]
+	},
+	{
+		"code": "80",
+		"name": "Berlin-Tempelhof-Schöneberg",
+		"state": "BE",
+		"stateName": "Berlin",
+		"bbox": [
+			13.3199,
+			52.3762,
+			13.4277,
+			52.5049
+		]
+	},
+	{
+		"code": "81",
+		"name": "Berlin-Neukölln",
+		"state": "BE",
+		"stateName": "Berlin",
+		"bbox": [
+			13.3995,
+			52.3959,
+			13.5242,
+			52.496
+		]
+	},
+	{
+		"code": "82",
+		"name": "Berlin-Friedrichshain-Kreuzberg – Prenzlauer Berg Ost",
+		"state": "BE",
+		"stateName": "Berlin",
+		"bbox": [
+			13.3683,
+			52.4828,
+			13.4916,
+			52.5521
+		]
+	},
+	{
+		"code": "83",
+		"name": "Berlin-Treptow-Köpenick",
+		"state": "BE",
+		"stateName": "Berlin",
+		"bbox": [
+			13.4397,
+			52.3383,
+			13.7604,
+			52.4976
+		]
+	},
+	{
+		"code": "84",
+		"name": "Berlin-Marzahn-Hellersdorf",
+		"state": "BE",
+		"stateName": "Berlin",
+		"bbox": [
+			13.517,
+			52.4707,
+			13.6588,
+			52.5741
+		]
+	},
+	{
+		"code": "85",
+		"name": "Berlin-Lichtenberg",
+		"state": "BE",
+		"stateName": "Berlin",
+		"bbox": [
+			13.4562,
+			52.4679,
+			13.5674,
+			52.5964
+		]
+	},
+	{
+		"code": "86",
+		"name": "Aachen I",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			5.9748,
+			50.6488,
+			6.2169,
+			50.8573
+		]
+	},
+	{
+		"code": "87",
+		"name": "Aachen II",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.0576,
+			50.4944,
+			6.4198,
+			50.9502
+		]
+	},
+	{
+		"code": "88",
+		"name": "Heinsberg",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			5.8664,
+			50.8983,
+			6.4771,
+			51.1899
+		]
+	},
+	{
+		"code": "89",
+		"name": "Düren",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.1935,
+			50.5983,
+			6.7181,
+			51.0466
+		]
+	},
+	{
+		"code": "90",
+		"name": "Rhein-Erft-Kreis I",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.4534,
+			50.822,
+			6.9221,
+			51.066
+		]
+	},
+	{
+		"code": "91",
+		"name": "Euskirchen – Rhein-Erft-Kreis II",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.3158,
+			50.3229,
+			7.0302,
+			50.8614
+		]
+	},
+	{
+		"code": "92",
+		"name": "Köln I",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.9248,
+			50.8296,
+			7.1638,
+			50.9621
+		]
+	},
+	{
+		"code": "93",
+		"name": "Köln II",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.8088,
+			50.8352,
+			7.0518,
+			50.9783
+		]
+	},
+	{
+		"code": "94",
+		"name": "Köln III",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.7724,
+			50.9392,
+			6.9986,
+			51.0845
+		]
+	},
+	{
+		"code": "95",
+		"name": "Bonn",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			7.0234,
+			50.6318,
+			7.2108,
+			50.7745
+		]
+	},
+	{
+		"code": "96",
+		"name": "Rhein-Sieg-Kreis I",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.9794,
+			50.6962,
+			7.6822,
+			50.9498
+		]
+	},
+	{
+		"code": "97",
+		"name": "Rhein-Sieg-Kreis II",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.8544,
+			50.556,
+			7.3722,
+			50.8053
+		]
+	},
+	{
+		"code": "98",
+		"name": "Oberbergischer Kreis",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			7.2527,
+			50.8185,
+			7.7921,
+			51.2503
+		]
+	},
+	{
+		"code": "99",
+		"name": "Rheinisch-Bergischer Kreis",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.9904,
+			50.8673,
+			7.3986,
+			51.1608
+		]
+	},
+	{
+		"code": "100",
+		"name": "Leverkusen – Köln IV",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.898,
+			50.945,
+			7.1157,
+			51.0971
+		]
+	},
+	{
+		"code": "101",
+		"name": "Wuppertal I",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			7.0148,
+			51.2054,
+			7.3135,
+			51.3182
+		]
+	},
+	{
+		"code": "102",
+		"name": "Solingen – Remscheid – Wuppertal II",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.9513,
+			51.1152,
+			7.3093,
+			51.2503
+		]
+	},
+	{
+		"code": "103",
+		"name": "Mettmann I",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.8534,
+			51.0649,
+			7.0518,
+			51.295
+		]
+	},
+	{
+		"code": "104",
+		"name": "Mettmann II",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.7999,
+			51.2548,
+			7.1696,
+			51.3814
+		]
+	},
+	{
+		"code": "105",
+		"name": "Düsseldorf I",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.69,
+			51.2116,
+			6.9399,
+			51.3514
+		]
+	},
+	{
+		"code": "106",
+		"name": "Düsseldorf II",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.7226,
+			51.1244,
+			6.9252,
+			51.229
+		]
+	},
+	{
+		"code": "107",
+		"name": "Neuss I",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.5194,
+			51.0151,
+			6.8836,
+			51.2346
+		]
+	},
+	{
+		"code": "108",
+		"name": "Mönchengladbach",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.291,
+			51.0858,
+			6.5372,
+			51.2477
+		]
+	},
+	{
+		"code": "109",
+		"name": "Krefeld I – Neuss II",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.4366,
+			51.0341,
+			6.7346,
+			51.3906
+		]
+	},
+	{
+		"code": "110",
+		"name": "Viersen",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.0679,
+			51.1662,
+			6.6261,
+			51.4249
+		]
+	},
+	{
+		"code": "111",
+		"name": "Kleve",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			5.945,
+			51.3551,
+			6.5345,
+			51.9051
+		]
+	},
+	{
+		"code": "112",
+		"name": "Wesel I",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.2931,
+			51.4724,
+			6.9406,
+			51.8169
+		]
+	},
+	{
+		"code": "113",
+		"name": "Krefeld II – Wesel II",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.4778,
+			51.3233,
+			6.678,
+			51.5237
+		]
+	},
+	{
+		"code": "114",
+		"name": "Duisburg I",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.6258,
+			51.3332,
+			6.8304,
+			51.4529
+		]
+	},
+	{
+		"code": "115",
+		"name": "Duisburg II",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.6289,
+			51.4313,
+			6.8232,
+			51.5602
+		]
+	},
+	{
+		"code": "116",
+		"name": "Oberhausen – Wesel III",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.6866,
+			51.4489,
+			6.9307,
+			51.6071
+		]
+	},
+	{
+		"code": "117",
+		"name": "Mülheim – Essen I",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.805,
+			51.3512,
+			6.9897,
+			51.5047
+		]
+	},
+	{
+		"code": "118",
+		"name": "Essen II",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.977,
+			51.4283,
+			7.1336,
+			51.5342
+		]
+	},
+	{
+		"code": "119",
+		"name": "Essen III",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.9039,
+			51.3473,
+			7.137,
+			51.4713
+		]
+	},
+	{
+		"code": "120",
+		"name": "Recklinghausen I",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			7.1342,
+			51.5207,
+			7.4652,
+			51.6628
+		]
+	},
+	{
+		"code": "121",
+		"name": "Recklinghausen II",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			7.0216,
+			51.5506,
+			7.4223,
+			51.822
+		]
+	},
+	{
+		"code": "122",
+		"name": "Gelsenkirchen",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.9876,
+			51.4807,
+			7.1452,
+			51.6314
+		]
+	},
+	{
+		"code": "123",
+		"name": "Steinfurt I – Borken I",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.8671,
+			52.0039,
+			7.5867,
+			52.3425
+		]
+	},
+	{
+		"code": "124",
+		"name": "Bottrop – Recklinghausen III",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.8332,
+			51.4968,
+			7.0889,
+			51.801
+		]
+	},
+	{
+		"code": "125",
+		"name": "Borken II",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			6.3868,
+			51.7289,
+			7.1727,
+			52.128
+		]
+	},
+	{
+		"code": "126",
+		"name": "Coesfeld – Steinfurt II",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			7.0532,
+			51.6645,
+			7.7357,
+			52.1438
+		]
+	},
+	{
+		"code": "127",
+		"name": "Steinfurt III",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			7.4326,
+			52.0326,
+			8.0252,
+			52.475
+		]
+	},
+	{
+		"code": "128",
+		"name": "Münster",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			7.4741,
+			51.8402,
+			7.7742,
+			52.0601
+		]
+	},
+	{
+		"code": "129",
+		"name": "Warendorf",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			7.6132,
+			51.6581,
+			8.3201,
+			52.104
+		]
+	},
+	{
+		"code": "130",
+		"name": "Gütersloh I",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			8.0756,
+			51.7175,
+			8.6013,
+			52.1352
+		]
+	},
+	{
+		"code": "131",
+		"name": "Bielefeld – Gütersloh II",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			8.351,
+			51.9148,
+			8.6637,
+			52.1151
+		]
+	},
+	{
+		"code": "132",
+		"name": "Herford – Minden-Lübbecke II",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			8.4039,
+			52.0588,
+			8.9271,
+			52.2764
+		]
+	},
+	{
+		"code": "133",
+		"name": "Minden-Lübbecke I",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			8.2974,
+			52.1809,
+			9.1368,
+			52.5315
+		]
+	},
+	{
+		"code": "134",
+		"name": "Lippe I",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			8.6064,
+			51.8589,
+			9.1973,
+			52.1946
+		]
+	},
+	{
+		"code": "135",
+		"name": "Höxter – Gütersloh III – Lippe II",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			8.5573,
+			51.442,
+			9.4616,
+			51.9773
+		]
+	},
+	{
+		"code": "136",
+		"name": "Paderborn",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			8.4032,
+			51.4474,
+			9.0174,
+			51.8771
+		]
+	},
+	{
+		"code": "137",
+		"name": "Hagen – Ennepe-Ruhr-Kreis I",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			7.2541,
+			51.2131,
+			7.5991,
+			51.4181
+		]
+	},
+	{
+		"code": "138",
+		"name": "Ennepe-Ruhr-Kreis II",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			7.1085,
+			51.295,
+			7.469,
+			51.4837
+		]
+	},
+	{
+		"code": "139",
+		"name": "Bochum I",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			7.1044,
+			51.4108,
+			7.2898,
+			51.522
+		]
+	},
+	{
+		"code": "140",
+		"name": "Herne – Bochum II",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			7.1236,
+			51.454,
+			7.3499,
+			51.5734
+		]
+	},
+	{
+		"code": "141",
+		"name": "Dortmund I",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			7.3025,
+			51.4328,
+			7.5239,
+			51.5995
+		]
+	},
+	{
+		"code": "142",
+		"name": "Dortmund II",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			7.4213,
+			51.4155,
+			7.6379,
+			51.5926
+		]
+	},
+	{
+		"code": "143",
+		"name": "Unna I",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			7.5033,
+			51.3855,
+			7.8497,
+			51.6611
+		]
+	},
+	{
+		"code": "144",
+		"name": "Hamm – Unna II",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			7.4079,
+			51.5766,
+			7.9977,
+			51.7447
+		]
+	},
+	{
+		"code": "145",
+		"name": "Soest",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			7.8271,
+			51.3885,
+			8.5862,
+			51.7285
+		]
+	},
+	{
+		"code": "146",
+		"name": "Hochsauerlandkreis",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			7.8638,
+			51.0925,
+			8.9707,
+			51.5485
+		]
+	},
+	{
+		"code": "147",
+		"name": "Siegen-Wittgenstein",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			7.8267,
+			50.6854,
+			8.5491,
+			51.1494
+		]
+	},
+	{
+		"code": "148",
+		"name": "Olpe – Märkischer Kreis I",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			7.4178,
+			50.9247,
+			8.2459,
+			51.2958
+		]
+	},
+	{
+		"code": "149",
+		"name": "Märkischer Kreis II",
+		"state": "NW",
+		"stateName": "North Rhine-Westphalia",
+		"bbox": [
+			7.5775,
+			51.1524,
+			7.951,
+			51.4786
+		]
+	},
+	{
+		"code": "150",
+		"name": "Nordsachsen",
+		"state": "SN",
+		"stateName": "Saxony",
+		"bbox": [
+			12.1488,
+			51.1996,
+			13.2166,
+			51.6849
+		]
+	},
+	{
+		"code": "151",
+		"name": "Leipzig I",
+		"state": "SN",
+		"stateName": "Saxony",
+		"bbox": [
+			12.2374,
+			51.3034,
+			12.5426,
+			51.448
+		]
+	},
+	{
+		"code": "152",
+		"name": "Leipzig II",
+		"state": "SN",
+		"stateName": "Saxony",
+		"bbox": [
+			12.2371,
+			51.2381,
+			12.5055,
+			51.3615
+		]
+	},
+	{
+		"code": "153",
+		"name": "Leipzig-Land",
+		"state": "SN",
+		"stateName": "Saxony",
+		"bbox": [
+			12.1478,
+			50.9788,
+			12.9426,
+			51.4686
+		]
+	},
+	{
+		"code": "154",
+		"name": "Meißen",
+		"state": "SN",
+		"stateName": "Saxony",
+		"bbox": [
+			13.1822,
+			51.0073,
+			13.8565,
+			51.4542
+		]
+	},
+	{
+		"code": "155",
+		"name": "Bautzen I",
+		"state": "SN",
+		"stateName": "Saxony",
+		"bbox": [
+			13.7607,
+			51.0187,
+			14.699,
+			51.5446
+		]
+	},
+	{
+		"code": "156",
+		"name": "Görlitz",
+		"state": "SN",
+		"stateName": "Saxony",
+		"bbox": [
+			14.4402,
+			50.8194,
+			15.042,
+			51.5973
+		]
+	},
+	{
+		"code": "157",
+		"name": "Sächsische Schweiz-Osterzgebirge",
+		"state": "SN",
+		"stateName": "Saxony",
+		"bbox": [
+			13.4215,
+			50.7169,
+			14.402,
+			51.0899
+		]
+	},
+	{
+		"code": "158",
+		"name": "Dresden I",
+		"state": "SN",
+		"stateName": "Saxony",
+		"bbox": [
+			13.6745,
+			50.9751,
+			13.8847,
+			51.0766
+		]
+	},
+	{
+		"code": "159",
+		"name": "Dresden II – Bautzen II",
+		"state": "SN",
+		"stateName": "Saxony",
+		"bbox": [
+			13.5798,
+			50.9867,
+			14.113,
+			51.2024
+		]
+	},
+	{
+		"code": "160",
+		"name": "Mittelsachsen",
+		"state": "SN",
+		"stateName": "Saxony",
+		"bbox": [
+			12.8492,
+			50.6336,
+			13.6522,
+			51.2346
+		]
+	},
+	{
+		"code": "161",
+		"name": "Chemnitz",
+		"state": "SN",
+		"stateName": "Saxony",
+		"bbox": [
+			12.727,
+			50.7412,
+			13.0542,
+			50.9039
+		]
+	},
+	{
+		"code": "162",
+		"name": "Chemnitzer Umland – Erzgebirgskreis II",
+		"state": "SN",
+		"stateName": "Saxony",
+		"bbox": [
+			12.5838,
+			50.5957,
+			13.0322,
+			51.108
+		]
+	},
+	{
+		"code": "163",
+		"name": "Erzgebirgskreis I",
+		"state": "SN",
+		"stateName": "Saxony",
+		"bbox": [
+			12.4578,
+			50.3974,
+			13.5019,
+			50.8066
+		]
+	},
+	{
+		"code": "164",
+		"name": "Zwickau",
+		"state": "SN",
+		"stateName": "Saxony",
+		"bbox": [
+			12.2268,
+			50.5466,
+			12.7187,
+			50.9093
+		]
+	},
+	{
+		"code": "165",
+		"name": "Vogtlandkreis",
+		"state": "SN",
+		"stateName": "Saxony",
+		"bbox": [
+			11.8714,
+			50.1716,
+			12.5842,
+			50.6771
+		]
+	},
+	{
+		"code": "166",
+		"name": "Waldeck",
+		"state": "HE",
+		"stateName": "Hesse",
+		"bbox": [
+			8.5563,
+			51.0282,
+			9.691,
+			51.6574
+		]
+	},
+	{
+		"code": "167",
+		"name": "Kassel",
+		"state": "HE",
+		"stateName": "Hesse",
+		"bbox": [
+			9.3514,
+			51.1709,
+			9.7596,
+			51.4155
+		]
+	},
+	{
+		"code": "168",
+		"name": "Werra-Meißner – Hersfeld-Rotenburg",
+		"state": "HE",
+		"stateName": "Hesse",
+		"bbox": [
+			9.4335,
+			50.7178,
+			10.2362,
+			51.421
+		]
+	},
+	{
+		"code": "169",
+		"name": "Schwalm-Eder",
+		"state": "HE",
+		"stateName": "Hesse",
+		"bbox": [
+			8.4735,
+			50.7727,
+			9.7809,
+			51.2576
+		]
+	},
+	{
+		"code": "170",
+		"name": "Marburg",
+		"state": "HE",
+		"stateName": "Hesse",
+		"bbox": [
+			8.3548,
+			50.6738,
+			9.1516,
+			50.9967
+		]
+	},
+	{
+		"code": "171",
+		"name": "Lahn-Dill",
+		"state": "HE",
+		"stateName": "Hesse",
+		"bbox": [
+			8.1096,
+			50.3958,
+			8.6964,
+			50.8827
+		]
+	},
+	{
+		"code": "172",
+		"name": "Gießen",
+		"state": "HE",
+		"stateName": "Hesse",
+		"bbox": [
+			8.5295,
+			50.4151,
+			9.4609,
+			50.8365
+		]
+	},
+	{
+		"code": "173",
+		"name": "Fulda",
+		"state": "HE",
+		"stateName": "Hesse",
+		"bbox": [
+			9.1046,
+			50.3562,
+			10.083,
+			50.8096
+		]
+	},
+	{
+		"code": "174",
+		"name": "Main-Kinzig – Wetterau II – Schotten",
+		"state": "HE",
+		"stateName": "Hesse",
+		"bbox": [
+			8.8993,
+			50.0838,
+			9.749,
+			50.5492
+		]
+	},
+	{
+		"code": "175",
+		"name": "Hochtaunus",
+		"state": "HE",
+		"stateName": "Hesse",
+		"bbox": [
+			8.0853,
+			50.1672,
+			8.7125,
+			50.5996
+		]
+	},
+	{
+		"code": "176",
+		"name": "Wetterau I",
+		"state": "HE",
+		"stateName": "Hesse",
+		"bbox": [
+			8.5141,
+			50.1619,
+			9.1262,
+			50.5001
+		]
+	},
+	{
+		"code": "177",
+		"name": "Rheingau-Taunus – Limburg",
+		"state": "HE",
+		"stateName": "Hesse",
+		"bbox": [
+			7.7725,
+			49.9718,
+			8.4111,
+			50.5571
+		]
+	},
+	{
+		"code": "178",
+		"name": "Wiesbaden",
+		"state": "HE",
+		"stateName": "Hesse",
+		"bbox": [
+			8.1103,
+			49.9945,
+			8.386,
+			50.1518
+		]
+	},
+	{
+		"code": "179",
+		"name": "Hanau",
+		"state": "HE",
+		"stateName": "Hesse",
+		"bbox": [
+			8.7808,
+			50.0662,
+			9.1595,
+			50.281
+		]
+	},
+	{
+		"code": "180",
+		"name": "Main-Taunus",
+		"state": "HE",
+		"stateName": "Hesse",
+		"bbox": [
+			8.317,
+			49.9965,
+			8.6009,
+			50.2299
+		]
+	},
+	{
+		"code": "181",
+		"name": "Frankfurt am Main I",
+		"state": "HE",
+		"stateName": "Hesse",
+		"bbox": [
+			8.4725,
+			50.0618,
+			8.696,
+			50.1842
+		]
+	},
+	{
+		"code": "182",
+		"name": "Frankfurt am Main II",
+		"state": "HE",
+		"stateName": "Hesse",
+		"bbox": [
+			8.5158,
+			50.0155,
+			8.8007,
+			50.2261
+		]
+	},
+	{
+		"code": "183",
+		"name": "Groß-Gerau",
+		"state": "HE",
+		"stateName": "Hesse",
+		"bbox": [
+			8.2882,
+			49.7172,
+			8.6301,
+			50.0836
+		]
+	},
+	{
+		"code": "184",
+		"name": "Offenbach",
+		"state": "HE",
+		"stateName": "Hesse",
+		"bbox": [
+			8.591,
+			49.9481,
+			8.9099,
+			50.1373
+		]
+	},
+	{
+		"code": "185",
+		"name": "Darmstadt",
+		"state": "HE",
+		"stateName": "Hesse",
+		"bbox": [
+			8.5199,
+			49.722,
+			8.9157,
+			49.9654
+		]
+	},
+	{
+		"code": "186",
+		"name": "Odenwald",
+		"state": "HE",
+		"stateName": "Hesse",
+		"bbox": [
+			8.7403,
+			49.4706,
+			9.1509,
+			50.0904
+		]
+	},
+	{
+		"code": "187",
+		"name": "Bergstraße",
+		"state": "HE",
+		"stateName": "Hesse",
+		"bbox": [
+			8.3561,
+			49.3953,
+			8.9504,
+			49.7547
+		]
+	},
+	{
+		"code": "188",
+		"name": "Eichsfeld – Nordhausen – Kyffhäuserkreis",
+		"state": "TH",
+		"stateName": "Thuringia",
+		"bbox": [
+			9.9234,
+			51.1905,
+			11.4752,
+			51.6489
+		]
+	},
+	{
+		"code": "189",
+		"name": "Eisenach – Wartburgkreis – Unstrut-Hainich-Kreis",
+		"state": "TH",
+		"stateName": "Thuringia",
+		"bbox": [
+			9.8771,
+			50.6268,
+			10.9225,
+			51.3433
+		]
+	},
+	{
+		"code": "190",
+		"name": "Jena – Sömmerda – Weimarer Land I",
+		"state": "TH",
+		"stateName": "Thuringia",
+		"bbox": [
+			10.8627,
+			50.7936,
+			11.6973,
+			51.3227
+		]
+	},
+	{
+		"code": "191",
+		"name": "Gotha – Ilm-Kreis",
+		"state": "TH",
+		"stateName": "Thuringia",
+		"bbox": [
+			10.401,
+			50.5468,
+			11.2243,
+			51.1117
+		]
+	},
+	{
+		"code": "192",
+		"name": "Erfurt – Weimar – Weimarer Land II",
+		"state": "TH",
+		"stateName": "Thuringia",
+		"bbox": [
+			10.8555,
+			50.8903,
+			11.4021,
+			51.08
+		]
+	},
+	{
+		"code": "193",
+		"name": "Gera – Greiz – Altenburger Land",
+		"state": "TH",
+		"stateName": "Thuringia",
+		"bbox": [
+			11.858,
+			50.5494,
+			12.6542,
+			51.1037
+		]
+	},
+	{
+		"code": "194",
+		"name": "Saalfeld-Rudolstadt – Saale-Holzland-Kreis – Saale-Orla-Kreis",
+		"state": "TH",
+		"stateName": "Thuringia",
+		"bbox": [
+			10.9664,
+			50.3742,
+			12.0211,
+			51.0878
+		]
+	},
+	{
+		"code": "195",
+		"name": "Suhl – Schmalkalden-Meiningen – Hildburghausen – Sonneberg",
+		"state": "TH",
+		"stateName": "Thuringia",
+		"bbox": [
+			10.0374,
+			50.2048,
+			11.285,
+			50.8513
+		]
+	},
+	{
+		"code": "196",
+		"name": "Neuwied",
+		"state": "RP",
+		"stateName": "Rhineland-Palatinate",
+		"bbox": [
+			7.2101,
+			50.4118,
+			8.043,
+			50.9422
+		]
+	},
+	{
+		"code": "197",
+		"name": "Ahrweiler",
+		"state": "RP",
+		"stateName": "Rhineland-Palatinate",
+		"bbox": [
+			6.7432,
+			50.1973,
+			7.4508,
+			50.6497
+		]
+	},
+	{
+		"code": "198",
+		"name": "Koblenz",
+		"state": "RP",
+		"stateName": "Rhineland-Palatinate",
+		"bbox": [
+			7.3447,
+			50.0666,
+			7.8542,
+			50.4645
+		]
+	},
+	{
+		"code": "199",
+		"name": "Mosel/Rhein-Hunsrück",
+		"state": "RP",
+		"stateName": "Rhineland-Palatinate",
+		"bbox": [
+			6.8716,
+			49.673,
+			7.7649,
+			50.2812
+		]
+	},
+	{
+		"code": "200",
+		"name": "Kreuznach",
+		"state": "RP",
+		"stateName": "Rhineland-Palatinate",
+		"bbox": [
+			7.0278,
+			49.5486,
+			7.9689,
+			50.0009
+		]
+	},
+	{
+		"code": "201",
+		"name": "Bitburg",
+		"state": "RP",
+		"stateName": "Rhineland-Palatinate",
+		"bbox": [
+			6.1125,
+			49.8105,
+			7.126,
+			50.3895
+		]
+	},
+	{
+		"code": "202",
+		"name": "Trier",
+		"state": "RP",
+		"stateName": "Rhineland-Palatinate",
+		"bbox": [
+			6.3577,
+			49.517,
+			7.0652,
+			49.9176
+		]
+	},
+	{
+		"code": "203",
+		"name": "Montabaur",
+		"state": "RP",
+		"stateName": "Rhineland-Palatinate",
+		"bbox": [
+			7.595,
+			50.1023,
+			8.1522,
+			50.7401
+		]
+	},
+	{
+		"code": "204",
+		"name": "Mainz",
+		"state": "RP",
+		"stateName": "Rhineland-Palatinate",
+		"bbox": [
+			7.665,
+			49.8679,
+			8.3431,
+			50.0825
+		]
+	},
+	{
+		"code": "205",
+		"name": "Worms",
+		"state": "RP",
+		"stateName": "Rhineland-Palatinate",
+		"bbox": [
+			7.8988,
+			49.5865,
+			8.4797,
+			49.9488
+		]
+	},
+	{
+		"code": "206",
+		"name": "Ludwigshafen/Frankenthal",
+		"state": "RP",
+		"stateName": "Rhineland-Palatinate",
+		"bbox": [
+			8.2329,
+			49.3162,
+			8.5086,
+			49.6076
+		]
+	},
+	{
+		"code": "207",
+		"name": "Neustadt – Speyer",
+		"state": "RP",
+		"stateName": "Rhineland-Palatinate",
+		"bbox": [
+			7.8247,
+			49.2499,
+			8.5014,
+			49.6287
+		]
+	},
+	{
+		"code": "208",
+		"name": "Kaiserslautern",
+		"state": "RP",
+		"stateName": "Rhineland-Palatinate",
+		"bbox": [
+			7.2465,
+			49.3587,
+			8.1611,
+			49.7657
+		]
+	},
+	{
+		"code": "209",
+		"name": "Pirmasens",
+		"state": "RP",
+		"stateName": "Rhineland-Palatinate",
+		"bbox": [
+			7.2891,
+			49.0329,
+			7.9167,
+			49.4924
+		]
+	},
+	{
+		"code": "210",
+		"name": "Südpfalz",
+		"state": "RP",
+		"stateName": "Rhineland-Palatinate",
+		"bbox": [
+			7.8257,
+			48.9665,
+			8.4131,
+			49.3437
+		]
+	},
+	{
+		"code": "211",
+		"name": "Altötting",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			12.0321,
+			48.0443,
+			12.9446,
+			48.4297
+		]
+	},
+	{
+		"code": "212",
+		"name": "Erding – Ebersberg",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			11.7313,
+			47.9313,
+			12.2552,
+			48.4547
+		]
+	},
+	{
+		"code": "213",
+		"name": "Freising",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			11.1267,
+			48.2658,
+			12.0194,
+			48.8143
+		]
+	},
+	{
+		"code": "214",
+		"name": "Fürstenfeldbruck",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			10.9929,
+			48.0877,
+			11.582,
+			48.4556
+		]
+	},
+	{
+		"code": "215",
+		"name": "Ingolstadt",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			10.9369,
+			48.5891,
+			11.744,
+			49.0876
+		]
+	},
+	{
+		"code": "216",
+		"name": "München-Nord",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			11.4656,
+			48.1395,
+			11.6503,
+			48.2482
+		]
+	},
+	{
+		"code": "217",
+		"name": "München-Ost",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			11.5648,
+			48.0774,
+			11.7231,
+			48.1828
+		]
+	},
+	{
+		"code": "218",
+		"name": "München-Süd",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			11.4632,
+			48.0616,
+			11.6167,
+			48.1363
+		]
+	},
+	{
+		"code": "219",
+		"name": "München-West/Mitte",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			11.3609,
+			48.1177,
+			11.5875,
+			48.2199
+		]
+	},
+	{
+		"code": "220",
+		"name": "München-Land",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			11.3853,
+			47.917,
+			11.8522,
+			48.2994
+		]
+	},
+	{
+		"code": "221",
+		"name": "Rosenheim",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			11.8017,
+			47.6008,
+			12.4441,
+			48.1432
+		]
+	},
+	{
+		"code": "222",
+		"name": "Bad Tölz-Wolfratshausen – Miesbach",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			11.2627,
+			47.4954,
+			12.0623,
+			47.9803
+		]
+	},
+	{
+		"code": "223",
+		"name": "Starnberg – Landsberg am Lech",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			10.7484,
+			47.8208,
+			11.434,
+			48.2366
+		]
+	},
+	{
+		"code": "224",
+		"name": "Traunstein",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			12.3236,
+			47.4634,
+			13.0988,
+			48.1638
+		]
+	},
+	{
+		"code": "225",
+		"name": "Weilheim",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			10.7158,
+			47.3935,
+			11.4299,
+			47.9548
+		]
+	},
+	{
+		"code": "226",
+		"name": "Deggendorf",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			12.7496,
+			48.5989,
+			13.8397,
+			48.9834
+		]
+	},
+	{
+		"code": "227",
+		"name": "Landshut",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			11.595,
+			48.3163,
+			12.4839,
+			49.0232
+		]
+	},
+	{
+		"code": "228",
+		"name": "Passau",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			12.9834,
+			48.293,
+			13.8376,
+			48.7616
+		]
+	},
+	{
+		"code": "229",
+		"name": "Rottal-Inn",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			12.2559,
+			48.2066,
+			13.1771,
+			48.7994
+		]
+	},
+	{
+		"code": "230",
+		"name": "Straubing",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			12.1279,
+			48.7157,
+			13.4167,
+			49.1736
+		]
+	},
+	{
+		"code": "231",
+		"name": "Amberg",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			11.1861,
+			48.9514,
+			12.1196,
+			49.7609
+		]
+	},
+	{
+		"code": "232",
+		"name": "Regensburg",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			11.6592,
+			48.7648,
+			12.4575,
+			49.2237
+		]
+	},
+	{
+		"code": "233",
+		"name": "Schwandorf",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			11.9342,
+			48.9719,
+			13.1709,
+			49.594
+		]
+	},
+	{
+		"code": "234",
+		"name": "Weiden",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			11.6287,
+			49.5038,
+			12.5938,
+			50.0613
+		]
+	},
+	{
+		"code": "235",
+		"name": "Bamberg",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			10.4401,
+			49.5873,
+			11.2888,
+			49.9746
+		]
+	},
+	{
+		"code": "236",
+		"name": "Bayreuth",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			11.1144,
+			49.6138,
+			11.904,
+			50.1336
+		]
+	},
+	{
+		"code": "237",
+		"name": "Coburg",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			10.7124,
+			50.088,
+			11.6239,
+			50.5232
+		]
+	},
+	{
+		"code": "238",
+		"name": "Hof",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			11.5288,
+			49.9707,
+			12.2755,
+			50.4247
+		]
+	},
+	{
+		"code": "239",
+		"name": "Kulmbach",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			10.713,
+			49.8322,
+			11.6898,
+			50.2685
+		]
+	},
+	{
+		"code": "240",
+		"name": "Ansbach",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			10.0947,
+			48.8593,
+			11.2012,
+			49.492
+		]
+	},
+	{
+		"code": "241",
+		"name": "Erlangen",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			10.5919,
+			49.4712,
+			11.2888,
+			49.7881
+		]
+	},
+	{
+		"code": "242",
+		"name": "Fürth",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			10.0697,
+			49.3547,
+			11.0286,
+			49.7562
+		]
+	},
+	{
+		"code": "243",
+		"name": "Nürnberg-Nord",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			10.988,
+			49.4166,
+			11.1858,
+			49.5404
+		]
+	},
+	{
+		"code": "244",
+		"name": "Nürnberg-Süd",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			10.9705,
+			49.2933,
+			11.2802,
+			49.4646
+		]
+	},
+	{
+		"code": "245",
+		"name": "Roth",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			10.8373,
+			48.9978,
+			11.6016,
+			49.7149
+		]
+	},
+	{
+		"code": "246",
+		"name": "Aschaffenburg",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			8.9758,
+			49.8324,
+			9.4864,
+			50.1494
+		]
+	},
+	{
+		"code": "247",
+		"name": "Bad Kissingen",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			9.6233,
+			49.8553,
+			10.8792,
+			50.5643
+		]
+	},
+	{
+		"code": "248",
+		"name": "Main-Spessart",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			9.0335,
+			49.5735,
+			10.0463,
+			50.2435
+		]
+	},
+	{
+		"code": "249",
+		"name": "Schweinfurt",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			9.957,
+			49.5898,
+			10.5551,
+			50.2316
+		]
+	},
+	{
+		"code": "250",
+		"name": "Würzburg",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			9.6254,
+			49.4804,
+			10.1891,
+			49.9536
+		]
+	},
+	{
+		"code": "251",
+		"name": "Augsburg-Stadt",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			10.7642,
+			48.2583,
+			10.9592,
+			48.4586
+		]
+	},
+	{
+		"code": "252",
+		"name": "Augsburg-Land",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			10.495,
+			48.1917,
+			11.2143,
+			48.6386
+		]
+	},
+	{
+		"code": "253",
+		"name": "Donau-Ries",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			10.2544,
+			48.4294,
+			11.3118,
+			49.0361
+		]
+	},
+	{
+		"code": "254",
+		"name": "Neu-Ulm",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			9.9673,
+			48.1083,
+			10.5997,
+			48.5277
+		]
+	},
+	{
+		"code": "255",
+		"name": "Memmingen – Unterallgäu",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			10.0769,
+			47.8201,
+			10.803,
+			48.3225
+		]
+	},
+	{
+		"code": "256",
+		"name": "Oberallgäu",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			9.6021,
+			47.2701,
+			10.5115,
+			47.8636
+		]
+	},
+	{
+		"code": "257",
+		"name": "Ostallgäu",
+		"state": "BY",
+		"stateName": "Bavaria",
+		"bbox": [
+			10.3261,
+			47.514,
+			10.9527,
+			48.2544
+		]
+	},
+	{
+		"code": "258",
+		"name": "Stuttgart I",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			9.039,
+			48.6898,
+			9.2707,
+			48.8105
+		]
+	},
+	{
+		"code": "259",
+		"name": "Stuttgart II",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			9.0768,
+			48.7548,
+			9.3154,
+			48.8672
+		]
+	},
+	{
+		"code": "260",
+		"name": "Böblingen",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			8.7465,
+			48.4991,
+			9.1121,
+			48.8333
+		]
+	},
+	{
+		"code": "261",
+		"name": "Esslingen",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			9.2131,
+			48.6436,
+			9.5107,
+			48.7881
+		]
+	},
+	{
+		"code": "262",
+		"name": "Nürtingen",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			9.085,
+			48.5123,
+			9.5966,
+			48.7091
+		]
+	},
+	{
+		"code": "263",
+		"name": "Göppingen",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			9.4839,
+			48.5173,
+			9.9945,
+			48.7813
+		]
+	},
+	{
+		"code": "264",
+		"name": "Waiblingen",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			9.2374,
+			48.7406,
+			9.7696,
+			48.9469
+		]
+	},
+	{
+		"code": "265",
+		"name": "Ludwigsburg",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			8.8732,
+			48.7542,
+			9.313,
+			49.0212
+		]
+	},
+	{
+		"code": "266",
+		"name": "Neckar-Zaber",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			8.8643,
+			48.9002,
+			9.4263,
+			49.1712
+		]
+	},
+	{
+		"code": "267",
+		"name": "Heilbronn",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			8.8162,
+			49.0462,
+			9.5275,
+			49.3877
+		]
+	},
+	{
+		"code": "268",
+		"name": "Schwäbisch Hall – Hohenlohe",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			9.3435,
+			48.9175,
+			10.2647,
+			49.43
+		]
+	},
+	{
+		"code": "269",
+		"name": "Backnang – Schwäbisch Gmünd",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			9.3044,
+			48.7145,
+			10.0425,
+			49.079
+		]
+	},
+	{
+		"code": "270",
+		"name": "Aalen – Heidenheim",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			9.8911,
+			48.5,
+			10.4957,
+			49.0608
+		]
+	},
+	{
+		"code": "271",
+		"name": "Karlsruhe-Stadt",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			8.2775,
+			48.9403,
+			8.5429,
+			49.0916
+		]
+	},
+	{
+		"code": "272",
+		"name": "Karlsruhe-Land",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			8.2583,
+			48.813,
+			8.8941,
+			49.2082
+		]
+	},
+	{
+		"code": "273",
+		"name": "Rastatt",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			7.9596,
+			48.5866,
+			8.4852,
+			48.9809
+		]
+	},
+	{
+		"code": "274",
+		"name": "Heidelberg",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			8.4962,
+			49.3522,
+			8.7942,
+			49.6258
+		]
+	},
+	{
+		"code": "275",
+		"name": "Mannheim",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			8.4142,
+			49.411,
+			8.5903,
+			49.5905
+		]
+	},
+	{
+		"code": "276",
+		"name": "Odenwald – Tauber",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			8.9381,
+			49.2716,
+			10.1617,
+			49.7915
+		]
+	},
+	{
+		"code": "277",
+		"name": "Rhein-Neckar",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			8.5614,
+			49.1743,
+			9.1008,
+			49.5751
+		]
+	},
+	{
+		"code": "278",
+		"name": "Bruchsal – Schwetzingen",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			8.3812,
+			49.059,
+			8.8258,
+			49.4181
+		]
+	},
+	{
+		"code": "279",
+		"name": "Pforzheim",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			8.4677,
+			48.7743,
+			8.9484,
+			49.0622
+		]
+	},
+	{
+		"code": "280",
+		"name": "Calw",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			8.2068,
+			48.301,
+			8.8787,
+			48.8383
+		]
+	},
+	{
+		"code": "281",
+		"name": "Freiburg",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			7.5686,
+			47.874,
+			7.9301,
+			48.1168
+		]
+	},
+	{
+		"code": "282",
+		"name": "Lörrach – Müllheim",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			7.5116,
+			47.5323,
+			8.0224,
+			47.9679
+		]
+	},
+	{
+		"code": "283",
+		"name": "Emmendingen – Lahr",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			7.5771,
+			48.0081,
+			8.1876,
+			48.4338
+		]
+	},
+	{
+		"code": "284",
+		"name": "Offenburg",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			7.7522,
+			48.2894,
+			8.2755,
+			48.7186
+		]
+	},
+	{
+		"code": "285",
+		"name": "Rottweil – Tuttlingen",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			8.2768,
+			47.8461,
+			9.0215,
+			48.411
+		]
+	},
+	{
+		"code": "286",
+		"name": "Schwarzwald-Baar",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			8.1096,
+			47.7705,
+			8.6631,
+			48.4014
+		]
+	},
+	{
+		"code": "287",
+		"name": "Konstanz",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			8.614,
+			47.652,
+			9.2179,
+			47.9421
+		]
+	},
+	{
+		"code": "288",
+		"name": "Waldshut",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			7.8508,
+			47.5439,
+			8.6291,
+			48.0652
+		]
+	},
+	{
+		"code": "289",
+		"name": "Reutlingen",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			9.1145,
+			48.1949,
+			9.6388,
+			48.6057
+		]
+	},
+	{
+		"code": "290",
+		"name": "Tübingen",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			8.7558,
+			48.2526,
+			9.2216,
+			48.6227
+		]
+	},
+	{
+		"code": "291",
+		"name": "Ulm",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			9.4891,
+			48.1423,
+			10.2413,
+			48.6318
+		]
+	},
+	{
+		"code": "292",
+		"name": "Biberach",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			9.2604,
+			47.7266,
+			10.1442,
+			48.2939
+		]
+	},
+	{
+		"code": "293",
+		"name": "Bodensee",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			9.0658,
+			47.5812,
+			9.7445,
+			47.9885
+		]
+	},
+	{
+		"code": "294",
+		"name": "Ravensburg",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			9.3761,
+			47.6018,
+			10.1397,
+			48.0055
+		]
+	},
+	{
+		"code": "295",
+		"name": "Zollernalb – Sigmaringen",
+		"state": "BW",
+		"stateName": "Baden-Württemberg",
+		"bbox": [
+			8.648,
+			47.8816,
+			9.6048,
+			48.4174
+		]
+	},
+	{
+		"code": "296",
+		"name": "Saarbrücken",
+		"state": "SL",
+		"stateName": "Saarland",
+		"bbox": [
+			6.7113,
+			49.1119,
+			7.1373,
+			49.3312
+		]
+	},
+	{
+		"code": "297",
+		"name": "Saarlouis",
+		"state": "SL",
+		"stateName": "Saarland",
+		"bbox": [
+			6.357,
+			49.2154,
+			6.9629,
+			49.6134
+		]
+	},
+	{
+		"code": "298",
+		"name": "St. Wendel",
+		"state": "SL",
+		"stateName": "Saarland",
+		"bbox": [
+			6.7861,
+			49.3177,
+			7.31,
+			49.6394
+		]
+	},
+	{
+		"code": "299",
+		"name": "Homburg",
+		"state": "SL",
+		"stateName": "Saarland",
+		"bbox": [
+			6.9935,
+			49.1148,
+			7.4038,
+			49.4083
+		]
+	}
+]

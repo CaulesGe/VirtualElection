@@ -62,6 +62,7 @@ export default function VirtualElectionPage({
 		}
 		if (code === 'UK') return 'United Kingdom';
 		if (code === 'AU') return 'Australia - House of Representatives';
+		if (code === 'DE') return 'Germany - Bundestag (constituency vote)';
 		if (code === 'CA') return 'Canada';
 		return code || 'Virtual Election';
 	}, [activeMapMetadata?.countryCode, scope?.country, scope?.district]);

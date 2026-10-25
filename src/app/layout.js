@@ -26,7 +26,7 @@ export const metadata = {
 	default: "VirtualElection - Interactive Election Maps and Live Virtual Voting"
   },
   description:
-	"Explore Canada, USA, UK, and Australia election maps with live virtual voting totals, regional breakdowns, and riding-level results.",
+	"Explore Canada, USA, UK, Germany, and Australia election maps with live virtual voting totals, regional breakdowns, and riding-level results.",
   alternates: {
 	canonical: "/"
   },
@@ -35,14 +35,14 @@ export const metadata = {
 	url: "/",
 	title: "VirtualElection - Interactive Election Maps and Live Virtual Voting",
 	description:
-		"Explore Canada, USA, UK, and Australia election maps with live virtual voting totals, regional breakdowns, and riding-level results.",
+		"Explore Canada, USA, UK, Germany, and Australia election maps with live virtual voting totals, regional breakdowns, and riding-level results.",
 	siteName: "VirtualElection"
   },
   twitter: {
 	card: "summary_large_image",
 	title: "VirtualElection - Interactive Election Maps and Live Virtual Voting",
 	description:
-		"Explore Canada, USA, UK, and Australia election maps with live virtual voting totals, regional breakdowns, and riding-level results."
+		"Explore Canada, USA, UK, Germany, and Australia election maps with live virtual voting totals, regional breakdowns, and riding-level results."
   }
 };
 
@@ -64,7 +64,7 @@ export default async function RootLayout({ children }) {
                   name: "VirtualElection",
                   url: siteUrl,
                   description:
-                    "Interactive election maps with live virtual voting totals for Canada, USA, the United Kingdom, and Australia."
+                    "Interactive election maps with live virtual voting totals for Canada, USA, the United Kingdom, Germany, and Australia."
                 },
                 {
                   "@type": "Organization",
