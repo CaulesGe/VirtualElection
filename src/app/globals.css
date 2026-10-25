@@ -164,6 +164,23 @@ button:disabled {
   }
 }
 
+/* Labels of the inset frames (e.g. French overseas territories) */
+.leaflet-tooltip.election-map-inset-label {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  color: #374151;
+  font-size: 9px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-shadow: 0 0 3px #fff, 0 0 3px #fff;
+  pointer-events: none;
+}
+.leaflet-tooltip.election-map-inset-label::before {
+  display: none;
+}
+
 /* === Chart Tooltip === */
 .region-vote-tooltip {
   background: #fff;

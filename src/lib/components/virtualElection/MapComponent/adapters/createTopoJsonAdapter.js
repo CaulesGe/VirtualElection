@@ -19,7 +19,8 @@ function firstPresent(properties, names = []) {
 export function createTopoJsonAdapter(countryCode, map) {
 	return {
 		countryCode,
-		getAssetUrl: () => map.asset,
+		// /static/* is cached for a day (immutable): bump `assetVersion` when the file changes.
+		getAssetUrl: () => (map.assetVersion ? `${map.asset}?v=${map.assetVersion}` : map.asset),
 		toGeoJSON: (raw) => {
 			if (!raw || typeof raw !== 'object') return null;
 			if (raw.type === 'FeatureCollection' && Array.isArray(raw.features)) {

@@ -27,6 +27,8 @@ export default function VirtualElectionMap({
 	const isMapMovingRef = useRef(false);
 	const tooltipRef = useRef(null);
 	const [features, setFeatures] = useState([]);
+	// Optional labelled frames ({ label, bounds: [[south, west], [north, east]] }) from the map file.
+	const [insets, setInsets] = useState([]);
 	const [loadError, setLoadError] = useState('');
 	const [isMapReady, setIsMapReady] = useState(false);
 
@@ -47,6 +49,7 @@ export default function VirtualElectionMap({
 				if (!geoJSON?.features?.length) throw new Error('Invalid map asset content');
 				if (!cancelled) {
 					setFeatures(geoJSON.features);
+					setInsets(Array.isArray(geoJSON.insets) ? geoJSON.insets : []);
 					if (typeof onFeaturesLoaded === 'function') {
 						const districts = geoJSON.features
 							.map((f) => {
@@ -148,6 +151,35 @@ export default function VirtualElectionMap({
 			setIsMapReady(false);
 		};
 	}, [adapter]);
+
+	useEffect(() => {
+		const L = leafletRef.current;
+		const map = mapRef.current;
+		if (!isMapReady || !L || !map || insets.length === 0) return;
+		const frames = L.layerGroup();
+		for (const inset of insets) {
+			L.rectangle(inset.bounds, {
+				color: '#6b7280',
+				weight: 1,
+				dashArray: '4 3',
+				fill: false,
+				interactive: false
+			})
+				.bindTooltip(inset.label, {
+					permanent: true,
+					direction: 'top',
+					offset: [0, 2],
+					className: 'election-map-inset-label'
+				})
+				.addTo(frames);
+		}
+		frames.addTo(map);
+		// Frames sit under the districts so they never block clicks.
+		frames.eachLayer((layer) => layer.bringToBack?.());
+		return () => {
+			frames.remove();
+		};
+	}, [insets, isMapReady]);
 
 	useEffect(() => {
 		const tooltip = document.createElement('div');

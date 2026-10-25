@@ -45,6 +45,7 @@ const france = {
 		// Built from France.geojson by scripts/build-fr-map.mjs: simplified, with overseas
 		// constituencies moved into insets in the Atlantic west of Brittany.
 		asset: '/static/ridingMaps/France.json',
+		assetVersion: '2', // bump whenever scripts/build-fr-map.mjs output changes (browser cache)
 		idProperties: ['code'],
 		nameProperties: ['name'],
 		subnationalProperties: ['region'],

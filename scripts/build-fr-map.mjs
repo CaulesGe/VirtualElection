@@ -4,6 +4,8 @@
  *   - overseas constituencies are moved into inset boxes in the Atlantic (west of Brittany), each
  *     fitted to its own box, so the whole country fits one map view (true positions span the globe)
  *   - geometry is simplified (Douglas-Peucker) and rounded to keep the file small
+ *   - the inset frames/labels are written to an `insets` member ({ label, bounds }[]) that the
+ *     Leaflet map draws as labelled boxes
  *   - properties become { code, name, dept, deptName, region }
  *
  * Usage: node scripts/build-fr-map.mjs
@@ -82,7 +84,8 @@ const INSET_COLS = [
 function insetBox(index) {
 	const [west, east] = INSET_COLS[index % 3];
 	const top = 50.6 - 3.2 * Math.floor(index / 3);
-	return { west, east, south: top - 2.8, north: top };
+	// Leaves a gap above each box for its label.
+	return { west, east, south: top - 2.4, north: top };
 }
 
 function eachPosition(coordinates, visit) {
@@ -252,7 +255,19 @@ async function main() {
 		};
 	});
 
-	const text = JSON.stringify({ type: 'FeatureCollection', features });
+	// Frames + labels for the insets, drawn by the map (`insets` member of the collection).
+	const insets = INSET_ORDER.map((dept, index) => {
+		const box = insetBox(index);
+		return {
+			label: DEPARTMENTS[dept],
+			bounds: [
+				[box.south, box.west],
+				[box.north, box.east]
+			]
+		};
+	});
+
+	const text = JSON.stringify({ type: 'FeatureCollection', insets, features });
 	await writeFile(OUTPUT, text);
 	console.log(
 		`${features.length} circonscriptions -> ${path.relative(process.cwd(), OUTPUT)} (${(text.length / 1048576).toFixed(2)} MB)`
