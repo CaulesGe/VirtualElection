@@ -1,9 +1,12 @@
 import { and, desc, eq, sql } from 'drizzle-orm';
+import { getElectionCountry } from '@/lib/config/electionCountries';
 import {
 	DEFAULT_SCOPE,
+	IRV_TIE_BREAK_ORDER_BY_COUNTRY,
 	VIRTUAL_ELECTION_ALLOWED_SCOPES,
 	getAllowedPartiesForScope as getAllowedPartiesForScopeConfig,
-	isPreferentialScope
+	isPreferentialScope,
+	sortPartiesForDisplay
 } from '@/lib/config/virtualElection';
 import {
 	countIrv,
@@ -43,12 +46,8 @@ export function isMissingVirtualElectionTableError(error) {
 		const message = (obj?.message ?? '').toLowerCase();
 		if (
 			(message.includes('relation') && message.includes('does not exist')) ||
-			message.includes('canada_riding_result') ||
-			message.includes('usa_riding_result') ||
-			message.includes('uk_riding_result') ||
-			message.includes('australia_riding_result') ||
-			message.includes('germany_riding_result') ||
-			message.includes('australia_ballot_result') ||
+			message.includes('riding_result') ||
+			message.includes('ballot_result') ||
 			(message.includes('ranking_key') && message.includes('does not exist')) ||
 			message.includes('virtual_election_riding_totals') ||
 			message.includes('virtual_election_votes')
@@ -75,25 +74,11 @@ function assertVoteWindowOpen() {
 	}
 }
 
-const RIDING_RESULT_TABLES = {
-	ca: {
-		name: 'RidingResults.canada_riding_result'
-	},
-	us: {
-		name: 'RidingResults.usa_riding_result'
-	},
-	uk: {
-		name: 'RidingResults.uk_riding_result'
-	},
-	au: {
-		name: 'RidingResults.australia_riding_result'
-	},
-	de: {
-		name: 'RidingResults.germany_riding_result'
-	}
-};
-
-const AU_BALLOT_TABLE_SQL = sql.raw('"RidingResults"."australia_ballot_result"');
+// Pre-aggregated counters shared by every country (rows are keyed by country).
+const RIDING_RESULT_TABLE_SQL = sql.raw('"RidingResults"."riding_result"');
+const RIDING_RESULT_VOTES_SQL = sql.raw('"RidingResults"."riding_result".votes');
+const BALLOT_RESULT_TABLE_SQL = sql.raw('"RidingResults"."ballot_result"');
+const BALLOT_RESULT_VOTES_SQL = sql.raw('"RidingResults"."ballot_result".votes');
 
 export function normalizeScope(scope) {
 	return {
@@ -103,13 +88,10 @@ export function normalizeScope(scope) {
 	};
 }
 
-function getRidingResultTableConfig(scopeInput) {
-	const scope = normalizeScope(scopeInput);
-	const config = RIDING_RESULT_TABLES[scope.country];
-	if (!config) {
+function assertKnownCountry(scope) {
+	if (!getElectionCountry(scope.country)) {
 		throw new VirtualElectionError('INVALID_SCOPE', 'Unsupported result table scope.');
 	}
-	return config;
 }
 
 export function assertAllowedScope(scopeInput) {
@@ -147,7 +129,8 @@ async function readAllowedPartiesFromDb(scope) {
 		.innerJoin(parties, eq(parties.id, electionParties.partyId))
 		.where(eq(electionParties.electionId, election.id));
 
-	const allowedParties = rows.map((row) => row.partyId);
+	// The query has no ORDER BY, so apply the shared display order.
+	const allowedParties = sortPartiesForDisplay(rows.map((row) => row.partyId));
 	return allowedParties.length > 0 ? allowedParties : null;
 }
 
@@ -216,10 +199,7 @@ async function castOrUpdateRankedVote(input, scope) {
 	await assertValidRanking(ranking, scope);
 	await assertValidRidingForScope(input.ridingId, scope);
 
-	const [schemaName, tableName] = getRidingResultTableConfig(scope).name.split('.');
-	const ridingResultTableSql = sql.raw(`"${schemaName}"."${tableName}"`);
-	const ridingResultVotesSql = sql.raw(`"${schemaName}"."${tableName}".votes`);
-	const ballotVotesSql = sql.raw('"RidingResults"."australia_ballot_result".votes');
+	assertKnownCountry(scope);
 	const firstPreference = ranking[0];
 	const rankingKey = toRankingKey(ranking);
 
@@ -270,45 +250,47 @@ async function castOrUpdateRankedVote(input, scope) {
 				LEFT JOIN previous_vote pv ON true
 			),
 			decrement_party AS (
-				UPDATE ${ridingResultTableSql} t
+				UPDATE ${RIDING_RESULT_TABLE_SQL} t
 				SET votes = GREATEST(t.votes - 1, 0),
 					updated_at = now()
 				FROM change_flags cf
 				WHERE cf.party_changed
+				  AND t.country = ${scope.country}
 				  AND t.riding_id = cf.prev_riding_id
 				  AND t.party = cf.prev_party
 				  AND t.district = ${scope.district}
 				  AND t.year = ${scope.year}
 			),
 			increment_party AS (
-				INSERT INTO ${ridingResultTableSql} (riding_id, party, district, year, votes)
-				SELECT cf.new_riding_id, cf.new_party, ${scope.district}, ${scope.year}, 1
+				INSERT INTO ${RIDING_RESULT_TABLE_SQL} (country, riding_id, party, district, year, votes)
+				SELECT ${scope.country}, cf.new_riding_id, cf.new_party, ${scope.district}, ${scope.year}, 1
 				FROM change_flags cf
 				WHERE cf.is_created OR cf.party_changed
-				ON CONFLICT (riding_id, party, district, year)
+				ON CONFLICT (country, riding_id, party, district, year)
 				DO UPDATE SET
-					votes = ${ridingResultVotesSql} + 1,
+					votes = ${RIDING_RESULT_VOTES_SQL} + 1,
 					updated_at = now()
 			),
 			decrement_ballot AS (
-				UPDATE ${AU_BALLOT_TABLE_SQL} b
+				UPDATE ${BALLOT_RESULT_TABLE_SQL} b
 				SET votes = GREATEST(b.votes - 1, 0),
 					updated_at = now()
 				FROM change_flags cf
 				WHERE cf.ballot_changed
+				  AND b.country = ${scope.country}
 				  AND b.riding_id = cf.prev_riding_id
 				  AND b.ranking_key = cf.prev_ranking_key
 				  AND b.district = ${scope.district}
 				  AND b.year = ${scope.year}
 			),
 			increment_ballot AS (
-				INSERT INTO ${AU_BALLOT_TABLE_SQL} (riding_id, ranking_key, district, year, votes)
-				SELECT cf.new_riding_id, cf.new_ranking_key, ${scope.district}, ${scope.year}, 1
+				INSERT INTO ${BALLOT_RESULT_TABLE_SQL} (country, riding_id, ranking_key, district, year, votes)
+				SELECT ${scope.country}, cf.new_riding_id, cf.new_ranking_key, ${scope.district}, ${scope.year}, 1
 				FROM change_flags cf
 				WHERE cf.is_created OR cf.ballot_changed
-				ON CONFLICT (riding_id, ranking_key, district, year)
+				ON CONFLICT (country, riding_id, ranking_key, district, year)
 				DO UPDATE SET
-					votes = ${ballotVotesSql} + 1,
+					votes = ${BALLOT_RESULT_VOTES_SQL} + 1,
 					updated_at = now()
 			)
 			SELECT
@@ -332,8 +314,9 @@ async function castOrUpdateRankedVote(input, scope) {
 			// Hygiene only: reads ignore rows with 0 votes, so a failure here is harmless.
 			try {
 				await db.execute(sql`
-					DELETE FROM ${AU_BALLOT_TABLE_SQL}
-					WHERE riding_id = ${row.prev_riding_id}
+					DELETE FROM ${BALLOT_RESULT_TABLE_SQL}
+					WHERE country = ${scope.country}
+					  AND riding_id = ${row.prev_riding_id}
 					  AND ranking_key = ${row.prev_ranking_key}
 					  AND district = ${scope.district}
 					  AND year = ${scope.year}
@@ -367,10 +350,7 @@ export async function castOrUpdateVote(input) {
 	if (isPreferentialScope(scope)) {
 		return castOrUpdateRankedVote(input, scope);
 	}
-	const ridingResultTable = getRidingResultTableConfig(scope);
-	const [schemaName, tableName] = ridingResultTable.name.split('.');
-	const ridingResultTableSql = sql.raw(`"${schemaName}"."${tableName}"`);
-	const ridingResultVotesSql = sql.raw(`"${schemaName}"."${tableName}".votes`);
+	assertKnownCountry(scope);
 	await assertValidParty(input.party, scope);
 	await assertValidRidingForScope(input.ridingId, scope);
 
@@ -412,25 +392,26 @@ export async function castOrUpdateVote(input) {
 				LEFT JOIN previous_vote pv ON true
 			),
 			decrement_totals AS (
-				UPDATE ${ridingResultTableSql} t
+				UPDATE ${RIDING_RESULT_TABLE_SQL} t
 				SET votes = GREATEST(t.votes - 1, 0),
 					updated_at = now()
 				FROM change_flags cf
 				WHERE NOT cf.is_created
 				  AND NOT cf.is_unchanged
+				  AND t.country = ${scope.country}
 				  AND t.riding_id = cf.prev_riding_id
 				  AND t.party = cf.prev_party
 				  AND t.district = ${scope.district}
 				  AND t.year = ${scope.year}
 			),
 			increment_totals AS (
-				INSERT INTO ${ridingResultTableSql} (riding_id, party, district, year, votes)
-				SELECT cf.new_riding_id, cf.new_party, ${scope.district}, ${scope.year}, 1
+				INSERT INTO ${RIDING_RESULT_TABLE_SQL} (country, riding_id, party, district, year, votes)
+				SELECT ${scope.country}, cf.new_riding_id, cf.new_party, ${scope.district}, ${scope.year}, 1
 				FROM change_flags cf
 				WHERE cf.is_created OR NOT cf.is_unchanged
-				ON CONFLICT (riding_id, party, district, year)
+				ON CONFLICT (country, riding_id, party, district, year)
 				DO UPDATE SET
-					votes = ${ridingResultVotesSql} + 1,
+					votes = ${RIDING_RESULT_VOTES_SQL} + 1,
 					updated_at = now()
 			)
 			SELECT
@@ -524,7 +505,9 @@ export async function getElectionOptionsForScope(scopeInput) {
 
 // Candidate list for IRV. Config order is the deterministic last-resort tie-break order.
 function getIrvParties(scope) {
-	return getAllowedPartiesForScopeConfig(scope);
+	// The IRV tie-break order is intentionally independent of the party display order.
+	const countryCode = String(scope?.country ?? '').toUpperCase();
+	return IRV_TIE_BREAK_ORDER_BY_COUNTRY[countryCode] ?? getAllowedPartiesForScopeConfig(scope);
 }
 
 async function getIrvResultsForScope(scope) {
@@ -533,8 +516,9 @@ async function getIrvResultsForScope(scope) {
 			riding_id AS "ridingId",
 			ranking_key AS "rankingKey",
 			votes AS "votes"
-		FROM ${AU_BALLOT_TABLE_SQL}
-		WHERE district = ${scope.district}
+		FROM ${BALLOT_RESULT_TABLE_SQL}
+		WHERE country = ${scope.country}
+		  AND district = ${scope.district}
 		  AND year = ${scope.year}
 		  AND votes > 0
 	`);
@@ -553,8 +537,9 @@ export async function getIrvForRiding(scopeInput, ridingId) {
 		SELECT
 			ranking_key AS "rankingKey",
 			votes AS "votes"
-		FROM ${AU_BALLOT_TABLE_SQL}
-		WHERE district = ${scope.district}
+		FROM ${BALLOT_RESULT_TABLE_SQL}
+		WHERE country = ${scope.country}
+		  AND district = ${scope.district}
 		  AND year = ${scope.year}
 		  AND riding_id = ${String(ridingId)}
 		  AND votes > 0
@@ -569,15 +554,15 @@ export async function getIrvForRiding(scopeInput, ridingId) {
 
 export async function getTotals(scopeInput) {
 	const scope = normalizeScope(scopeInput);
-	const ridingResultTable = getRidingResultTableConfig(scope);
-	const [schemaName, tableName] = ridingResultTable.name.split('.');
+	assertKnownCountry(scope);
 	const execution = await db.execute(sql`
 		SELECT
 			riding_id AS "ridingId",
 			party AS "party",
 			votes AS "votes"
-		FROM ${sql.raw(`"${schemaName}"."${tableName}"`)}
-		WHERE district = ${scope.district}
+		FROM ${RIDING_RESULT_TABLE_SQL}
+		WHERE country = ${scope.country}
+		  AND district = ${scope.district}
 		  AND year = ${scope.year}
 		  ${isPreferentialScope(scope) ? sql`AND votes > 0` : sql``}
 	`);

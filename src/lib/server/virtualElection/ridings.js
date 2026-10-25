@@ -1,9 +1,6 @@
 import { and, eq, sql } from 'drizzle-orm';
-import { readFile } from 'node:fs/promises';
-import path from 'node:path';
 import { DEFAULT_RIDINGS } from '@/lib/data/defaultRidings';
-import auDivisions from '@/lib/data/auDivisions.json';
-import deDivisions from '@/lib/data/deDivisions.json';
+import { getDivisions } from '@/lib/config/electionCountries';
 import { db } from '@/lib/server/db/client';
 import {
 	constituencies,
@@ -12,10 +9,8 @@ import {
 	elections,
 	jurisdictions
 } from '@/lib/server/db/schema';
+import { getTopoDistricts } from '@/lib/server/virtualElection/mapAssets';
 import { getUsRidingsForScope } from '@/lib/server/virtualElection/usRidings';
-
-let canadaMapRidingsPromise = null;
-let ukMapRidingsPromise = null;
 
 function dedupeRidingsByCode(rows) {
 	const byCode = new Map();
@@ -32,77 +27,6 @@ function dedupeRidingsByCode(rows) {
 		}
 	}
 	return Array.from(byCode.values());
-}
-
-async function readCanadaRidingsFromMapAsset() {
-	const assetPath = path.join(process.cwd(), 'static', 'ridingMaps', 'canada2025.json');
-	const raw = await readFile(assetPath, 'utf8');
-	const parsed = JSON.parse(raw);
-	const objectName = Object.keys(parsed?.objects ?? {})[0];
-	const geometries = objectName ? parsed?.objects?.[objectName]?.geometries : null;
-	if (!Array.isArray(geometries) || geometries.length === 0) {
-		return [];
-	}
-
-	return dedupeRidingsByCode(
-		geometries
-		.map((geometry) => ({
-			code: geometry?.properties?.FED_NUM,
-			name: geometry?.properties?.ED_NAMEE
-		}))
-		.filter((row) => row.code !== undefined && row.code !== null)
-		.map((row) => ({
-			code: String(row.code),
-			name: row.name ? String(row.name) : String(row.code),
-			subnational: ''
-		}))
-	);
-}
-
-async function getCanadaMapRidings() {
-	if (!canadaMapRidingsPromise) {
-		canadaMapRidingsPromise = readCanadaRidingsFromMapAsset().catch((error) => {
-			canadaMapRidingsPromise = null;
-			throw error;
-		});
-	}
-	return canadaMapRidingsPromise;
-}
-
-async function readUkRidingsFromMapAsset() {
-	const assetPath = path.join(process.cwd(), 'static', 'ridingMaps', 'UK.json');
-	const raw = await readFile(assetPath, 'utf8');
-	const parsed = JSON.parse(raw);
-	const objectName = Object.keys(parsed?.objects ?? {})[0];
-	const geometries = objectName ? parsed?.objects?.[objectName]?.geometries : null;
-	if (!Array.isArray(geometries) || geometries.length === 0) {
-		return [];
-	}
-
-	return dedupeRidingsByCode(
-		geometries
-		.map((geometry) => ({
-			code: geometry?.properties?.GSScode ?? geometry?.properties?.['3CODE'],
-			name: geometry?.properties?.Name,
-			subnational: geometry?.properties?.CTR_REG ?? geometry?.properties?.Country
-		}))
-		.filter((row) => row.code !== undefined && row.code !== null)
-		.map((row) => ({
-			code: String(row.code),
-			name: row.name ? String(row.name) : String(row.code),
-			subnational: row.subnational ? String(row.subnational) : ''
-		}))
-	);
-}
-
-async function getUkMapRidings() {
-	if (!ukMapRidingsPromise) {
-		ukMapRidingsPromise = readUkRidingsFromMapAsset().catch((error) => {
-			ukMapRidingsPromise = null;
-			throw error;
-		});
-	}
-	return ukMapRidingsPromise;
 }
 
 export async function getRidingsForScope(scope) {
@@ -149,60 +73,28 @@ export async function getRidingsForScope(scope) {
 		}
 	}
 
-	if (
-		String(scope?.country).toLowerCase() === 'ca' &&
-		String(scope?.district).toLowerCase() === 'fed'
-	) {
+	if (String(scope?.district).toLowerCase() === 'fed') {
+		// PMTiles countries: districts come from the committed division list that mirrors the
+		// tiles (see scripts/extract-*-divisions.mjs --check); there is no legacy DB fallback.
+		const divisions = getDivisions(scope?.country);
+		if (divisions) {
+			return dedupeRidingsByCode(
+				divisions.map((division) => ({
+					code: division.code,
+					name: division.name,
+					subnational: division.state
+				}))
+			);
+		}
+
+		// TopoJSON countries: districts are read from the map asset, falling back to the legacy source.
 		try {
-			const mapRidings = await getCanadaMapRidings();
-			if (mapRidings.length > 0) return mapRidings;
+			const mapRidings = await getTopoDistricts(scope?.country);
+			if (mapRidings?.length > 0) return dedupeRidingsByCode(mapRidings);
 		} catch {
 			// Continue into legacy source fallback.
 		}
 	}
-
-	if (
-		String(scope?.country).toLowerCase() === 'au' &&
-		String(scope?.district).toLowerCase() === 'fed'
-	) {
-		// Divisions come from the committed list that mirrors Austrilia.pmtiles (see
-		// scripts/extract-au-divisions.mjs --check); there is no legacy DB fallback for AU.
-		return dedupeRidingsByCode(
-			auDivisions.map((division) => ({
-				code: division.code,
-				name: division.name,
-				subnational: division.state
-			}))
-		);
-	}
-
-	if (
-		String(scope?.country).toLowerCase() === 'de' &&
-		String(scope?.district).toLowerCase() === 'fed'
-	) {
-		// Constituencies come from the committed list that mirrors Germany.pmtiles (see
-		// scripts/extract-de-divisions.mjs --check); there is no legacy DB fallback for DE.
-		return dedupeRidingsByCode(
-			deDivisions.map((division) => ({
-				code: division.code,
-				name: division.name,
-				subnational: division.state
-			}))
-		);
-	}
-
-	if (
-		String(scope?.country).toLowerCase() === 'uk' &&
-		String(scope?.district).toLowerCase() === 'fed'
-	) {
-		try {
-			const mapRidings = await getUkMapRidings();
-			if (mapRidings.length > 0) return mapRidings;
-		} catch {
-			// Continue into legacy source fallback.
-		}
-	}
-
 	try {
 		const rows = await db
 			.select({

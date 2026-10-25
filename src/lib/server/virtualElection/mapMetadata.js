@@ -1,60 +1,27 @@
+// Relative import (not "@/"): the seed script loads this module outside Next.js.
+import { getElectionCountry, getElectionSite } from '../../config/electionCountries.js';
+
+/**
+ * Map metadata for a scope: the country's `map` config, overridden by the page's `map` config
+ * (for example the USA presidential page uses a state map with electoral-vote allocation).
+ */
 export function getMapMetadataForScope(scope) {
 	const countryCode = String(scope?.country ?? 'ca').toUpperCase();
-	const district = String(scope?.district ?? 'fed').toLowerCase();
 	const year = String(scope?.year ?? '2025');
-
-	if (countryCode === 'US' && district === 'pres') {
-		return {
-			countryCode: 'US',
-			mapVersion: `pres-${year}`,
-			mode: 'president',
-			regionKey: 'state',
-			allocationRule: 'winner_take_all',
-			electoralVotesVersion: '2020_apportionment'
-		};
+	const country = getElectionCountry(countryCode);
+	if (!country) {
+		return { countryCode, mapVersion: year, mode: 'house', regionKey: 'district' };
 	}
 
-	if (countryCode === 'US') {
-		return {
-			countryCode: 'US',
-			mapVersion: `house-${year}`,
-			mode: 'house',
-			regionKey: 'district'
-		};
-	}
-
-	if (countryCode === 'AU') {
-		return {
-			countryCode: 'AU',
-			mapVersion: `au-${year}`,
-			mode: 'house',
-			regionKey: 'division',
-			votingSystem: 'preferential'
-		};
-	}
-
-	if (countryCode === 'DE') {
-		return {
-			countryCode: 'DE',
-			mapVersion: `de-${year}`,
-			mode: 'house',
-			regionKey: 'constituency'
-		};
-	}
-
-	if (countryCode === 'UK') {
-		return {
-			countryCode: 'UK',
-			mapVersion: `uk-${year}`,
-			mode: 'house',
-			regionKey: 'constituency'
-		};
-	}
-
+	const site = getElectionSite({ country: country.code, district: scope?.district ?? 'fed' });
+	const map = { ...country.map, ...(site?.map ?? {}) };
 	return {
 		countryCode,
-		mapVersion: year,
-		mode: 'house',
-		regionKey: 'district'
+		mapVersion: `${map.versionPrefix ?? ''}${year}`,
+		mode: map.mode ?? 'house',
+		regionKey: map.regionKey,
+		...(map.allocationRule ? { allocationRule: map.allocationRule } : {}),
+		...(map.electoralVotesVersion ? { electoralVotesVersion: map.electoralVotesVersion } : {}),
+		...(country.votingSystem === 'preferential' ? { votingSystem: 'preferential' } : {})
 	};
 }

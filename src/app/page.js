@@ -1,6 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { ELECTION_COUNTRIES } from '@/lib/config/electionCountries';
 import styles from './page.module.css';
+
+// Regions in display order, derived from the country registry.
+const REGIONS = [...new Set(ELECTION_COUNTRIES.map((country) => country.region))];
 
 export const metadata = {
 	title: 'Interactive Election Map and Virtual Voting',
@@ -34,116 +38,37 @@ export default function Home() {
 				</p>
 			</section>
 
-			<section className={styles.regionSection} aria-labelledby="north-america-heading">
-				<div className={styles.regionHeader}>
-					<h2 id="north-america-heading" className={styles.regionTitle}>North America</h2>
-				</div>
-				<div className={styles.cardGrid} aria-label="North America election choices">
-					<Link href="/canada" className={styles.card}>
-						<div className={styles.cardTitle}>
-							<Image
-								src="/static/flags/Canada.svg.png"
-								alt="Canada flag"
-								width={28}
-								height={20}
-								className={styles.flag}
-							/>
-							<span>Canada</span>
-							<span className={styles.badge}>Federal</span>
+			{REGIONS.map((region) => {
+				const headingId = `${region.toLowerCase().replace(/\s+/g, '-')}-heading`;
+				return (
+					<section key={region} className={styles.regionSection} aria-labelledby={headingId}>
+						<div className={styles.regionHeader}>
+							<h2 id={headingId} className={styles.regionTitle}>
+								{region}
+							</h2>
 						</div>
-						<p className={styles.cardSubtitle}>
-							Explore all Canadian federal ridings and watch the national map update live as votes shift the race.
-						</p>
-						<span className={styles.cta}>Open Canada election →</span>
-					</Link>
-
-					<Link href="/usa/president" className={styles.card}>
-						<div className={styles.cardTitle}>
-							<Image
-								src="/static/flags/USA.png"
-								alt="USA flag"
-								width={28}
-								height={20}
-								className={styles.flag}
-							/>
-							<span>USA</span>
-							<span className={styles.badge}>House & President</span>
+						<div className={styles.cardGrid} aria-label={`${region} election choices`}>
+							{ELECTION_COUNTRIES.filter((country) => country.region === region).map((country) => (
+								<Link key={country.code} href={country.entryRoute} className={styles.card}>
+									<div className={styles.cardTitle}>
+										<Image
+											src={country.flag}
+											alt={`${country.name} flag`}
+											width={28}
+											height={20}
+											className={styles.flag}
+										/>
+										<span>{country.name}</span>
+										<span className={styles.badge}>{country.home.badge}</span>
+									</div>
+									<p className={styles.cardSubtitle}>{country.home.subtitle}</p>
+									<span className={styles.cta}>{country.home.cta} →</span>
+								</Link>
+							))}
 						</div>
-						<p className={styles.cardSubtitle}>
-							Battle across House districts or flip states in the Electoral College and race to 270 electoral votes.
-						</p>
-						<span className={styles.cta}>Open USA elections →</span>
-					</Link>
-				</div>
-			</section>
-
-			<section className={styles.regionSection} aria-labelledby="europe-heading">
-				<div className={styles.regionHeader}>
-					<h2 id="europe-heading" className={styles.regionTitle}>Europe</h2>
-				</div>
-				<div className={styles.cardGrid} aria-label="Europe election choices">
-					<Link href="/uk" className={styles.card}>
-						<div className={styles.cardTitle}>
-							<Image
-								src="/static/flags/UK.svg.png"
-								alt="United Kingdom flag"
-								width={28}
-								height={20}
-								className={styles.flag}
-							/>
-							<span>United Kingdom</span>
-							<span className={styles.badge}>Parliament</span>
-						</div>
-						<p className={styles.cardSubtitle}>
-							Vote across UK constituencies and watch the race for Parliament unfold in real time.
-						</p>
-						<span className={styles.cta}>Open UK election →</span>
-					</Link>
-
-					<Link href="/germany" className={styles.card}>
-						<div className={styles.cardTitle}>
-							<Image
-								src="/static/flags/Germany.svg"
-								alt="Germany flag"
-								width={28}
-								height={20}
-								className={styles.flag}
-							/>
-							<span>Germany</span>
-							<span className={styles.badge}>Bundestag</span>
-						</div>
-						<p className={styles.cardSubtitle}>
-							Pick the party for your constituency and watch the race across all 299 Bundestag constituencies.
-						</p>
-						<span className={styles.cta}>Open Germany election →</span>
-					</Link>
-				</div>
-			</section>
-			<section className={styles.regionSection} aria-labelledby="oceania-heading">
-				<div className={styles.regionHeader}>
-					<h2 id="oceania-heading" className={styles.regionTitle}>Oceania</h2>
-				</div>
-				<div className={styles.cardGrid} aria-label="Oceania election choices">
-					<Link href="/australia" className={styles.card}>
-						<div className={styles.cardTitle}>
-							<Image
-								src="/static/flags/Australia.svg"
-								alt="Australia flag"
-								width={28}
-								height={20}
-								className={styles.flag}
-							/>
-							<span>Australia</span>
-							<span className={styles.badge}>House of Representatives</span>
-						</div>
-						<p className={styles.cardSubtitle}>
-							Rank every party on a preferential ballot and watch preferences flow across all 150 federal divisions.
-						</p>
-						<span className={styles.cta}>Open Australia election →</span>
-					</Link>
-				</div>
-			</section>
-			<p className={styles.tip}>
+					</section>
+				);
+			})}			<p className={styles.tip}>
 				Tip: You can vote once per election scope (e.g., Canada federal vs USA president).
 			</p>
 		</main>

@@ -1,4 +1,5 @@
 import { getUsStateCodeFromFp } from '@/lib/virtualElection/usDistricts';
+import { createRegionProfile } from './createRegionProfile';
 
 const US_STATES = [
 	['AL', 'Alabama'],
@@ -54,19 +55,6 @@ const US_STATES = [
 	['WY', 'Wyoming']
 ];
 
-const STATE_CODE_SET = new Set(US_STATES.map(([code]) => code));
-const REGION_CODE_ALIASES = Object.fromEntries(
-	US_STATES.map(([code, name]) => [name.toUpperCase().replace(/[^A-Z]/g, ''), code])
-);
-
-function toCanonicalRegionCode(value) {
-	const normalized = String(value ?? '')
-		.toUpperCase()
-		.replace(/[^A-Z]/g, '');
-	if (STATE_CODE_SET.has(normalized)) return normalized;
-	return REGION_CODE_ALIASES[normalized] ?? normalized;
-}
-
 function inferStateCodeFromDistrictKey(ridingId) {
 	const parts = String(ridingId ?? '').split('-');
 	// us-fed-2025-01-1 or US-PRES-2025-06
@@ -80,10 +68,8 @@ const REGION_OPTIONS = [
 	...US_STATES.map(([code, label]) => ({ value: code, label, codes: [code, label] }))
 ];
 
-export const usaRegionProfile = {
-	getRegionOptions: () => REGION_OPTIONS,
-	toCanonicalRegionCode,
-	resolveRegionCode: ({ riding, row }) => {
-		return riding?.subnational || inferStateCodeFromDistrictKey(row?.ridingId);
-	}
-};
+export const usaRegionProfile = createRegionProfile({
+	options: REGION_OPTIONS,
+	resolveRegionCode: ({ riding, row }) =>
+		riding?.subnational || inferStateCodeFromDistrictKey(row?.ridingId)
+});

@@ -114,9 +114,12 @@ export const virtualElectionVotes = pgTable(
 	]
 );
 
-export const canadaRidingResult = ridingResultsSchema.table(
-	'canada_riding_result',
+// Pre-aggregated first-choice counters for every country (migration 0008). Written atomically
+// together with virtual_election_votes by the vote API.
+export const ridingResult = ridingResultsSchema.table(
+	'riding_result',
 	{
+		country: text('country').notNull(),
 		ridingId: text('riding_id').notNull(),
 		party: text('party').notNull(),
 		district: text('district').notNull(),
@@ -126,18 +129,21 @@ export const canadaRidingResult = ridingResultsSchema.table(
 	},
 	(table) => [
 		primaryKey({
-			name: 'canada_riding_result_pk',
-			columns: [table.ridingId, table.party, table.district, table.year]
+			name: 'riding_result_pk',
+			columns: [table.country, table.ridingId, table.party, table.district, table.year]
 		}),
-		index('canada_riding_result_scope_idx').on(table.district, table.year)
+		index('riding_result_scope_idx').on(table.country, table.district, table.year)
 	]
 );
 
-export const usaRidingResult = ridingResultsSchema.table(
-	'usa_riding_result',
+// Aggregated ranked ballots (one row per distinct full ranking per district) used for IRV
+// counting in preferential scopes (migration 0008).
+export const ballotResult = ridingResultsSchema.table(
+	'ballot_result',
 	{
+		country: text('country').notNull(),
 		ridingId: text('riding_id').notNull(),
-		party: text('party').notNull(),
+		rankingKey: text('ranking_key').notNull(),
 		district: text('district').notNull(),
 		year: integer('year').notNull(),
 		votes: integer('votes').notNull().default(0),
@@ -145,71 +151,42 @@ export const usaRidingResult = ridingResultsSchema.table(
 	},
 	(table) => [
 		primaryKey({
-			name: 'usa_riding_result_pk',
-			columns: [table.ridingId, table.party, table.district, table.year]
+			name: 'ballot_result_pk',
+			columns: [table.country, table.ridingId, table.rankingKey, table.district, table.year]
 		}),
-		index('usa_riding_result_scope_idx').on(table.district, table.year)
+		index('ballot_result_scope_idx').on(table.country, table.district, table.year)
 	]
 );
 
-export const ukRidingResult = ridingResultsSchema.table(
-	'uk_riding_result',
-	{
-		ridingId: text('riding_id').notNull(),
-		party: text('party').notNull(),
-		district: text('district').notNull(),
-		year: integer('year').notNull(),
-		votes: integer('votes').notNull().default(0),
-		updatedAt: timestamp('updated_at').defaultNow().notNull()
-	},
-	(table) => [
-		primaryKey({
-			name: 'uk_riding_result_pk',
-			columns: [table.ridingId, table.party, table.district, table.year]
-		}),
-		index('uk_riding_result_scope_idx').on(table.district, table.year)
-	]
-);
+// Legacy per-country tables (migrations 0004-0007). No longer read or written since migration
+// 0008 copied their rows into riding_result / ballot_result; kept so existing databases still
+// match the schema. They can be dropped in a later migration.
+function createRidingResultTable(tableName) {
+	return ridingResultsSchema.table(
+		tableName,
+		{
+			ridingId: text('riding_id').notNull(),
+			party: text('party').notNull(),
+			district: text('district').notNull(),
+			year: integer('year').notNull(),
+			votes: integer('votes').notNull().default(0),
+			updatedAt: timestamp('updated_at').defaultNow().notNull()
+		},
+		(table) => [
+			primaryKey({
+				name: `${tableName}_pk`,
+				columns: [table.ridingId, table.party, table.district, table.year]
+			}),
+			index(`${tableName}_scope_idx`).on(table.district, table.year)
+		]
+	);
+}
 
-export const germanyRidingResult = ridingResultsSchema.table(
-	'germany_riding_result',
-	{
-		ridingId: text('riding_id').notNull(),
-		party: text('party').notNull(),
-		district: text('district').notNull(),
-		year: integer('year').notNull(),
-		votes: integer('votes').notNull().default(0),
-		updatedAt: timestamp('updated_at').defaultNow().notNull()
-	},
-	(table) => [
-		primaryKey({
-			name: 'germany_riding_result_pk',
-			columns: [table.ridingId, table.party, table.district, table.year]
-		}),
-		index('germany_riding_result_scope_idx').on(table.district, table.year)
-	]
-);
-
-export const australiaRidingResult = ridingResultsSchema.table(
-	'australia_riding_result',
-	{
-		ridingId: text('riding_id').notNull(),
-		party: text('party').notNull(),
-		district: text('district').notNull(),
-		year: integer('year').notNull(),
-		votes: integer('votes').notNull().default(0),
-		updatedAt: timestamp('updated_at').defaultNow().notNull()
-	},
-	(table) => [
-		primaryKey({
-			name: 'australia_riding_result_pk',
-			columns: [table.ridingId, table.party, table.district, table.year]
-		}),
-		index('australia_riding_result_scope_idx').on(table.district, table.year)
-	]
-);
-
-// Aggregated ranked ballots (one row per distinct full ranking per division) used for IRV counting.
+export const canadaRidingResult = createRidingResultTable('canada_riding_result');
+export const usaRidingResult = createRidingResultTable('usa_riding_result');
+export const ukRidingResult = createRidingResultTable('uk_riding_result');
+export const germanyRidingResult = createRidingResultTable('germany_riding_result');
+export const australiaRidingResult = createRidingResultTable('australia_riding_result');
 export const australiaBallotResult = ridingResultsSchema.table(
 	'australia_ballot_result',
 	{

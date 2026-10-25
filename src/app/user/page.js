@@ -2,6 +2,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getServerAuthSession } from '@/lib/auth';
+import {
+	ELECTION_SITES,
+	getElectionCountry,
+	getElectionSite
+} from '@/lib/config/electionCountries';
 import { getPartyShortName } from '@/lib/components/virtualElection/partyMeta';
 import { getUserIdFromSession } from '@/lib/server/virtualElection/identity';
 import { listVotesForUser } from '@/lib/server/virtualElection/service';
@@ -19,33 +24,24 @@ function resolveBackHref(rawFrom) {
 	return from.startsWith('/') ? from : '/';
 }
 
-// Display order follows the home page (North America, Europe, Oceania) so that related
-// scopes, such as the two USA elections, stay next to each other.
-const COUNTRY_ENTRIES = [
-	{ key: 'ca', label: 'Canada', flag: '/static/flags/Canada.svg.png' },
-	{ key: 'us-pres', label: 'USA-Presidential Election', flag: '/static/flags/USA.png' },
-	{ key: 'us-fed', label: 'USA-House of Representatives', flag: '/static/flags/USA.png' },
-	{ key: 'uk', label: 'UK', flag: '/static/flags/UK.svg.png' },
-	{ key: 'de', label: 'Germany', flag: '/static/flags/Germany.svg' },
-	{ key: 'au', label: 'Australia', flag: '/static/flags/Australia.svg' }
-];
-
-function getCountryEntry(vote) {
-	const country = String(vote?.scopeCountry ?? '').toLowerCase();
-	const district = String(vote?.scopeDistrict ?? '').toLowerCase();
-	const key = country === 'us' ? `us-${district}` : country;
-	return COUNTRY_ENTRIES.find((entry) => entry.key === key) ?? null;
+// Display order follows ELECTION_SITES (same as the home page: North America, Europe, Oceania),
+// so related scopes such as the two USA elections stay next to each other.
+function getSiteEntry(vote) {
+	const site = getElectionSite({ country: vote?.scopeCountry, district: vote?.scopeDistrict });
+	if (!site) return null;
+	return {
+		order: ELECTION_SITES.indexOf(site),
+		label: site.historyLabel,
+		flag: getElectionCountry(site.scope.country)?.flag ?? null
+	};
 }
 
 function toCountryLabel(vote) {
-	return getCountryEntry(vote)?.label ?? String(vote?.scopeCountry ?? '').toUpperCase();
+	return getSiteEntry(vote)?.label ?? String(vote?.scopeCountry ?? '').toUpperCase();
 }
 
 function sortVotes(votes) {
-	const rank = (vote) => {
-		const entry = getCountryEntry(vote);
-		return entry ? COUNTRY_ENTRIES.indexOf(entry) : COUNTRY_ENTRIES.length;
-	};
+	const rank = (vote) => getSiteEntry(vote)?.order ?? ELECTION_SITES.length;
 	return [...votes].sort((a, b) => rank(a) - rank(b));
 }
 export default async function UserPage({ searchParams }) {
@@ -87,7 +83,7 @@ export default async function UserPage({ searchParams }) {
 							</thead>
 							<tbody>
 								{votes.map((vote, index) => {
-									const flagSrc = getCountryEntry(vote)?.flag;
+									const flagSrc = getSiteEntry(vote)?.flag;
 									return (
 									<tr key={`${vote.scopeCountry}-${vote.scopeDistrict}-${vote.scopeYear}-${index}`}>
 										<td>

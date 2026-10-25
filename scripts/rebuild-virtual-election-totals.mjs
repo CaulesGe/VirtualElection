@@ -8,11 +8,14 @@ if (!dbUrl) {
 
 const sql = neon(dbUrl);
 
+// Rebuilds the aggregate tables from the canonical vote rows (virtual_election_votes), for every
+// country at once.
 await sql`BEGIN`;
 try {
-	await sql`TRUNCATE TABLE "RidingResults".canada_riding_result, "RidingResults".usa_riding_result, "RidingResults".uk_riding_result, "RidingResults".australia_riding_result, "RidingResults".australia_ballot_result, "RidingResults".germany_riding_result`;
+	await sql`TRUNCATE TABLE "RidingResults".riding_result, "RidingResults".ballot_result`;
 	await sql`
-		INSERT INTO "RidingResults".canada_riding_result (
+		INSERT INTO "RidingResults".riding_result (
+			country,
 			riding_id,
 			party,
 			district,
@@ -21,6 +24,7 @@ try {
 			updated_at
 		)
 		SELECT
+			lower(country),
 			riding_id,
 			party,
 			district,
@@ -28,91 +32,12 @@ try {
 			COUNT(*)::int AS votes,
 			now() AS updated_at
 		FROM virtual_election_votes
-		WHERE lower(country) = 'ca'
-		GROUP BY riding_id, party, country, district, year
+		GROUP BY lower(country), riding_id, party, district, year
 	`;
+	// Ranked ballots (preferential scopes) used for IRV counting.
 	await sql`
-		INSERT INTO "RidingResults".usa_riding_result (
-			riding_id,
-			party,
-			district,
-			year,
-			votes,
-			updated_at
-		)
-		SELECT
-			riding_id,
-			party,
-			district,
-			year,
-			COUNT(*)::int AS votes,
-			now() AS updated_at
-		FROM virtual_election_votes
-		WHERE lower(country) = 'us'
-		GROUP BY riding_id, party, country, district, year
-	`;
-	await sql`
-		INSERT INTO "RidingResults".uk_riding_result (
-			riding_id,
-			party,
-			district,
-			year,
-			votes,
-			updated_at
-		)
-		SELECT
-			riding_id,
-			party,
-			district,
-			year,
-			COUNT(*)::int AS votes,
-			now() AS updated_at
-		FROM virtual_election_votes
-		WHERE lower(country) = 'uk'
-		GROUP BY riding_id, party, country, district, year
-	`;
-	await sql`
-		INSERT INTO "RidingResults".australia_riding_result (
-			riding_id,
-			party,
-			district,
-			year,
-			votes,
-			updated_at
-		)
-		SELECT
-			riding_id,
-			party,
-			district,
-			year,
-			COUNT(*)::int AS votes,
-			now() AS updated_at
-		FROM virtual_election_votes
-		WHERE lower(country) = 'au'
-		GROUP BY riding_id, party, country, district, year
-	`;
-	await sql`
-		INSERT INTO "RidingResults".germany_riding_result (
-			riding_id,
-			party,
-			district,
-			year,
-			votes,
-			updated_at
-		)
-		SELECT
-			riding_id,
-			party,
-			district,
-			year,
-			COUNT(*)::int AS votes,
-			now() AS updated_at
-		FROM virtual_election_votes
-		WHERE lower(country) = 'de'
-		GROUP BY riding_id, party, country, district, year
-	`;
-	await sql`
-		INSERT INTO "RidingResults".australia_ballot_result (
+		INSERT INTO "RidingResults".ballot_result (
+			country,
 			riding_id,
 			ranking_key,
 			district,
@@ -121,6 +46,7 @@ try {
 			updated_at
 		)
 		SELECT
+			lower(country),
 			riding_id,
 			ranking_key,
 			district,
@@ -128,8 +54,8 @@ try {
 			COUNT(*)::int AS votes,
 			now() AS updated_at
 		FROM virtual_election_votes
-		WHERE lower(country) = 'au' AND ranking_key IS NOT NULL
-		GROUP BY riding_id, ranking_key, country, district, year
+		WHERE ranking_key IS NOT NULL
+		GROUP BY lower(country), riding_id, ranking_key, district, year
 	`;
 	await sql`COMMIT`;
 } catch (error) {
@@ -138,39 +64,22 @@ try {
 }
 
 const [{ vote_count }] = await sql`SELECT COUNT(*)::int AS vote_count FROM virtual_election_votes`;
-const [{ canada_total_rows }] = await sql`
-	SELECT COUNT(*)::int AS canada_total_rows FROM "RidingResults".canada_riding_result
-`;
-const [{ usa_total_rows }] = await sql`
-	SELECT COUNT(*)::int AS usa_total_rows FROM "RidingResults".usa_riding_result
-`;
-const [{ uk_total_rows }] = await sql`
-	SELECT COUNT(*)::int AS uk_total_rows FROM "RidingResults".uk_riding_result
-`;
-const [{ au_total_rows }] = await sql`
-	SELECT COUNT(*)::int AS au_total_rows FROM "RidingResults".australia_riding_result
-`;
-const [{ de_total_rows }] = await sql`
-	SELECT COUNT(*)::int AS de_total_rows FROM "RidingResults".germany_riding_result
-`;
-const [{ au_ballot_rows }] = await sql`
-	SELECT COUNT(*)::int AS au_ballot_rows FROM "RidingResults".australia_ballot_result
-`;
-const [{ total_votes }] = await sql`
-	SELECT (
-		COALESCE((SELECT SUM(votes) FROM "RidingResults".canada_riding_result), 0) +
-		COALESCE((SELECT SUM(votes) FROM "RidingResults".usa_riding_result), 0) +
-		COALESCE((SELECT SUM(votes) FROM "RidingResults".uk_riding_result), 0) +
-		COALESCE((SELECT SUM(votes) FROM "RidingResults".australia_riding_result), 0) +
-		COALESCE((SELECT SUM(votes) FROM "RidingResults".germany_riding_result), 0)
-	)::int AS total_votes
-`;
-
 console.log(`Votes rows: ${vote_count}`);
-console.log(`Canada totals rows: ${canada_total_rows}`);
-console.log(`USA totals rows: ${usa_total_rows}`);
-console.log(`UK totals rows: ${uk_total_rows}`);
-console.log(`Australia first-preference rows: ${au_total_rows}`);
-console.log(`Australia ranked-ballot rows: ${au_ballot_rows}`);
-console.log(`Germany totals rows: ${de_total_rows}`);
-console.log(`Summed votes in totals: ${total_votes}`);
+
+const perCountry = await sql`
+	SELECT country, COUNT(*)::int AS row_count, COALESCE(SUM(votes), 0)::int AS vote_sum
+	FROM "RidingResults".riding_result
+	GROUP BY country
+	ORDER BY country
+`;
+for (const row of perCountry) {
+	console.log(`${row.country}: ${row.row_count} totals rows, ${row.vote_sum} votes`);
+}
+
+const [{ ballot_rows }] = await sql`
+	SELECT COUNT(*)::int AS ballot_rows FROM "RidingResults".ballot_result
+`;
+console.log(`Ranked-ballot rows: ${ballot_rows}`);
+console.log(
+	`Summed votes in totals: ${perCountry.reduce((sum, row) => sum + Number(row.vote_sum), 0)}`
+);

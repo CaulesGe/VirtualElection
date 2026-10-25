@@ -96,17 +96,14 @@ This seeds:
 - `elections` (active scope metadata)
 - `parties` (authoritative party IDs)
 - `election_parties` (allowed parties for the election scope)
-- `election_districts` (including the 150 Australian divisions from `src/lib/data/auDivisions.json` and the 299 German constituencies from `src/lib/data/deDivisions.json`)
+- `election_districts` (for every country whose config has `districts.source: 'divisions'` or `districts.seed: true`, e.g. the 150 Australian divisions, the 299 German constituencies and the 650 UK constituencies)
 
 The migrations create:
 
 - `virtual_election_votes` (migration `0006` adds the nullable `ranking_key` column used for ranked ballots)
-- `RidingResults.canada_riding_result`
-- `RidingResults.usa_riding_result`
-- `RidingResults.uk_riding_result`
-- `RidingResults.australia_riding_result` (first-preference counters)
-- `RidingResults.australia_ballot_result` (aggregated full rankings used for IRV)
-- `RidingResults.germany_riding_result` (migration `0007`; constituency-vote counters)
+- `RidingResults.riding_result` (migration `0008`): first-choice counters for every country, keyed by `country`
+- `RidingResults.ballot_result` (migration `0008`): aggregated full rankings used for IRV, keyed by `country`
+- Legacy per-country tables (`canada_`, `usa_`, `uk_`, `australia_`, `germany_riding_result`, `australia_ballot_result`): created by migrations `0004`-`0007`; migration `0008` copies their rows into the two tables above and the app no longer uses them
 - `elections`
 - `parties`
 - `election_parties`
@@ -117,25 +114,19 @@ Run in Neon SQL editor:
 
 ```sql
 select * from virtual_election_votes limit 5;
-select * from "RidingResults".canada_riding_result limit 5;
-select * from "RidingResults".usa_riding_result limit 5;
-select * from "RidingResults".uk_riding_result limit 5;
-select * from "RidingResults".australia_riding_result limit 5;
-select * from "RidingResults".australia_ballot_result limit 5;
-select * from "RidingResults".germany_riding_result limit 5;
+select country, count(*), sum(votes) from "RidingResults".riding_result group by country;
+select * from "RidingResults".ballot_result limit 5;
 ```
 
 ### 5) (Optional) clear virtual election data
 
 ```sql
 truncate table virtual_election_votes restart identity;
-truncate table "RidingResults".canada_riding_result;
-truncate table "RidingResults".usa_riding_result;
-truncate table "RidingResults".uk_riding_result;
-truncate table "RidingResults".australia_riding_result;
-truncate table "RidingResults".australia_ballot_result;
-truncate table "RidingResults".germany_riding_result;
+truncate table "RidingResults".riding_result;
+truncate table "RidingResults".ballot_result;
 ```
+
+To recompute the counters from the vote rows at any time (for example after migrating), run `node scripts/rebuild-virtual-election-totals.mjs`.
 
 ---
 
@@ -187,7 +178,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  entry["canada/page.js or usa/*/page.js"] --> loader["loadElectionPageData()"]
+  entry["[...election]/page.js + ElectionPage.jsx"] --> loader["loadElectionPageData()"]
   loader --> page["VirtualElectionPage.jsx"]
   page --> state["useElectionState.js"]
   page --> map["MapComponent/MapController.jsx"]
@@ -231,13 +222,8 @@ flowchart TD
 ## Data model
 
 - `virtual_election_votes`: canonical user vote row (`user_id + scope` unique)
-- `RidingResults.canada_riding_result`: pre-aggregated counters for Canada ridings by party/scope
-- `RidingResults.usa_riding_result`: pre-aggregated counters for USA districts/states by party/scope
-- `RidingResults.uk_riding_result`: pre-aggregated counters for UK constituencies by party/scope
-- `RidingResults.australia_riding_result`: first-preference counters for Australian divisions by party/scope
-- `RidingResults.germany_riding_result`: pre-aggregated counters for German constituencies by party/scope
-- `RidingResults.australia_ballot_result`: one row per distinct full ranking per division (`ranking_key` such as `ALP>GRN>LP>...`), the input for IRV counting
-- `virtual_election_votes.ranking_key`: the voter's full ranking for ranked-ballot scopes (`party` holds the first preference, so existing readers keep working)
+- `RidingResults.riding_result`: pre-aggregated first-choice counters, one row per `country + riding_id + party + district + year` (first preferences for ranked scopes)
+- `RidingResults.ballot_result`: one row per distinct full ranking per district (`ranking_key` such as `ALP>GRN>LNP>...`), the input for IRV counting in ranked scopes- `virtual_election_votes.ranking_key`: the voter's full ranking for ranked-ballot scopes (`party` holds the first preference, so existing readers keep working)
 - Australian division IDs are the 5-letter `code` values of the `au-gen` layer in `static/ridingMaps/Austrilia.pmtiles` (for example `ADELA`, `KSMIT`)
 - USA district IDs use canonical keys: `us-fed-2025-<STATEFP>-<DISTRICT_OR_AL>`
 - USA presidential state IDs use canonical keys: `US-PRES-2025-<FIPS>`
@@ -249,23 +235,43 @@ Vote API performs a single atomic SQL operation:
 3. decrement previous aggregate if changed
 4. increment new aggregate
 
-For ranked-ballot scopes (Australia) the same statement also moves the voter's ballot between rows of `australia_ballot_result`; changing only the lower preferences updates the ballot table but leaves the first-preference counters untouched.
+For ranked-ballot scopes (Australia) the same statement also moves the voter's ballot between rows of `ballot_result`; changing only the lower preferences updates the ballot table but leaves the first-preference counters untouched.
 
 ### Australia: preferential voting (IRV)
 
 - Scope `au/fed/2025`, map `static/ridingMaps/Austrilia.pmtiles` (150 House of Representatives divisions), rendered with MapLibre GL + the `pmtiles` protocol (`MapComponent/PmtilesMap.jsx`).
-- A ballot ranks all 7 parties exactly once (`ALP, LNP, GRN, IND, ONP, AFP, OTH`). One ballot per user: voting again overwrites the previous ranking and division.
-- Counting (`src/lib/virtualElection/irv.js`) is done on the server for every division on each `GET /totals` request: count first preferences; if a party has more than 50% it wins; otherwise the party with the fewest votes is eliminated and its ballots move to the next remaining preference; repeat. Elimination ties are broken by fewer first preferences, then by the party that is later in the configured party order. The client never runs IRV.
+- A ballot ranks all 7 parties exactly once (`ALP, LNP, GRN, IND, ONP, AFP, OTH`; the default ballot order is the shared display order). One ballot per user: voting again overwrites the previous ranking and division.
+- Counting (`src/lib/virtualElection/irv.js`) is done on the server for every division on each `GET /totals` request: count first preferences; if a party has more than 50% it wins; otherwise the party with the fewest votes is eliminated and its ballots move to the next remaining preference; repeat. Elimination ties are broken by fewer first preferences, then by the party that is later in `IRV_TIE_BREAK_ORDER_BY_COUNTRY` (`ALP, LNP, GRN, IND, ONP, AFP, OTH`; independent of the display order). The client never runs IRV.
 - Seats and map colors use the IRV winner; vote charts use first-preference totals.
 - Division list, states and zoom bounding boxes live in `src/lib/data/auDivisions.json`. After replacing the pmtiles file run `node scripts/extract-au-divisions.mjs --check` (and `--write-bbox` to refresh bounds); `node scripts/verify-irv.mjs` verifies the counting logic.
 
+### Adding a country
+
+Every country runs the same workflow (scope -> options -> vote -> aggregate -> totals -> map/charts), so a country is pure configuration plus data files:
+
+1. Create `src/lib/config/countries/<country>.js` (copy `germany.js` for a PMTiles map or `uk.js` for a TopoJSON map) and add it to `ELECTION_COUNTRIES` in `src/lib/config/electionCountries.js`. The file declares:
+   - meta: `code`, `name`, `region`, `basePath`, `entryRoute`, `flag`, `home` card
+   - `votingSystem` (`'single'` or `'preferential'`; preferential also needs `irvTieBreakOrder`) and `parties` (code -> name, short name, colors; reuse `SHARED_PARTIES.OTH` / `.IND`)
+   - `map`: `renderer: 'maplibre'` (`asset`, `sourceLayer`, `nameProperty`, `view.bounds`) or `renderer: 'leaflet'` (`asset`, `idProperties`, `nameProperties`, `subnationalProperties`, `view`), plus `versionPrefix` and `regionKey`
+   - `districts`: `{ source: 'divisions', divisions }` (committed JSON list, create it with a `scripts/extract-*-divisions.mjs`) or `{ source: 'map', seed }` (read from the TopoJSON map)
+   - `regions`: `options` (or `fromDivisions: true`), optional `aliases`, and `resolve` rules (`'subnational'`, `'division'`, `{ prefix: ... }`)
+   - `sites`: one entry per page (`district`, `year`, `route`, `pageTitle`, `historyLabel`, `seo`, optional `view` and `map` overrides)
+2. Add the map file under `static/ridingMaps/` and the flag under `static/flags/`.
+3. Run `npm run db:seed:options` (parties, scope and districts). No migration, page file, map adapter or region profile is needed: the routes, header, home page, sitemap, history page, API scopes, result rows, map adapter and region profile are all generated from the config.
+
+The USA is the only country with custom code (`map.renderer`, `districts.source` and `regions.source` set to `'custom'`): its House and presidential maps compute district IDs from FIPS codes (`adapters/usa.js`, `profiles/usa.js`, `server/virtualElection/usRidings.js`).
+
+### Party display order (all countries)
+
+The written order of `parties` in a country config is irrelevant. `sortPartiesForDisplay()` (used by `getAllowedPartiesForScope()` and by the server when reading `election_parties`) orders every list the same way: alphabetical by full name (accent-insensitive), with independents (`IND`, `Independent`) and then `OTH` last. The IRV tie-break order is a separate `irvTieBreakOrder` so display ordering never affects counting.
 ### Germany: constituency vote (FPTP)
 
 - Scope `de/fed/2025`, map `static/ridingMaps/Germany.pmtiles` (layer `fed`, 299 Bundestag constituencies, 16 states), rendered by the same `PmtilesMap` as Australia but with plain single-choice voting like Canada/UK.
 - Only the first vote (Erststimme) is simulated: one party per constituency, the plurality leader wins the seat (150 seats for a majority). The second vote and list seats are not simulated.
 - Parties: `CDU` (CDU and CSU merged; short name "CDU/CSU"), `AFD`, `SPD`, `GRUNE`, `LINKE`, `BSW`, `FDP`, `SSW`, `OTH`. Party names are shown in German (for example "Bündnis 90/Die Grünen", "Südschleswigscher Wählerverband").
 - Constituency IDs are the `code` values (the official constituency number as a string, `"1"`..`"299"`). Names, states and zoom bounding boxes live in `src/lib/data/deDivisions.json`. After replacing the pmtiles file run `node scripts/extract-de-divisions.mjs --write` to regenerate it and `node scripts/extract-de-divisions.mjs --check` to verify it against the tiles.
-- API request/response shapes are unchanged; use `country=de&district=fed&year=2025`. Existing databases need `npm run db:migrate` (migration `0007`) and `npm run db:seed:options` before Germany works.
+- API request/response shapes are unchanged; use `country=de&district=fed&year=2025`. Existing databases need `npm run db:migrate` (migrations `0007` and `0008`) and `npm run db:seed:options` before Germany works.
+
 ---
 
 ## Project map
@@ -273,13 +279,12 @@ For ranked-ballot scopes (Australia) the same statement also moves the voter's b
 - `src/app/page.js`: intro homepage
 - `src/app/sitemap.js`: XML sitemap route for search engine discovery
 - `src/app/robots.js`: robots.txt route for crawler directives
-- `src/app/canada/page.js`: Canada election page bootstrap
-- `src/app/usa/page.js`: USA default route redirect to presidential page
-- `src/app/usa/houseOfRepresentatives/page.js`: USA house page bootstrap
-- `src/app/usa/president/page.js`: USA presidential page bootstrap
-- `src/app/australia/page.js`: Australia House of Representatives page bootstrap (`au/fed/2025`)
-- `src/app/germany/page.js`: Germany Bundestag page bootstrap (`de/fed/2025`)
-- `src/lib/components/virtualElection/MapComponent/PmtilesMap.jsx`: generic MapLibre + PMTiles map surface (Australia, Germany); driven by adapter `sourceLayer` and `divisions`
+- `src/lib/config/countries/*.js`: one config file per country (meta, parties and colors, map, districts, regions, pages); `sharedParties.js` holds `OTH` / `IND`
+- `src/lib/config/electionCountries.js`: registry built from the country configs (`ELECTION_COUNTRIES`, `ELECTION_SITES`, party catalogue, lookups)
+- `src/lib/config/virtualElection.js`: election rules derived from the registry (allowed scopes and parties, display order, IRV tie-break order, preferential scopes)
+- `src/app/[...election]/page.js`: the single route for every election page (resolved from `ELECTION_SITES`; `/usa` redirects to its entry page; unknown paths 404)
+- `src/lib/components/virtualElection/ElectionPage.jsx`: shared server component (page data loading, SEO intro) and `buildElectionMetadata()`
+- `src/lib/components/virtualElection/MapComponent/adapters/index.js`: builds each country's map adapter from its `map` config (`createPmtilesAdapter.js`, `createTopoJsonAdapter.js`; `usa.js` is custom)- `src/lib/components/virtualElection/MapComponent/PmtilesMap.jsx`: generic MapLibre + PMTiles map surface (Australia, Germany); driven by adapter `sourceLayer` and `divisions`
 - `src/lib/components/virtualElection/MapComponent/IrvRoundsPanel.jsx`: round-by-round preference count for the selected division
 - `src/lib/components/virtualElection/RankedBallot.jsx`: drag-and-drop ranked-ballot control (`@dnd-kit`; mouse, touch long-press, keyboard)
 - `src/lib/virtualElection/irv.js`: pure IRV counting module
@@ -290,7 +295,8 @@ For ranked-ballot scopes (Australia) the same statement also moves the voter's b
 - `src/lib/components/virtualElection/MapComponent/adapters/usa.js`: USA house + president map adapter (`USA.json` + `us-atlas`)
 - `src/lib/components/virtualElection/regionBreakdown/RegionSeatChart.jsx`: seat chart
 - `src/lib/components/virtualElection/regionBreakdown/RegionVoteChart.jsx`: vote chart
-- `src/lib/components/virtualElection/regionBreakdown/profiles/*`: country-aware region logic
+- `src/lib/components/virtualElection/regionBreakdown/profiles/*`: builds each country's region profile from its `regions` config (`createRegionProfile.js`; `usa.js` is custom)
+- `src/lib/server/virtualElection/mapAssets.js`: reads districts from a country's TopoJSON map (same property names as the map rendering), shared by the ridings API and the seed script
 - `src/app/api/virtual-election/*`: API handlers
 - `src/lib/server/virtualElection/service.js`: domain logic + atomic SQL
 - `src/lib/server/virtualElection/loadElectionPageData.js`: shared page bootstrap loader
@@ -386,7 +392,7 @@ Error semantics are aligned with prior implementation:
 - Set all env vars in Vercel project settings.
 - Add production domain to `VIRTUAL_ELECTION_ALLOWED_ORIGINS`.
 - Add production callback URL for Google OAuth.
-- Run `npm run db:migrate` against production Neon DB before first launch (migration `0006` is required for Australia, `0007` for Germany), then `npm run db:seed:options`.
+- Run `npm run db:migrate` against production Neon DB before first launch (migration `0006` is required for Australia, `0007` for Germany, `0008` moves all counters to the shared `riding_result` / `ballot_result` tables), then `npm run db:seed:options`. Apply migrations before deploying code that depends on them; after `0008`, optionally run `node scripts/rebuild-virtual-election-totals.mjs` to recompute counters from the vote rows.
 - `static/ridingMaps/Austrilia.pmtiles` and `static/ridingMaps/Germany.pmtiles` are read by the browser with HTTP Range requests; the host serving `/static/*` must support `Range` (the Next.js dev server does). The CSP in `next.config.mjs` allows `worker-src blob:` for MapLibre.
 - The MapLibre worker is copied to `public/maplibre/` (git-ignored) by `scripts/copy-maplibre-worker.mjs`, which runs automatically via `predev` and `prebuild`. If you build with a custom command that skips `npm run build`, run `node scripts/copy-maplibre-worker.mjs` first.
 

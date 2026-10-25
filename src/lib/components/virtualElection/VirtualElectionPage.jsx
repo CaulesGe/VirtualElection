@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import { getElectionCountry, getElectionSite } from '@/lib/config/electionCountries';
 import { VIRTUAL_ELECTION_ALLOWED_SCOPES } from '@/lib/config/virtualElection';
 import LoginControl from '@/lib/components/virtualElection/LoginControl';
 import MapController from '@/lib/components/virtualElection/MapComponent/MapController';
@@ -53,19 +54,11 @@ export default function VirtualElectionPage({
 	const isUsaScope = String(scope?.country ?? '').toLowerCase() === 'us';
 	const usaIsPresident = String(scope?.district ?? '').toLowerCase() === 'pres';
 	const countryTitle = useMemo(() => {
+		const site = getElectionSite(scope);
+		if (site) return site.pageTitle;
 		const code = String(activeMapMetadata?.countryCode ?? scope?.country ?? '').toUpperCase();
-		const district = String(scope?.district ?? '').toLowerCase();
-		if (code === 'US') {
-			if (district === 'pres') return 'USA - Presidential Election';
-			if (district === 'fed') return 'USA - House of Representatives';
-			return 'USA';
-		}
-		if (code === 'UK') return 'United Kingdom';
-		if (code === 'AU') return 'Australia - House of Representatives';
-		if (code === 'DE') return 'Germany - Bundestag (constituency vote)';
-		if (code === 'CA') return 'Canada';
-		return code || 'Virtual Election';
-	}, [activeMapMetadata?.countryCode, scope?.country, scope?.district]);
+		return getElectionCountry(code)?.name ?? (code || 'Virtual Election');
+	}, [activeMapMetadata?.countryCode, scope]);
 
 	return (
 		<div className={styles.page}>

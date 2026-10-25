@@ -2,25 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { ELECTION_COUNTRIES, getElectionCountryFromPath } from '@/lib/config/electionCountries';
 import styles from './Header.module.css';
-
-function getCountryNameFromPath(pathname) {
-	if (pathname?.startsWith('/usa')) return 'USA';
-	if (pathname?.startsWith('/canada')) return 'Canada';
-	if (pathname?.startsWith('/uk')) return 'United Kingdom';
-	if (pathname?.startsWith('/australia')) return 'Australia';
-	if (pathname?.startsWith('/germany')) return 'Germany';
-	return '...';
-}
-
-function getCountryRouteFromPath(pathname) {
-	if (pathname?.startsWith('/canada')) return '/canada';
-	if (pathname?.startsWith('/usa')) return '/usa/president';
-	if (pathname?.startsWith('/uk')) return '/uk';
-	if (pathname?.startsWith('/australia')) return '/australia';
-	if (pathname?.startsWith('/germany')) return '/germany';
-	return '/canada';
-}
 
 function getRouteContext(pathname, fromParam) {
 	if (pathname?.startsWith('/user') && typeof fromParam === 'string' && fromParam.startsWith('/')) {
@@ -35,8 +18,9 @@ export default function Header({ isAuthenticated = false, userLabel = '' }) {
 	const router = useRouter();
 	const fromParam = searchParams?.get('from') ?? '';
 	const routeContext = getRouteContext(pathname, fromParam);
-	const countryName = getCountryNameFromPath(routeContext);
-	const currentCountryRoute = getCountryRouteFromPath(routeContext);
+	const currentCountry = getElectionCountryFromPath(routeContext);
+	const countryName = currentCountry?.name ?? '...';
+	const currentCountryRoute = currentCountry?.entryRoute ?? ELECTION_COUNTRIES[0].entryRoute;
 	const query = searchParams?.toString();
 	const currentPathWithQuery = `${pathname}${query ? `?${query}` : ''}`;
 	const from = pathname === '/user' ? '/' : currentPathWithQuery;
@@ -65,11 +49,11 @@ export default function Header({ isAuthenticated = false, userLabel = '' }) {
 							router.push(event.target.value);
 						}}
 					>
-						<option value="/canada">Canada</option>
-						<option value="/usa/president">USA</option>
-						<option value="/uk">United Kingdom</option>
-						<option value="/australia">Australia</option>
-						<option value="/germany">Germany</option>
+						{ELECTION_COUNTRIES.map((country) => (
+							<option key={country.code} value={country.entryRoute}>
+								{country.name}
+							</option>
+						))}
 					</select>
 				</div>
 				<div className={styles.userSlot}>
