@@ -7,7 +7,11 @@ const nextConfig = {
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https://*.tile.openstreetmap.org",
       "font-src 'self'",
-      "connect-src 'self' https://accounts.google.com https://www.google.com",
+      // MapLibre loads basemap tiles with fetch(), so OSM tile hosts are needed here as well as in img-src.
+      "connect-src 'self' https://accounts.google.com https://www.google.com https://*.tile.openstreetmap.org",
+      // MapLibre GL (Australia vector-tile map) decodes tiles in blob: web workers.
+      "worker-src 'self' blob:",
+      "child-src 'self' blob:",
       "frame-src https://accounts.google.com https://www.google.com"
     ].join('; ');
 

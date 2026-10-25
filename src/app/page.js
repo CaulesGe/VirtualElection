@@ -5,20 +5,20 @@ import styles from './page.module.css';
 export const metadata = {
 	title: 'Interactive Election Map and Virtual Voting',
 	description:
-		'Choose Canada, USA, or United Kingdom election simulations with live riding totals, regional breakdowns, and map-driven exploration.',
+		'Choose Canada, USA, United Kingdom, or Australia election simulations with live riding totals, regional breakdowns, and map-driven exploration.',
 	alternates: {
 		canonical: '/'
 	},
 	openGraph: {
 		title: 'VirtualElection - Interactive Election Map and Virtual Voting',
 		description:
-			'Choose Canada, USA, or United Kingdom election simulations with live riding totals, regional breakdowns, and map-driven exploration.',
+			'Choose Canada, USA, United Kingdom, or Australia election simulations with live riding totals, regional breakdowns, and map-driven exploration.',
 		url: '/'
 	},
 	twitter: {
 		title: 'VirtualElection - Interactive Election Map and Virtual Voting',
 		description:
-			'Choose Canada, USA, or United Kingdom election simulations with live riding totals, regional breakdowns, and map-driven exploration.'
+			'Choose Canada, USA, United Kingdom, or Australia election simulations with live riding totals, regional breakdowns, and map-driven exploration.'
 	}
 };
 
@@ -98,6 +98,30 @@ export default function Home() {
 							Vote across UK constituencies and watch the race for Parliament unfold in real time.
 						</p>
 						<span className={styles.cta}>Open UK election →</span>
+					</Link>
+				</div>
+			</section>
+			<section className={styles.regionSection} aria-labelledby="oceania-heading">
+				<div className={styles.regionHeader}>
+					<h2 id="oceania-heading" className={styles.regionTitle}>Oceania</h2>
+				</div>
+				<div className={styles.cardGrid} aria-label="Oceania election choices">
+					<Link href="/australia" className={styles.card}>
+						<div className={styles.cardTitle}>
+							<Image
+								src="/static/flags/Australia.svg"
+								alt="Australia flag"
+								width={28}
+								height={20}
+								className={styles.flag}
+							/>
+							<span>Australia</span>
+							<span className={styles.badge}>House of Representatives</span>
+						</div>
+						<p className={styles.cardSubtitle}>
+							Rank every party on a preferential ballot and watch preferences flow across all 150 federal divisions.
+						</p>
+						<span className={styles.cta}>Open Australia election →</span>
 					</Link>
 				</div>
 			</section>

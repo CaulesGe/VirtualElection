@@ -1,0 +1,1652 @@
+[
+	{
+		"code": "ADELA",
+		"name": "Adelaide",
+		"state": "SA",
+		"bbox": [
+			138.547,
+			-34.967,
+			138.638,
+			-34.847
+		]
+	},
+	{
+		"code": "ASTON",
+		"name": "Aston",
+		"state": "VIC",
+		"bbox": [
+			145.191,
+			-37.964,
+			145.348,
+			-37.818
+		]
+	},
+	{
+		"code": "BALLA",
+		"name": "Ballarat",
+		"state": "VIC",
+		"bbox": [
+			143.441,
+			-38.064,
+			144.419,
+			-37.148
+		]
+	},
+	{
+		"code": "BANKS",
+		"name": "Banks",
+		"state": "NSW",
+		"bbox": [
+			150.966,
+			-34.003,
+			151.122,
+			-33.929
+		]
+	},
+	{
+		"code": "BARKE",
+		"name": "Barker",
+		"state": "SA",
+		"bbox": [
+			138.744,
+			-38.063,
+			141.003,
+			-33.31
+		]
+	},
+	{
+		"code": "BARTO",
+		"name": "Barton",
+		"state": "NSW",
+		"bbox": [
+			151.072,
+			-33.988,
+			151.161,
+			-33.913
+		]
+	},
+	{
+		"code": "BASS",
+		"name": "Bass",
+		"state": "TAS",
+		"bbox": [
+			146.381,
+			-41.556,
+			148.498,
+			-39.204
+		]
+	},
+	{
+		"code": "BEAN",
+		"name": "Bean",
+		"state": "ACT",
+		"bbox": [
+			148.763,
+			-35.92,
+			149.206,
+			-35.218
+		]
+	},
+	{
+		"code": "BENDI",
+		"name": "Bendigo",
+		"state": "VIC",
+		"bbox": [
+			143.831,
+			-37.386,
+			144.942,
+			-36.255
+		]
+	},
+	{
+		"code": "BENNE",
+		"name": "Bennelong",
+		"state": "NSW",
+		"bbox": [
+			151.065,
+			-33.847,
+			151.198,
+			-33.761
+		]
+	},
+	{
+		"code": "BEROW",
+		"name": "Berowra",
+		"state": "NSW",
+		"bbox": [
+			150.87,
+			-33.783,
+			151.285,
+			-33.378
+		]
+	},
+	{
+		"code": "BLAIR",
+		"name": "Blair",
+		"state": "QLD",
+		"bbox": [
+			152.073,
+			-27.864,
+			152.928,
+			-26.453
+		]
+	},
+	{
+		"code": "BLAXL",
+		"name": "Blaxland",
+		"state": "NSW",
+		"bbox": [
+			150.955,
+			-33.905,
+			151.069,
+			-33.816
+		]
+	},
+	{
+		"code": "BONNE",
+		"name": "Bonner",
+		"state": "QLD",
+		"bbox": [
+			153.056,
+			-27.607,
+			153.468,
+			-27.022
+		]
+	},
+	{
+		"code": "BOOTH",
+		"name": "Boothby",
+		"state": "SA",
+		"bbox": [
+			138.504,
+			-35.06,
+			138.681,
+			-34.952
+		]
+	},
+	{
+		"code": "BOWMA",
+		"name": "Bowman",
+		"state": "QLD",
+		"bbox": [
+			153.172,
+			-27.74,
+			153.547,
+			-27.388
+		]
+	},
+	{
+		"code": "BRADD",
+		"name": "Braddon",
+		"state": "TAS",
+		"bbox": [
+			143.819,
+			-43.323,
+			146.762,
+			-39.579
+		]
+	},
+	{
+		"code": "BRADF",
+		"name": "Bradfield",
+		"state": "NSW",
+		"bbox": [
+			151.09,
+			-33.825,
+			151.234,
+			-33.659
+		]
+	},
+	{
+		"code": "BRAND",
+		"name": "Brand",
+		"state": "WA",
+		"bbox": [
+			115.659,
+			-32.396,
+			115.899,
+			-32.119
+		]
+	},
+	{
+		"code": "BRISB",
+		"name": "Brisbane",
+		"state": "QLD",
+		"bbox": [
+			152.975,
+			-27.48,
+			153.1,
+			-27.404
+		]
+	},
+	{
+		"code": "BRUCE",
+		"name": "Bruce",
+		"state": "VIC",
+		"bbox": [
+			145.188,
+			-38.089,
+			145.386,
+			-37.923
+		]
+	},
+	{
+		"code": "BULLW",
+		"name": "Bullwinkel",
+		"state": "WA",
+		"bbox": [
+			115.974,
+			-32.358,
+			117.247,
+			-31.231
+		]
+	},
+	{
+		"code": "BURT",
+		"name": "Burt",
+		"state": "WA",
+		"bbox": [
+			115.883,
+			-32.241,
+			116.021,
+			-32.003
+		]
+	},
+	{
+		"code": "CALAR",
+		"name": "Calare",
+		"state": "NSW",
+		"bbox": [
+			148.291,
+			-34.206,
+			150.62,
+			-32.058
+		]
+	},
+	{
+		"code": "CALWE",
+		"name": "Calwell",
+		"state": "VIC",
+		"bbox": [
+			144.806,
+			-37.695,
+			144.958,
+			-37.502
+		]
+	},
+	{
+		"code": "CANBE",
+		"name": "Canberra",
+		"state": "ACT",
+		"bbox": [
+			149.026,
+			-35.351,
+			149.399,
+			-35.202
+		]
+	},
+	{
+		"code": "CANNI",
+		"name": "Canning",
+		"state": "WA",
+		"bbox": [
+			115.607,
+			-32.943,
+			116.26,
+			-32.192
+		]
+	},
+	{
+		"code": "CAPRI",
+		"name": "Capricornia",
+		"state": "QLD",
+		"bbox": [
+			146.031,
+			-23.556,
+			152.909,
+			-20.294
+		]
+	},
+	{
+		"code": "CASEY",
+		"name": "Casey",
+		"state": "VIC",
+		"bbox": [
+			145.235,
+			-37.975,
+			146.192,
+			-37.525
+		]
+	},
+	{
+		"code": "CHIFL",
+		"name": "Chifley",
+		"state": "NSW",
+		"bbox": [
+			150.76,
+			-33.789,
+			150.906,
+			-33.65
+		]
+	},
+	{
+		"code": "CHISH",
+		"name": "Chisholm",
+		"state": "VIC",
+		"bbox": [
+			145.038,
+			-37.924,
+			145.208,
+			-37.835
+		]
+	},
+	{
+		"code": "CLARK",
+		"name": "Clark",
+		"state": "TAS",
+		"bbox": [
+			147.136,
+			-42.986,
+			147.362,
+			-42.75
+		]
+	},
+	{
+		"code": "COOK",
+		"name": "Cook",
+		"state": "NSW",
+		"bbox": [
+			151.059,
+			-34.078,
+			151.232,
+			-33.983
+		]
+	},
+	{
+		"code": "COOPE",
+		"name": "Cooper",
+		"state": "VIC",
+		"bbox": [
+			144.966,
+			-37.804,
+			145.075,
+			-37.691
+		]
+	},
+	{
+		"code": "CORAN",
+		"name": "Corangamite",
+		"state": "VIC",
+		"bbox": [
+			144.185,
+			-38.398,
+			144.72,
+			-38.107
+		]
+	},
+	{
+		"code": "CORIO",
+		"name": "Corio",
+		"state": "VIC",
+		"bbox": [
+			144.093,
+			-38.215,
+			144.688,
+			-37.801
+		]
+	},
+	{
+		"code": "COWAN",
+		"name": "Cowan",
+		"state": "WA",
+		"bbox": [
+			115.783,
+			-31.89,
+			115.927,
+			-31.783
+		]
+	},
+	{
+		"code": "COWPE",
+		"name": "Cowper",
+		"state": "NSW",
+		"bbox": [
+			152.27,
+			-31.493,
+			153.155,
+			-30.181
+		]
+	},
+	{
+		"code": "CUNNI",
+		"name": "Cunningham",
+		"state": "NSW",
+		"bbox": [
+			150.69,
+			-34.542,
+			151.066,
+			-34.13
+		]
+	},
+	{
+		"code": "CURTI",
+		"name": "Curtin",
+		"state": "WA",
+		"bbox": [
+			115.751,
+			-32.026,
+			115.844,
+			-31.873
+		]
+	},
+	{
+		"code": "DAWSO",
+		"name": "Dawson",
+		"state": "QLD",
+		"bbox": [
+			146.762,
+			-21.298,
+			152.678,
+			-19.182
+		]
+	},
+	{
+		"code": "DEAKI",
+		"name": "Deakin",
+		"state": "VIC",
+		"bbox": [
+			145.152,
+			-37.865,
+			145.309,
+			-37.76
+		]
+	},
+	{
+		"code": "DICKS",
+		"name": "Dickson",
+		"state": "QLD",
+		"bbox": [
+			152.681,
+			-27.422,
+			153.019,
+			-27.086
+		]
+	},
+	{
+		"code": "DOBEL",
+		"name": "Dobell",
+		"state": "NSW",
+		"bbox": [
+			151.207,
+			-33.429,
+			151.578,
+			-33.044
+		]
+	},
+	{
+		"code": "DUNKL",
+		"name": "Dunkley",
+		"state": "VIC",
+		"bbox": [
+			145.095,
+			-38.21,
+			145.24,
+			-38.043
+		]
+	},
+	{
+		"code": "DURAC",
+		"name": "Durack",
+		"state": "WA",
+		"bbox": [
+			112.921,
+			-31.856,
+			129.001,
+			-13.689
+		]
+	},
+	{
+		"code": "EDENM",
+		"name": "Eden-monaro",
+		"state": "NSW",
+		"bbox": [
+			148.201,
+			-37.505,
+			150.333,
+			-34.549
+		]
+	},
+	{
+		"code": "FADDE",
+		"name": "Fadden",
+		"state": "QLD",
+		"bbox": [
+			153.213,
+			-27.977,
+			153.449,
+			-27.691
+		]
+	},
+	{
+		"code": "FAIRF",
+		"name": "Fairfax",
+		"state": "QLD",
+		"bbox": [
+			152.551,
+			-26.733,
+			153.12,
+			-26.432
+		]
+	},
+	{
+		"code": "FARRE",
+		"name": "Farrer",
+		"state": "NSW",
+		"bbox": [
+			141.002,
+			-36.13,
+			147.898,
+			-32.671
+		]
+	},
+	{
+		"code": "FENNE",
+		"name": "Fenner",
+		"state": "ACT",
+		"bbox": [
+			148.961,
+			-35.28,
+			150.772,
+			-35.114
+		]
+	},
+	{
+		"code": "FISHE",
+		"name": "Fisher",
+		"state": "QLD",
+		"bbox": [
+			152.583,
+			-26.985,
+			153.151,
+			-26.615
+		]
+	},
+	{
+		"code": "FLIND",
+		"name": "Flinders",
+		"state": "VIC",
+		"bbox": [
+			144.652,
+			-38.503,
+			145.503,
+			-38.162
+		]
+	},
+	{
+		"code": "FLYNN",
+		"name": "Flynn",
+		"state": "QLD",
+		"bbox": [
+			146.572,
+			-26.479,
+			153.265,
+			-22.654
+		]
+	},
+	{
+		"code": "FORDE",
+		"name": "Forde",
+		"state": "QLD",
+		"bbox": [
+			152.987,
+			-27.919,
+			153.315,
+			-27.634
+		]
+	},
+	{
+		"code": "FORRE",
+		"name": "Forrest",
+		"state": "WA",
+		"bbox": [
+			114.975,
+			-34.425,
+			116.209,
+			-32.921
+		]
+	},
+	{
+		"code": "FOWLE",
+		"name": "Fowler",
+		"state": "NSW",
+		"bbox": [
+			150.842,
+			-33.939,
+			150.985,
+			-33.846
+		]
+	},
+	{
+		"code": "FRANK",
+		"name": "Franklin",
+		"state": "TAS",
+		"bbox": [
+			145.916,
+			-43.642,
+			147.613,
+			-42.761
+		]
+	},
+	{
+		"code": "FRASE",
+		"name": "Fraser",
+		"state": "VIC",
+		"bbox": [
+			144.769,
+			-37.851,
+			144.917,
+			-37.724
+		]
+	},
+	{
+		"code": "FREMA",
+		"name": "Fremantle",
+		"state": "WA",
+		"bbox": [
+			115.45,
+			-32.181,
+			115.916,
+			-31.987
+		]
+	},
+	{
+		"code": "GELLI",
+		"name": "Gellibrand",
+		"state": "VIC",
+		"bbox": [
+			144.704,
+			-37.941,
+			144.913,
+			-37.807
+		]
+	},
+	{
+		"code": "GILMO",
+		"name": "Gilmore",
+		"state": "NSW",
+		"bbox": [
+			149.814,
+			-36.05,
+			150.866,
+			-34.599
+		]
+	},
+	{
+		"code": "GIPPS",
+		"name": "Gippsland",
+		"state": "VIC",
+		"bbox": [
+			146.211,
+			-38.791,
+			149.976,
+			-36.612
+		]
+	},
+	{
+		"code": "GOLDS",
+		"name": "Goldstein",
+		"state": "VIC",
+		"bbox": [
+			144.985,
+			-37.996,
+			145.061,
+			-37.883
+		]
+	},
+	{
+		"code": "GORTO",
+		"name": "Gorton",
+		"state": "VIC",
+		"bbox": [
+			144.605,
+			-37.812,
+			144.848,
+			-37.663
+		]
+	},
+	{
+		"code": "GRAYN",
+		"name": "Grayndler",
+		"state": "NSW",
+		"bbox": [
+			151.089,
+			-33.934,
+			151.186,
+			-33.87
+		]
+	},
+	{
+		"code": "GREEN",
+		"name": "Greenway",
+		"state": "NSW",
+		"bbox": [
+			150.851,
+			-33.775,
+			150.958,
+			-33.612
+		]
+	},
+	{
+		"code": "GREY",
+		"name": "Grey",
+		"state": "SA",
+		"bbox": [
+			129.001,
+			-35.378,
+			141.002,
+			-25.996
+		]
+	},
+	{
+		"code": "GRIFF",
+		"name": "Griffith",
+		"state": "QLD",
+		"bbox": [
+			152.996,
+			-27.531,
+			153.106,
+			-27.441
+		]
+	},
+	{
+		"code": "GROOM",
+		"name": "Groom",
+		"state": "QLD",
+		"bbox": [
+			151.076,
+			-27.907,
+			152.153,
+			-26.968
+		]
+	},
+	{
+		"code": "HASLU",
+		"name": "Hasluck",
+		"state": "WA",
+		"bbox": [
+			115.878,
+			-31.93,
+			116.094,
+			-31.742
+		]
+	},
+	{
+		"code": "HAWKE",
+		"name": "Hawke",
+		"state": "VIC",
+		"bbox": [
+			144.13,
+			-37.88,
+			144.871,
+			-37.421
+		]
+	},
+	{
+		"code": "HERBE",
+		"name": "Herbert",
+		"state": "QLD",
+		"bbox": [
+			146.275,
+			-19.417,
+			149.325,
+			-18.498
+		]
+	},
+	{
+		"code": "HINDM",
+		"name": "Hindmarsh",
+		"state": "SA",
+		"bbox": [
+			138.476,
+			-34.976,
+			138.575,
+			-34.755
+		]
+	},
+	{
+		"code": "HINKL",
+		"name": "Hinkler",
+		"state": "QLD",
+		"bbox": [
+			151.982,
+			-25.509,
+			153.233,
+			-24.747
+		]
+	},
+	{
+		"code": "HOLT",
+		"name": "Holt",
+		"state": "VIC",
+		"bbox": [
+			145.215,
+			-38.248,
+			145.43,
+			-38.017
+		]
+	},
+	{
+		"code": "HOTHA",
+		"name": "Hotham",
+		"state": "VIC",
+		"bbox": [
+			145.044,
+			-37.967,
+			145.196,
+			-37.881
+		]
+	},
+	{
+		"code": "HUGHE",
+		"name": "Hughes",
+		"state": "NSW",
+		"bbox": [
+			150.828,
+			-34.172,
+			151.172,
+			-33.927
+		]
+	},
+	{
+		"code": "HUME",
+		"name": "Hume",
+		"state": "NSW",
+		"bbox": [
+			150.015,
+			-34.337,
+			150.898,
+			-33.842
+		]
+	},
+	{
+		"code": "HUNTE",
+		"name": "Hunter",
+		"state": "NSW",
+		"bbox": [
+			150.336,
+			-33.203,
+			151.64,
+			-32.139
+		]
+	},
+	{
+		"code": "INDI",
+		"name": "Indi",
+		"state": "VIC",
+		"bbox": [
+			145.163,
+			-37.629,
+			148.221,
+			-35.929
+		]
+	},
+	{
+		"code": "ISAAC",
+		"name": "Isaacs",
+		"state": "VIC",
+		"bbox": [
+			145.052,
+			-38.078,
+			145.252,
+			-37.936
+		]
+	},
+	{
+		"code": "JAGAJ",
+		"name": "Jagajaga",
+		"state": "VIC",
+		"bbox": [
+			145.028,
+			-37.785,
+			145.269,
+			-37.657
+		]
+	},
+	{
+		"code": "KENNE",
+		"name": "Kennedy",
+		"state": "QLD",
+		"bbox": [
+			137.992,
+			-23.694,
+			147.599,
+			-15.838
+		]
+	},
+	{
+		"code": "KINGS",
+		"name": "Kingston",
+		"state": "SA",
+		"bbox": [
+			138.462,
+			-35.247,
+			138.628,
+			-35.023
+		]
+	},
+	{
+		"code": "KOOYO",
+		"name": "Kooyong",
+		"state": "VIC",
+		"bbox": [
+			145,
+			-37.874,
+			145.102,
+			-37.777
+		]
+	},
+	{
+		"code": "KSMIT",
+		"name": "Kingsford Smith",
+		"state": "NSW",
+		"bbox": [
+			151.142,
+			-34.017,
+			151.266,
+			-33.901
+		]
+	},
+	{
+		"code": "LALOR",
+		"name": "Lalor",
+		"state": "VIC",
+		"bbox": [
+			144.571,
+			-37.975,
+			144.743,
+			-37.793
+		]
+	},
+	{
+		"code": "LATRO",
+		"name": "La Trobe",
+		"state": "VIC",
+		"bbox": [
+			145.327,
+			-38.333,
+			145.765,
+			-37.864
+		]
+	},
+	{
+		"code": "LEICH",
+		"name": "Leichhardt",
+		"state": "QLD",
+		"bbox": [
+			140.995,
+			-17.045,
+			146.362,
+			-9.116
+		]
+	},
+	{
+		"code": "LILLE",
+		"name": "Lilley",
+		"state": "QLD",
+		"bbox": [
+			152.975,
+			-27.445,
+			153.16,
+			-27.277
+		]
+	},
+	{
+		"code": "LINDS",
+		"name": "Lindsay",
+		"state": "NSW",
+		"bbox": [
+			150.59,
+			-33.876,
+			150.812,
+			-33.612
+		]
+	},
+	{
+		"code": "LINGI",
+		"name": "Lingiari",
+		"state": "NT",
+		"bbox": [
+			129,
+			-25.998,
+			137.999,
+			-10.906
+		]
+	},
+	{
+		"code": "LONGM",
+		"name": "Longman",
+		"state": "QLD",
+		"bbox": [
+			152.651,
+			-27.249,
+			153.207,
+			-26.793
+		]
+	},
+	{
+		"code": "LYNE",
+		"name": "Lyne",
+		"state": "NSW",
+		"bbox": [
+			151.304,
+			-32.76,
+			152.915,
+			-31.114
+		]
+	},
+	{
+		"code": "LYONS",
+		"name": "Lyons",
+		"state": "TAS",
+		"bbox": [
+			145.833,
+			-43.741,
+			148.359,
+			-40.715
+		]
+	},
+	{
+		"code": "MACAR",
+		"name": "Macarthur",
+		"state": "NSW",
+		"bbox": [
+			150.737,
+			-34.19,
+			150.941,
+			-33.95
+		]
+	},
+	{
+		"code": "MACKE",
+		"name": "Mackellar",
+		"state": "NSW",
+		"bbox": [
+			151.162,
+			-33.784,
+			151.343,
+			-33.572
+		]
+	},
+	{
+		"code": "MACNA",
+		"name": "Macnamara",
+		"state": "VIC",
+		"bbox": [
+			144.897,
+			-37.892,
+			145.05,
+			-37.819
+		]
+	},
+	{
+		"code": "MACQU",
+		"name": "Macquarie",
+		"state": "NSW",
+		"bbox": [
+			150.166,
+			-33.962,
+			151.135,
+			-32.996
+		]
+	},
+	{
+		"code": "MAKIN",
+		"name": "Makin",
+		"state": "SA",
+		"bbox": [
+			138.547,
+			-34.85,
+			138.78,
+			-34.734
+		]
+	},
+	{
+		"code": "MALLE",
+		"name": "Mallee",
+		"state": "VIC",
+		"bbox": [
+			140.962,
+			-37.45,
+			144.418,
+			-33.981
+		]
+	},
+	{
+		"code": "MARAN",
+		"name": "Maranoa",
+		"state": "QLD",
+		"bbox": [
+			137.997,
+			-29.178,
+			152.493,
+			-21.309
+		]
+	},
+	{
+		"code": "MARIB",
+		"name": "Maribyrnong",
+		"state": "VIC",
+		"bbox": [
+			144.829,
+			-37.802,
+			144.938,
+			-37.678
+		]
+	},
+	{
+		"code": "MAYO",
+		"name": "Mayo",
+		"state": "SA",
+		"bbox": [
+			136.533,
+			-36.087,
+			139.158,
+			-34.681
+		]
+	},
+	{
+		"code": "MCEWE",
+		"name": "Mcewen",
+		"state": "VIC",
+		"bbox": [
+			144.378,
+			-37.691,
+			145.333,
+			-37.208
+		]
+	},
+	{
+		"code": "MCMAH",
+		"name": "Mcmahon",
+		"state": "NSW",
+		"bbox": [
+			150.759,
+			-33.886,
+			150.963,
+			-33.763
+		]
+	},
+	{
+		"code": "MCPHE",
+		"name": "McPherson",
+		"state": "QLD",
+		"bbox": [
+			153.294,
+			-28.25,
+			153.55,
+			-28.032
+		]
+	},
+	{
+		"code": "MELB",
+		"name": "Melbourne",
+		"state": "VIC",
+		"bbox": [
+			144.906,
+			-37.853,
+			145.028,
+			-37.777
+		]
+	},
+	{
+		"code": "MENZI",
+		"name": "Menzies",
+		"state": "VIC",
+		"bbox": [
+			145.067,
+			-37.848,
+			145.258,
+			-37.73
+		]
+	},
+	{
+		"code": "MITCH",
+		"name": "Mitchell",
+		"state": "NSW",
+		"bbox": [
+			150.928,
+			-33.797,
+			151.049,
+			-33.66
+		]
+	},
+	{
+		"code": "MONAS",
+		"name": "Monash",
+		"state": "VIC",
+		"bbox": [
+			145.109,
+			-39.159,
+			146.707,
+			-37.58
+		]
+	},
+	{
+		"code": "MONCR",
+		"name": "Moncrieff",
+		"state": "QLD",
+		"bbox": [
+			153.286,
+			-28.076,
+			153.447,
+			-27.934
+		]
+	},
+	{
+		"code": "MOORE",
+		"name": "Moore",
+		"state": "WA",
+		"bbox": [
+			115.719,
+			-31.883,
+			115.821,
+			-31.717
+		]
+	},
+	{
+		"code": "MORET",
+		"name": "Moreton",
+		"state": "QLD",
+		"bbox": [
+			152.963,
+			-27.618,
+			153.111,
+			-27.5
+		]
+	},
+	{
+		"code": "NENG",
+		"name": "New England",
+		"state": "NSW",
+		"bbox": [
+			149.795,
+			-32.846,
+			152.631,
+			-28.249
+		]
+	},
+	{
+		"code": "NEWCA",
+		"name": "Newcastle",
+		"state": "NSW",
+		"bbox": [
+			151.601,
+			-32.963,
+			151.81,
+			-32.823
+		]
+	},
+	{
+		"code": "NICHO",
+		"name": "Nicholls",
+		"state": "VIC",
+		"bbox": [
+			144.26,
+			-37.348,
+			146.247,
+			-35.802
+		]
+	},
+	{
+		"code": "OCONN",
+		"name": "O'connor",
+		"state": "WA",
+		"bbox": [
+			115.337,
+			-35.192,
+			129.002,
+			-23.44
+		]
+	},
+	{
+		"code": "OXLEY",
+		"name": "Oxley",
+		"state": "QLD",
+		"bbox": [
+			152.853,
+			-27.686,
+			153.025,
+			-27.527
+		]
+	},
+	{
+		"code": "PAGE",
+		"name": "Page",
+		"state": "NSW",
+		"bbox": [
+			152.168,
+			-30.419,
+			153.545,
+			-28.27
+		]
+	},
+	{
+		"code": "PARKE",
+		"name": "Parkes",
+		"state": "NSW",
+		"bbox": [
+			140.999,
+			-34.317,
+			150.6,
+			-28.537
+		]
+	},
+	{
+		"code": "PARRA",
+		"name": "Parramatta",
+		"state": "NSW",
+		"bbox": [
+			150.933,
+			-33.835,
+			151.075,
+			-33.759
+		]
+	},
+	{
+		"code": "PATER",
+		"name": "Paterson",
+		"state": "NSW",
+		"bbox": [
+			151.4,
+			-32.889,
+			152.205,
+			-32.636
+		]
+	},
+	{
+		"code": "PEARC",
+		"name": "Pearce",
+		"state": "WA",
+		"bbox": [
+			115.561,
+			-31.796,
+			115.983,
+			-31.455
+		]
+	},
+	{
+		"code": "PERTH",
+		"name": "Perth",
+		"state": "WA",
+		"bbox": [
+			115.801,
+			-31.991,
+			115.937,
+			-31.883
+		]
+	},
+	{
+		"code": "PETRI",
+		"name": "Petrie",
+		"state": "QLD",
+		"bbox": [
+			152.977,
+			-27.365,
+			153.12,
+			-27.148
+		]
+	},
+	{
+		"code": "RANKI",
+		"name": "Rankin",
+		"state": "QLD",
+		"bbox": [
+			153.015,
+			-27.7,
+			153.183,
+			-27.587
+		]
+	},
+	{
+		"code": "REID",
+		"name": "Reid",
+		"state": "NSW",
+		"bbox": [
+			151.03,
+			-33.893,
+			151.166,
+			-33.82
+		]
+	},
+	{
+		"code": "RICHM",
+		"name": "Richmond",
+		"state": "NSW",
+		"bbox": [
+			153.107,
+			-28.925,
+			153.639,
+			-28.157
+		]
+	},
+	{
+		"code": "RIVER",
+		"name": "Riverina",
+		"state": "NSW",
+		"bbox": [
+			146.354,
+			-36.806,
+			150.123,
+			-33.527
+		]
+	},
+	{
+		"code": "ROBER",
+		"name": "Robertson",
+		"state": "NSW",
+		"bbox": [
+			150.984,
+			-33.582,
+			151.453,
+			-33.111
+		]
+	},
+	{
+		"code": "RYAN",
+		"name": "Ryan",
+		"state": "QLD",
+		"bbox": [
+			152.68,
+			-27.601,
+			153.022,
+			-27.319
+		]
+	},
+	{
+		"code": "SCULL",
+		"name": "Scullin",
+		"state": "VIC",
+		"bbox": [
+			144.939,
+			-37.7,
+			145.124,
+			-37.54
+		]
+	},
+	{
+		"code": "SHORT",
+		"name": "Shortland",
+		"state": "NSW",
+		"bbox": [
+			151.508,
+			-33.247,
+			151.738,
+			-32.92
+		]
+	},
+	{
+		"code": "SOLOM",
+		"name": "Solomon",
+		"state": "NT",
+		"bbox": [
+			130.815,
+			-12.547,
+			131.013,
+			-12.33
+		]
+	},
+	{
+		"code": "SPENC",
+		"name": "Spence",
+		"state": "SA",
+		"bbox": [
+			138.436,
+			-34.792,
+			138.848,
+			-34.551
+		]
+	},
+	{
+		"code": "STURT",
+		"name": "Sturt",
+		"state": "SA",
+		"bbox": [
+			138.613,
+			-34.975,
+			138.755,
+			-34.837
+		]
+	},
+	{
+		"code": "SWAN",
+		"name": "Swan",
+		"state": "WA",
+		"bbox": [
+			115.838,
+			-32.054,
+			115.995,
+			-31.917
+		]
+	},
+	{
+		"code": "SYDNE",
+		"name": "Sydney",
+		"state": "NSW",
+		"bbox": [
+			151.142,
+			-33.924,
+			151.227,
+			-33.845
+		]
+	},
+	{
+		"code": "TANGN",
+		"name": "Tangney",
+		"state": "WA",
+		"bbox": [
+			115.776,
+			-32.115,
+			115.952,
+			-31.991
+		]
+	},
+	{
+		"code": "WANNO",
+		"name": "Wannon",
+		"state": "VIC",
+		"bbox": [
+			140.966,
+			-38.858,
+			144.278,
+			-37.087
+		]
+	},
+	{
+		"code": "WARRI",
+		"name": "Warringah",
+		"state": "NSW",
+		"bbox": [
+			151.185,
+			-33.857,
+			151.304,
+			-33.752
+		]
+	},
+	{
+		"code": "WATSO",
+		"name": "Watson",
+		"state": "NSW",
+		"bbox": [
+			150.967,
+			-33.939,
+			151.117,
+			-33.884
+		]
+	},
+	{
+		"code": "WENTW",
+		"name": "Wentworth",
+		"state": "NSW",
+		"bbox": [
+			151.215,
+			-33.917,
+			151.291,
+			-33.824
+		]
+	},
+	{
+		"code": "WERRI",
+		"name": "Werriwa",
+		"state": "NSW",
+		"bbox": [
+			150.753,
+			-33.978,
+			150.919,
+			-33.876
+		]
+	},
+	{
+		"code": "WHITL",
+		"name": "Whitlam",
+		"state": "NSW",
+		"bbox": [
+			149.964,
+			-34.769,
+			150.904,
+			-34.213
+		]
+	},
+	{
+		"code": "WIDEB",
+		"name": "Wide Bay",
+		"state": "QLD",
+		"bbox": [
+			151.719,
+			-26.598,
+			153.36,
+			-24.697
+		]
+	},
+	{
+		"code": "WILLS",
+		"name": "Wills",
+		"state": "VIC",
+		"bbox": [
+			144.915,
+			-37.794,
+			144.995,
+			-37.691
+		]
+	},
+	{
+		"code": "WRIGH",
+		"name": "Wright",
+		"state": "QLD",
+		"bbox": [
+			151.942,
+			-28.364,
+			153.37,
+			-27.387
+		]
+	}
+]

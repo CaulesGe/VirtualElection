@@ -1,0 +1,67 @@
+.panel {
+	border: 1px solid #e5e7eb;
+	border-radius: 0.75rem;
+	padding: 1rem;
+	background: #fff;
+	display: grid;
+	gap: 0.6rem;
+}
+
+.panel h3 {
+	margin: 0;
+	font-size: 1.05rem;
+}
+
+.tableWrap {
+	overflow-x: auto;
+}
+
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.85rem;
+}
+
+.table th,
+.table td {
+	padding: 0.3rem 0.45rem;
+	border-bottom: 1px solid #f3f4f6;
+	text-align: right;
+	white-space: nowrap;
+}
+
+.table thead th {
+	color: #4b5563;
+	font-weight: 600;
+}
+
+.table th[scope='row'],
+.table thead th:first-child {
+	text-align: left;
+	font-weight: 600;
+}
+
+.swatch {
+	display: inline-block;
+	width: 0.7rem;
+	height: 0.7rem;
+	margin-right: 0.4rem;
+	border-radius: 0.15rem;
+	border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.eliminated {
+	color: #b91c1c;
+	text-decoration: line-through;
+}
+
+.winner {
+	font-weight: 700;
+	color: #047857;
+}
+
+.note {
+	margin: 0;
+	font-size: 0.78rem;
+	color: #6b7280;
+}

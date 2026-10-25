@@ -1,13 +1,15 @@
 import 'dotenv/config';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, notInArray } from 'drizzle-orm';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { feature } from 'topojson-client';
 import statesTopology from 'us-atlas/states-10m.json' with { type: 'json' };
+import auDivisions from '../../data/auDivisions.json' with { type: 'json' };
 import {
 	FEDERAL_PARTIES,
 	VIRTUAL_ELECTION_ALLOWED_SCOPES,
-	getAllowedPartiesForScope
+	getAllowedPartiesForScope,
+	isPreferentialScope
 } from '../../config/virtualElection.js';
 import { getMapMetadataForScope } from '../virtualElection/mapMetadata.js';
 import {
@@ -107,6 +109,17 @@ async function seed() {
 	for (const scope of VIRTUAL_ELECTION_ALLOWED_SCOPES) {
 		const electionId = await ensureElection(scope);
 		const allowedPartyIds = getAllowedPartiesForScope(scope);
+		if (isPreferentialScope(scope)) {
+			// Config is authoritative for ranked scopes: drop parties that were removed from it.
+			await db
+				.delete(electionParties)
+				.where(
+					and(
+						eq(electionParties.electionId, electionId),
+						notInArray(electionParties.partyId, allowedPartyIds)
+					)
+				);
+		}
 		for (const partyId of allowedPartyIds) {
 			await db
 				.insert(electionParties)
@@ -124,6 +137,21 @@ async function seed() {
 				fips: row.fips,
 				electoralVotes: row.electoralVotes,
 				sortOrder: row.sortOrder
+			}));
+			if (rows.length > 0) {
+				await db.insert(electionDistricts).values(rows);
+			}
+			continue;
+		}
+
+		if (scope.country === 'au' && scope.district === 'fed') {
+			await db.delete(electionDistricts).where(eq(electionDistricts.electionId, electionId));
+			const rows = auDivisions.map((division, index) => ({
+				electionId,
+				districtKey: String(division.code),
+				name: String(division.name),
+				subnationalCode: String(division.state),
+				sortOrder: index
 			}));
 			if (rows.length > 0) {
 				await db.insert(electionDistricts).values(rows);

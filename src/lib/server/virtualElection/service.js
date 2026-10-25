@@ -2,8 +2,16 @@ import { and, desc, eq, sql } from 'drizzle-orm';
 import {
 	DEFAULT_SCOPE,
 	VIRTUAL_ELECTION_ALLOWED_SCOPES,
-	getAllowedPartiesForScope as getAllowedPartiesForScopeConfig
+	getAllowedPartiesForScope as getAllowedPartiesForScopeConfig,
+	isPreferentialScope
 } from '@/lib/config/virtualElection';
+import {
+	countIrv,
+	countIrvByRiding,
+	isCompleteRanking,
+	parseRankingKey,
+	toRankingKey
+} from '@/lib/virtualElection/irv';
 import { db } from '@/lib/server/db/client';
 import { getMapMetadataForScope } from '@/lib/server/virtualElection/mapMetadata';
 import { getRidingsForScope } from '@/lib/server/virtualElection/ridings';
@@ -38,6 +46,9 @@ export function isMissingVirtualElectionTableError(error) {
 			message.includes('canada_riding_result') ||
 			message.includes('usa_riding_result') ||
 			message.includes('uk_riding_result') ||
+			message.includes('australia_riding_result') ||
+			message.includes('australia_ballot_result') ||
+			(message.includes('ranking_key') && message.includes('does not exist')) ||
 			message.includes('virtual_election_riding_totals') ||
 			message.includes('virtual_election_votes')
 		) {
@@ -72,8 +83,13 @@ const RIDING_RESULT_TABLES = {
 	},
 	uk: {
 		name: 'RidingResults.uk_riding_result'
+	},
+	au: {
+		name: 'RidingResults.australia_riding_result'
 	}
 };
+
+const AU_BALLOT_TABLE_SQL = sql.raw('"RidingResults"."australia_ballot_result"');
 
 export function normalizeScope(scope) {
 	return {
@@ -133,6 +149,9 @@ async function readAllowedPartiesFromDb(scope) {
 
 export async function getAllowedPartiesForScope(scopeInput) {
 	const scope = normalizeScope(scopeInput);
+	// Preferential (ranked) scopes need an exact, ordered candidate list for IRV, so the config
+	// is the single source of truth there; stale rows in election_parties must not leak in.
+	if (isPreferentialScope(scope)) return getAllowedPartiesForScopeConfig(scope);
 	try {
 		const fromDb = await readAllowedPartiesFromDb(scope);
 		if (fromDb?.length) return fromDb;
@@ -178,11 +197,172 @@ async function assertValidRidingForScope(ridingId, scope) {
 	}
 }
 
+export async function assertValidRanking(ranking, scope) {
+	const allowedParties = await getAllowedPartiesForScope(scope);
+	if (!isCompleteRanking(ranking, allowedParties)) {
+		throw new VirtualElectionError(
+			'INVALID_RANKING',
+			'Invalid ranking. Rank every party exactly once.'
+		);
+	}
+}
+
+async function castOrUpdateRankedVote(input, scope) {
+	const ranking = input.ranking;
+	await assertValidRanking(ranking, scope);
+	await assertValidRidingForScope(input.ridingId, scope);
+
+	const [schemaName, tableName] = getRidingResultTableConfig(scope).name.split('.');
+	const ridingResultTableSql = sql.raw(`"${schemaName}"."${tableName}"`);
+	const ridingResultVotesSql = sql.raw(`"${schemaName}"."${tableName}".votes`);
+	const ballotVotesSql = sql.raw('"RidingResults"."australia_ballot_result".votes');
+	const firstPreference = ranking[0];
+	const rankingKey = toRankingKey(ranking);
+
+	try {
+		const execution = await db.execute(sql`
+			WITH previous_vote AS (
+				SELECT riding_id, party, ranking_key
+				FROM virtual_election_votes
+				WHERE user_id = ${input.userId}
+				  AND country = ${scope.country}
+				  AND district = ${scope.district}
+				  AND year = ${scope.year}
+				LIMIT 1
+			),
+			upsert_vote AS (
+				INSERT INTO virtual_election_votes (user_id, ip_hash, riding_id, party, ranking_key, country, district, year)
+				VALUES (${input.userId}, ${input.ipHash ?? null}, ${input.ridingId}, ${firstPreference}, ${rankingKey}, ${scope.country}, ${scope.district}, ${scope.year})
+				ON CONFLICT (user_id, country, district, year)
+				DO UPDATE SET
+					ip_hash = EXCLUDED.ip_hash,
+					riding_id = EXCLUDED.riding_id,
+					party = EXCLUDED.party,
+					ranking_key = EXCLUDED.ranking_key,
+					updated_at = now()
+				RETURNING riding_id AS new_riding_id, party AS new_party, ranking_key AS new_ranking_key
+			),
+			change_flags AS (
+				SELECT
+					pv.riding_id AS prev_riding_id,
+					pv.party AS prev_party,
+					pv.ranking_key AS prev_ranking_key,
+					uv.new_riding_id,
+					uv.new_party,
+					uv.new_ranking_key,
+					(pv.riding_id IS NULL) AS is_created,
+					(
+						pv.riding_id IS NOT NULL
+						AND (pv.riding_id <> uv.new_riding_id OR pv.party <> uv.new_party)
+					) AS party_changed,
+					(
+						pv.riding_id IS NOT NULL
+						AND (
+							pv.riding_id <> uv.new_riding_id
+							OR pv.ranking_key IS DISTINCT FROM uv.new_ranking_key
+						)
+					) AS ballot_changed
+				FROM upsert_vote uv
+				LEFT JOIN previous_vote pv ON true
+			),
+			decrement_party AS (
+				UPDATE ${ridingResultTableSql} t
+				SET votes = GREATEST(t.votes - 1, 0),
+					updated_at = now()
+				FROM change_flags cf
+				WHERE cf.party_changed
+				  AND t.riding_id = cf.prev_riding_id
+				  AND t.party = cf.prev_party
+				  AND t.district = ${scope.district}
+				  AND t.year = ${scope.year}
+			),
+			increment_party AS (
+				INSERT INTO ${ridingResultTableSql} (riding_id, party, district, year, votes)
+				SELECT cf.new_riding_id, cf.new_party, ${scope.district}, ${scope.year}, 1
+				FROM change_flags cf
+				WHERE cf.is_created OR cf.party_changed
+				ON CONFLICT (riding_id, party, district, year)
+				DO UPDATE SET
+					votes = ${ridingResultVotesSql} + 1,
+					updated_at = now()
+			),
+			decrement_ballot AS (
+				UPDATE ${AU_BALLOT_TABLE_SQL} b
+				SET votes = GREATEST(b.votes - 1, 0),
+					updated_at = now()
+				FROM change_flags cf
+				WHERE cf.ballot_changed
+				  AND b.riding_id = cf.prev_riding_id
+				  AND b.ranking_key = cf.prev_ranking_key
+				  AND b.district = ${scope.district}
+				  AND b.year = ${scope.year}
+			),
+			increment_ballot AS (
+				INSERT INTO ${AU_BALLOT_TABLE_SQL} (riding_id, ranking_key, district, year, votes)
+				SELECT cf.new_riding_id, cf.new_ranking_key, ${scope.district}, ${scope.year}, 1
+				FROM change_flags cf
+				WHERE cf.is_created OR cf.ballot_changed
+				ON CONFLICT (riding_id, ranking_key, district, year)
+				DO UPDATE SET
+					votes = ${ballotVotesSql} + 1,
+					updated_at = now()
+			)
+			SELECT
+				new_riding_id,
+				new_party,
+				new_ranking_key,
+				prev_riding_id,
+				prev_ranking_key,
+				is_created,
+				ballot_changed
+			FROM change_flags
+			LIMIT 1
+		`);
+
+		const row = execution?.rows?.[0];
+		if (!row) throw new VirtualElectionError('CONFLICT', 'Vote conflict. Please retry.');
+
+		const status = row.is_created ? 'created' : row.ballot_changed ? 'updated' : 'unchanged';
+
+		if (status === 'updated' && row.prev_riding_id && row.prev_ranking_key) {
+			// Hygiene only: reads ignore rows with 0 votes, so a failure here is harmless.
+			try {
+				await db.execute(sql`
+					DELETE FROM ${AU_BALLOT_TABLE_SQL}
+					WHERE riding_id = ${row.prev_riding_id}
+					  AND ranking_key = ${row.prev_ranking_key}
+					  AND district = ${scope.district}
+					  AND year = ${scope.year}
+					  AND votes <= 0
+				`);
+			} catch (cleanupError) {
+				console.error('[virtual-election] Failed cleaning empty ballot rows', cleanupError);
+			}
+		}
+
+		return {
+			status,
+			voted: true,
+			ridingId: String(row.new_riding_id ?? input.ridingId),
+			party: String(row.new_party ?? firstPreference),
+			ranking: parseRankingKey(row.new_ranking_key ?? rankingKey)
+		};
+	} catch (error) {
+		if (error?.code === '23505') {
+			throw new VirtualElectionError('CONFLICT', 'Vote conflict. Please retry.');
+		}
+		throw error;
+	}
+}
+
 export async function castOrUpdateVote(input) {
 	assertVoteWindowOpen();
 	assertValidRidingId(input.ridingId);
 
 	const scope = assertAllowedScope(input);
+	if (isPreferentialScope(scope)) {
+		return castOrUpdateRankedVote(input, scope);
+	}
 	const ridingResultTable = getRidingResultTableConfig(scope);
 	const [schemaName, tableName] = ridingResultTable.name.split('.');
 	const ridingResultTableSql = sql.raw(`"${schemaName}"."${tableName}"`);
@@ -290,6 +470,7 @@ export async function getElectionOptionsForScope(scopeInput) {
 		regionKey: mapMeta.regionKey,
 		allocationRule: mapMeta.allocationRule,
 		electoralVotesVersion: mapMeta.electoralVotesVersion,
+		votingSystem: mapMeta.votingSystem ?? 'single',
 		districtIdNamespace: `${scope.country}:${scope.district}:riding-id`,
 		allowedParties: getAllowedPartiesForScopeConfig(scope)
 	};
@@ -337,6 +518,51 @@ export async function getElectionOptionsForScope(scopeInput) {
 	}
 }
 
+// Candidate list for IRV. Config order is the deterministic last-resort tie-break order.
+function getIrvParties(scope) {
+	return getAllowedPartiesForScopeConfig(scope);
+}
+
+async function getIrvResultsForScope(scope) {
+	const execution = await db.execute(sql`
+		SELECT
+			riding_id AS "ridingId",
+			ranking_key AS "rankingKey",
+			votes AS "votes"
+		FROM ${AU_BALLOT_TABLE_SQL}
+		WHERE district = ${scope.district}
+		  AND year = ${scope.year}
+		  AND votes > 0
+	`);
+	return countIrvByRiding(execution?.rows ?? [], getIrvParties(scope));
+}
+
+export async function getIrvForRiding(scopeInput, ridingId) {
+	const scope = assertAllowedScope(scopeInput);
+	if (!isPreferentialScope(scope)) {
+		throw new VirtualElectionError('INVALID_SCOPE', 'Scope does not use ranked voting.');
+	}
+	assertValidRidingId(String(ridingId ?? ''));
+	await assertValidRidingForScope(String(ridingId), scope);
+
+	const execution = await db.execute(sql`
+		SELECT
+			ranking_key AS "rankingKey",
+			votes AS "votes"
+		FROM ${AU_BALLOT_TABLE_SQL}
+		WHERE district = ${scope.district}
+		  AND year = ${scope.year}
+		  AND riding_id = ${String(ridingId)}
+		  AND votes > 0
+	`);
+	const ballots = (execution?.rows ?? []).map((row) => ({
+		ranking: parseRankingKey(row.rankingKey),
+		votes: Number(row.votes ?? 0)
+	}));
+	const result = countIrv({ ballots, parties: getIrvParties(scope) });
+	return { ridingId: String(ridingId), ...result };
+}
+
 export async function getTotals(scopeInput) {
 	const scope = normalizeScope(scopeInput);
 	const ridingResultTable = getRidingResultTableConfig(scope);
@@ -349,8 +575,10 @@ export async function getTotals(scopeInput) {
 		FROM ${sql.raw(`"${schemaName}"."${tableName}"`)}
 		WHERE district = ${scope.district}
 		  AND year = ${scope.year}
+		  ${isPreferentialScope(scope) ? sql`AND votes > 0` : sql``}
 	`);
 	const rows = execution?.rows ?? [];
+	const irvByRiding = isPreferentialScope(scope) ? await getIrvResultsForScope(scope) : null;
 
 	const ridingMap = new Map();
 	for (const row of rows) {
@@ -375,6 +603,22 @@ export async function getTotals(scopeInput) {
 				leader = party;
 			}
 		}
+		const irv = irvByRiding?.get(ridingId);
+		if (irv) {
+			// Preferential scope: totals are first-preference counts; the leader is the IRV winner.
+			return {
+				ridingId,
+				totals: entry.totals,
+				leader: irv.winner ?? leader,
+				intensity: irv.winner ? irv.winnerShare : entry.totalVotes > 0 ? leaderVotes / entry.totalVotes : 0,
+				totalVotes: entry.totalVotes,
+				irv: {
+					winner: irv.winner,
+					firstPreferenceLeader: irv.firstPreferenceLeader,
+					finalTwo: irv.finalTwo
+				}
+			};
+		}
 		return {
 			ridingId,
 			totals: entry.totals,
@@ -387,11 +631,15 @@ export async function getTotals(scopeInput) {
 
 export async function getUserVote(userId, scopeInput) {
 	const scope = normalizeScope(scopeInput);
+	// Only select ranking_key for preferential scopes so other scopes keep working
+	// even before migration 0006 has been applied.
+	const selectFields = {
+		ridingId: virtualElectionVotes.ridingId,
+		party: virtualElectionVotes.party,
+		...(isPreferentialScope(scope) ? { rankingKey: virtualElectionVotes.rankingKey } : {})
+	};
 	const rows = await db
-		.select({
-			ridingId: virtualElectionVotes.ridingId,
-			party: virtualElectionVotes.party
-		})
+		.select(selectFields)
 		.from(virtualElectionVotes)
 		.where(
 			and(
@@ -405,6 +653,14 @@ export async function getUserVote(userId, scopeInput) {
 
 	const vote = rows[0];
 	if (!vote) return { voted: false };
+	if (isPreferentialScope(scope)) {
+		return {
+			voted: true,
+			ridingId: vote.ridingId,
+			party: vote.party,
+			ranking: vote.rankingKey ? parseRankingKey(vote.rankingKey) : [vote.party]
+		};
+	}
 	return { voted: true, ridingId: vote.ridingId, party: vote.party };
 }
 

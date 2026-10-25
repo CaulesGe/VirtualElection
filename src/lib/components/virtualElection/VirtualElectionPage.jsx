@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { VIRTUAL_ELECTION_ALLOWED_SCOPES } from '@/lib/config/virtualElection';
 import LoginControl from '@/lib/components/virtualElection/LoginControl';
 import MapController from '@/lib/components/virtualElection/MapComponent/MapController';
+import IrvRoundsPanel from '@/lib/components/virtualElection/MapComponent/IrvRoundsPanel';
 import RidingResultTable from '@/lib/components/virtualElection/MapComponent/RidingResultTable';
 import { getPartyColor, getPartyFullName } from '@/lib/components/virtualElection/partyMeta';
 import useElectionState from '@/lib/components/virtualElection/useElectionState';
@@ -30,6 +31,9 @@ export default function VirtualElectionPage({
 		setSelectedRiding,
 		selectedParty,
 		setSelectedParty,
+		isPreferential,
+		selectedRanking,
+		setSelectedRanking,
 		userVote,
 		totals,
 		errorMessage,
@@ -57,6 +61,7 @@ export default function VirtualElectionPage({
 			return 'USA';
 		}
 		if (code === 'UK') return 'United Kingdom';
+		if (code === 'AU') return 'Australia - House of Representatives';
 		if (code === 'CA') return 'Canada';
 		return code || 'Virtual Election';
 	}, [activeMapMetadata?.countryCode, scope?.country, scope?.district]);
@@ -129,6 +134,12 @@ export default function VirtualElectionPage({
 						userLabel={sessionUserLabel}
 						isSubmitting={isSubmitting}
 						errorMessage={errorMessage}
+						isPreferential={isPreferential}
+						selectedRanking={selectedRanking}
+						onRankingChange={(ranking) => {
+							setSelectedRanking(ranking);
+							setErrorMessage('');
+						}}
 						onPartyChange={(party) => {
 							setSelectedParty(party);
 							setErrorMessage('');
@@ -140,7 +151,18 @@ export default function VirtualElectionPage({
 						selectedRiding={selectedRiding}
 						selectedRidingTotals={selectedRidingTotals}
 						allowedParties={allowedParties}
+						isPreferential={isPreferential}
 					/>
+
+					{isPreferential ? (
+						<IrvRoundsPanel
+							scope={scope}
+							selectedRiding={selectedRiding}
+							revision={`${selectedRidingTotals?.totalVotes ?? 0}|${JSON.stringify(
+								selectedRidingTotals?.irv?.finalTwo ?? []
+							)}|${(userVote?.ranking ?? []).join('>')}`}
+						/>
+					) : null}
 
 					<section className={styles.totalsCard}>
 						<h3>Map Legend</h3>
@@ -156,7 +178,11 @@ export default function VirtualElectionPage({
 								<span>No Votes Yet</span>
 							</div>
 						</div>
-						<p className="muted">Color intensity reflects leader share in each riding.</p>
+						<p className="muted">
+							{isPreferential
+								? 'Colors show each division\u2019s projected winner after preferences; intensity reflects the winner\u2019s share in the final count.'
+								: 'Color intensity reflects leader share in each riding.'}
+						</p>
 					</section>
 				</div>
 			</section>

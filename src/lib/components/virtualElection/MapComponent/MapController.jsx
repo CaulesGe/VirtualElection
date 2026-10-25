@@ -28,6 +28,11 @@ const VirtualElectionMap = dynamic(
 	{ ssr: false, loading: () => <div className="election-map-container" style={{ display: 'grid', placeItems: 'center' }}>Loading map…</div> }
 );
 
+const AustraliaMap = dynamic(
+	() => import('@/lib/components/virtualElection/MapComponent/AustraliaMap'),
+	{ ssr: false, loading: () => <div className="election-map-container" style={{ display: 'grid', placeItems: 'center' }}>Loading map…</div> }
+);
+
 function normalizeSearchText(value) {
 	return String(value ?? '')
 		.normalize('NFD')
@@ -67,6 +72,7 @@ export default function MapController({
 	const countryCode = mapMetadata?.countryCode ?? 'CA';
 	const mapVersion = String(mapMetadata?.mapVersion ?? '2025');
 	const adapter = useMemo(() => getMapAdapter(countryCode), [countryCode]);
+	const MapView = adapter.renderer === 'maplibre' ? AustraliaMap : VirtualElectionMap;
 
 	const ridingById = useMemo(() => {
 		const map = new Map();
@@ -268,7 +274,7 @@ export default function MapController({
 			</div>
 
 			<div className={styles.shell}>
-				<VirtualElectionMap
+				<MapView
 					adapter={adapter}
 					mapVersion={mapVersion}
 					districtStyles={districtStyles}

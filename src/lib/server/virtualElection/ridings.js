@@ -2,6 +2,7 @@ import { and, eq, sql } from 'drizzle-orm';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { DEFAULT_RIDINGS } from '@/lib/data/defaultRidings';
+import auDivisions from '@/lib/data/auDivisions.json';
 import { db } from '@/lib/server/db/client';
 import {
 	constituencies,
@@ -157,6 +158,21 @@ export async function getRidingsForScope(scope) {
 		} catch {
 			// Continue into legacy source fallback.
 		}
+	}
+
+	if (
+		String(scope?.country).toLowerCase() === 'au' &&
+		String(scope?.district).toLowerCase() === 'fed'
+	) {
+		// Divisions come from the committed list that mirrors Austrilia.pmtiles (see
+		// scripts/extract-au-divisions.mjs --check); there is no legacy DB fallback for AU.
+		return dedupeRidingsByCode(
+			auDivisions.map((division) => ({
+				code: division.code,
+				name: division.name,
+				subnational: division.state
+			}))
+		);
 	}
 
 	if (

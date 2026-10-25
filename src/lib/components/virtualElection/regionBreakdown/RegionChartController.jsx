@@ -132,12 +132,22 @@ export default function RegionChartController({
 			<div className={`${styles.grid} ${mode === 'president' ? styles.gridSingle : ''}`}>
 				{mode !== 'president' ? (
 					<section className={styles.card}>
-						<h3>Seat Distribution (Leads by Riding) - {effectiveSelectedRegion}</h3>
+						<h3>
+							{countryCode === 'AU'
+								? 'Seat Distribution (Projected Winners after Preferences)'
+								: 'Seat Distribution (Leads by Riding)'}{' '}
+							- {effectiveSelectedRegion}
+						</h3>
 						<RegionSeatChart seatSeries={regionSeatSeries} mode={chartMode} />
 					</section>
 				) : null}
 				<section className={styles.card}>
-					<h3>Vote Distribution (Virtual Votes) - {effectiveSelectedRegion}</h3>
+					<h3>
+						{countryCode === 'AU'
+							? 'First Preference Votes (Virtual Votes)'
+							: 'Vote Distribution (Virtual Votes)'}{' '}
+						- {effectiveSelectedRegion}
+					</h3>
 					<RegionVoteChart voteSeries={regionVoteSeries} mode={chartMode} />
 				</section>
 			</div>

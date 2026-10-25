@@ -41,6 +41,10 @@ export async function POST(request) {
 		const body = await request.json();
 		const ridingId = String(body?.ridingId ?? '').trim();
 		const party = String(body?.party ?? '').trim();
+		// Ranked ballot (Australia): ordered list of party ids. Ignored for single-choice scopes.
+		const ranking = Array.isArray(body?.ranking)
+			? body.ranking.map((entry) => String(entry ?? '').trim())
+			: undefined;
 		const captchaToken = typeof body?.captchaToken === 'string' ? body.captchaToken : null;
 		const clientIp = getClientAddress(request);
 		const ipHash = hashIp(clientIp);
@@ -55,7 +59,7 @@ export async function POST(request) {
 		});
 		if (!Number.isFinite(scope.year)) return json({ error: 'Invalid year' }, 400);
 
-		const result = await castOrUpdateVote({ userId, ipHash, ridingId, party, ...scope });
+		const result = await castOrUpdateVote({ userId, ipHash, ridingId, party, ranking, ...scope });
 		const me = await getUserVote(userId, scope);
 		return json({ success: true, result, me });
 	} catch (error) {

@@ -34,6 +34,12 @@ export default function sitemap() {
 			lastModified: now,
 			changeFrequency: 'daily',
 			priority: 0.9
+		},
+		{
+			url: `${siteUrl}/australia`,
+			lastModified: now,
+			changeFrequency: 'daily',
+			priority: 0.9
 		}
 	];
 }

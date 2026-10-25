@@ -32,6 +32,7 @@ export async function GET(request) {
 			regionKey: options.regionKey,
 			allocationRule: options.allocationRule,
 			electoralVotesVersion: options.electoralVotesVersion,
+			votingSystem: options.votingSystem,
 			districtIdNamespace: options.districtIdNamespace,
 			allowedParties: options.allowedParties,
 			ridings,

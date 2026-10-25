@@ -77,6 +77,7 @@ Optional hardening:
 - `VIRTUAL_ELECTION_BURST_WARN_THRESHOLD`
 - `VIRTUAL_ELECTION_DEADLINE_ISO`
 - `ALLOW_SCOPE_FALLBACK` (set `true` only in local dev/test if riding-scope base tables are unavailable)
+- `VIRTUAL_ELECTION_TOTALS_CACHE_SECONDS` (Australia only; shared-cache TTL in seconds for `GET /totals` and `GET /irv`, default `10`, `0` disables the shared cache)
 
 ### 3) Run schema migration
 
@@ -95,13 +96,16 @@ This seeds:
 - `elections` (active scope metadata)
 - `parties` (authoritative party IDs)
 - `election_parties` (allowed parties for the election scope)
+- `election_districts` (including the 150 Australian divisions from `src/lib/data/auDivisions.json`)
 
-This creates:
+The migrations create:
 
-- `virtual_election_votes`
+- `virtual_election_votes` (migration `0006` adds the nullable `ranking_key` column used for ranked ballots)
 - `RidingResults.canada_riding_result`
 - `RidingResults.usa_riding_result`
 - `RidingResults.uk_riding_result`
+- `RidingResults.australia_riding_result` (first-preference counters)
+- `RidingResults.australia_ballot_result` (aggregated full rankings used for IRV)
 - `elections`
 - `parties`
 - `election_parties`
@@ -115,6 +119,8 @@ select * from virtual_election_votes limit 5;
 select * from "RidingResults".canada_riding_result limit 5;
 select * from "RidingResults".usa_riding_result limit 5;
 select * from "RidingResults".uk_riding_result limit 5;
+select * from "RidingResults".australia_riding_result limit 5;
+select * from "RidingResults".australia_ballot_result limit 5;
 ```
 
 ### 5) (Optional) clear virtual election data
@@ -124,6 +130,8 @@ truncate table virtual_election_votes restart identity;
 truncate table "RidingResults".canada_riding_result;
 truncate table "RidingResults".usa_riding_result;
 truncate table "RidingResults".uk_riding_result;
+truncate table "RidingResults".australia_riding_result;
+truncate table "RidingResults".australia_ballot_result;
 ```
 
 ---
@@ -223,6 +231,10 @@ flowchart TD
 - `RidingResults.canada_riding_result`: pre-aggregated counters for Canada ridings by party/scope
 - `RidingResults.usa_riding_result`: pre-aggregated counters for USA districts/states by party/scope
 - `RidingResults.uk_riding_result`: pre-aggregated counters for UK constituencies by party/scope
+- `RidingResults.australia_riding_result`: first-preference counters for Australian divisions by party/scope
+- `RidingResults.australia_ballot_result`: one row per distinct full ranking per division (`ranking_key` such as `ALP>GRN>LP>...`), the input for IRV counting
+- `virtual_election_votes.ranking_key`: the voter's full ranking for ranked-ballot scopes (`party` holds the first preference, so existing readers keep working)
+- Australian division IDs are the 5-letter `code` values of the `au-gen` layer in `static/ridingMaps/Austrilia.pmtiles` (for example `ADELA`, `KSMIT`)
 - USA district IDs use canonical keys: `us-fed-2025-<STATEFP>-<DISTRICT_OR_AL>`
 - USA presidential state IDs use canonical keys: `US-PRES-2025-<FIPS>`
 
@@ -232,6 +244,16 @@ Vote API performs a single atomic SQL operation:
 2. upsert current vote
 3. decrement previous aggregate if changed
 4. increment new aggregate
+
+For ranked-ballot scopes (Australia) the same statement also moves the voter's ballot between rows of `australia_ballot_result`; changing only the lower preferences updates the ballot table but leaves the first-preference counters untouched.
+
+### Australia: preferential voting (IRV)
+
+- Scope `au/fed/2025`, map `static/ridingMaps/Austrilia.pmtiles` (150 House of Representatives divisions), rendered with MapLibre GL + the `pmtiles` protocol (`MapComponent/AustraliaMap.jsx`).
+- A ballot ranks all 7 parties exactly once (`ALP, LNP, GRN, IND, ONP, AFP, OTH`). One ballot per user: voting again overwrites the previous ranking and division.
+- Counting (`src/lib/virtualElection/irv.js`) is done on the server for every division on each `GET /totals` request: count first preferences; if a party has more than 50% it wins; otherwise the party with the fewest votes is eliminated and its ballots move to the next remaining preference; repeat. Elimination ties are broken by fewer first preferences, then by the party that is later in the configured party order. The client never runs IRV.
+- Seats and map colors use the IRV winner; vote charts use first-preference totals.
+- Division list, states and zoom bounding boxes live in `src/lib/data/auDivisions.json`. After replacing the pmtiles file run `node scripts/extract-au-divisions.mjs --check` (and `--write-bbox` to refresh bounds); `node scripts/verify-irv.mjs` verifies the counting logic.
 
 ---
 
@@ -244,6 +266,11 @@ Vote API performs a single atomic SQL operation:
 - `src/app/usa/page.js`: USA default route redirect to presidential page
 - `src/app/usa/houseOfRepresentatives/page.js`: USA house page bootstrap
 - `src/app/usa/president/page.js`: USA presidential page bootstrap
+- `src/app/australia/page.js`: Australia House of Representatives page bootstrap (`au/fed/2025`)
+- `src/lib/components/virtualElection/MapComponent/AustraliaMap.jsx`: MapLibre + PMTiles map surface for Australia
+- `src/lib/components/virtualElection/MapComponent/IrvRoundsPanel.jsx`: round-by-round preference count for the selected division
+- `src/lib/components/virtualElection/RankedBallot.jsx`: drag-and-drop ranked-ballot control (`@dnd-kit`; mouse, touch long-press, keyboard)
+- `src/lib/virtualElection/irv.js`: pure IRV counting module
 - `src/lib/components/virtualElection/VirtualElectionPage.jsx`: client orchestrator
 - `src/lib/components/virtualElection/Header.jsx`: shared country selector header
 - `src/lib/components/virtualElection/LoginControl.jsx`: auth-aware vote controls
@@ -285,6 +312,7 @@ Vote API performs a single atomic SQL operation:
 - `GET /api/virtual-election/me`
 - `GET /api/virtual-election/ridings`
 - `GET /api/virtual-election/options`
+- `GET /api/virtual-election/irv` (Australia only, see "Ranked-ballot scopes")
 
 
 POST /api/virtual-election/vote
@@ -297,7 +325,27 @@ GET /api/virtual-election/ridings
 Returns the list of ridings available in the selected scope (code, name, subnational) for map/selector rendering.
 GET /api/virtual-election/options
 Returns authoritative election bootstrap options for the selected scope (`scopeId`, `countryCode`, `mapVersion`, `districtIdNamespace`, `allowedParties`, `ridings`, and UI rules). Clients should use this to render allowed UI choices; server remains the source of truth for enforcement.
-For presidential scope, options also include `mode`, `regionKey`, `allocationRule`, and `electoralVotesVersion`.
+For presidential scope, options also include `mode`, `regionKey`, `allocationRule`, and `electoralVotesVersion`. Options also include `votingSystem` (`"preferential"` for Australia, `"single"` otherwise).
+
+#### Ranked-ballot scopes (Australia, `country=au`)
+
+The contracts above are unchanged for Canada, UK and USA. For `country=au` they change as follows (additive, except that `ranking` replaces `party` on `POST /vote`):
+
+- `POST /api/virtual-election/vote`
+  - Purpose: cast or overwrite the user's ranked ballot for one division.
+  - Request: `{ "country": "au", "district": "fed", "year": 2025, "ridingId": "ADELA", "ranking": ["ALP","LNP","GRN","IND","ONP","AFP","OTH"], "captchaToken"?: string }`. `ranking` must list every allowed party exactly once; the first entry is the first preference (`party` is ignored for `au`).
+  - Response: `{ "success": true, "result": { "status": "created" | "updated" | "unchanged", "voted": true, "ridingId", "party", "ranking" }, "me": { "voted": true, "ridingId", "party", "ranking" } }`, where `party` is the first preference.
+  - Errors: `400` `INVALID_RANKING` (missing, partial, duplicated or unknown parties), plus the existing `400/401/403/409/429/503` cases.
+- `GET /api/virtual-election/totals`
+  - Each riding row keeps `ridingId`, `totals`, `leader`, `intensity`, `totalVotes`. For `au`: `totals` and `totalVotes` are first-preference counts, `leader` is the IRV winner, `intensity` is the winner's share in the final count, and an additive `irv: { winner, firstPreferenceLeader, finalTwo: [{ party, votes }] }` is included.
+  - Caching: for `au` the response is `Cache-Control: public, s-maxage=N, stale-while-revalidate=3N` with `N = VIRTUAL_ELECTION_TOTALS_CACHE_SECONDS` (default 10; `0` disables). The client adds a `fresh=<timestamp>` query param right after voting to bypass shared caches.
+- `GET /api/virtual-election/me`
+  - For `au`, a saved vote also returns `ranking` (full ordered list).
+- `GET /api/virtual-election/irv?country=au&district=fed&year=2025&ridingId=ADELA` (new, `au` only)
+  - Purpose: full preference count for one division.
+  - Response: `{ ridingId, totalBallots, winner, firstPreferenceLeader, finalTwo, winnerShare, exhausted, rounds: [{ round, counts: { party: votes }, total, eliminated: party | null }] }`.
+  - Errors: `400` `INVALID_SCOPE` (scope does not use ranked ballots), `400` `INVALID_RIDING`, `503` tables missing. Uses the same caching rule as `GET /totals`.
+
 Current routes:
 
 - `/` intro page
@@ -306,6 +354,7 @@ Current routes:
 - `/usa/houseOfRepresentatives` USA House virtual election (`us/fed/2025`)
 - `/usa/president` USA presidential virtual election (`us/pres/2025`)
 - `/uk` UK parliament virtual election (`uk/fed/2025`)
+- `/australia` Australia House of Representatives virtual election (`au/fed/2025`, ranked ballot)
 
 Note: USA map currently uses direct AK/HI placement (insets can be added later).
 Error semantics are aligned with prior implementation:
@@ -324,6 +373,8 @@ Error semantics are aligned with prior implementation:
 - Set all env vars in Vercel project settings.
 - Add production domain to `VIRTUAL_ELECTION_ALLOWED_ORIGINS`.
 - Add production callback URL for Google OAuth.
-- Run `npm run db:migrate` against production Neon DB before first launch.
+- Run `npm run db:migrate` against production Neon DB before first launch (migration `0006` is required for Australia), then `npm run db:seed:options`.
+- `static/ridingMaps/Austrilia.pmtiles` is read by the browser with HTTP Range requests; the host serving `/static/*` must support `Range` (the Next.js dev server does). The CSP in `next.config.mjs` allows `worker-src blob:` for MapLibre.
+- The MapLibre worker is copied to `public/maplibre/` (git-ignored) by `scripts/copy-maplibre-worker.mjs`, which runs automatically via `predev` and `prebuild`. If you build with a custom command that skips `npm run build`, run `node scripts/copy-maplibre-worker.mjs` first.
 
 test

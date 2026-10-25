@@ -2,9 +2,11 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
-	VIRTUAL_ELECTION_ALLOWED_PARTIES,
-	VIRTUAL_ELECTION_ALLOWED_SCOPES
+	VIRTUAL_ELECTION_ALLOWED_SCOPES,
+	getAllowedPartiesForScope,
+	isPreferentialScope
 } from '@/lib/config/virtualElection';
+import { isCompleteRanking } from '@/lib/virtualElection/irv';
 
 /**
  * Custom hook that owns all election state: totals polling, user vote,
@@ -26,8 +28,17 @@ export default function useElectionState({
 	const [errorMessage, setErrorMessage] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [ridingResults, setRidingResults] = useState(initialRidings);
-	const [allowedParties, setAllowedParties] = useState(VIRTUAL_ELECTION_ALLOWED_PARTIES);
+	const [allowedParties, setAllowedParties] = useState(() => getAllowedPartiesForScope(scope));
 	const [activeMapMetadata, setActiveMapMetadata] = useState(mapMetadata);
+	// Ranked ballot (preferential scopes such as Australia): ordered list of every allowed party.
+	const isPreferential = isPreferentialScope(scope);
+	const [selectedRanking, setSelectedRanking] = useState(() =>
+		isPreferential
+			? isCompleteRanking(initialMe?.ranking, getAllowedPartiesForScope(scope))
+				? initialMe.ranking
+				: getAllowedPartiesForScope(scope)
+			: []
+	);
 
 	// Sync with server-side props when they change
 	useEffect(() => {
@@ -35,6 +46,15 @@ export default function useElectionState({
 		setTotals(initialTotals);
 		setRidingResults(initialRidings);
 	}, [initialMe, initialTotals, initialRidings]);
+
+	// Keep the ranked ballot aligned with the saved vote and the allowed party list.
+	useEffect(() => {
+		if (!isPreferential) return;
+		setSelectedRanking((previous) => {
+			if (isCompleteRanking(userVote?.ranking, allowedParties)) return userVote.ranking;
+			return isCompleteRanking(previous, allowedParties) ? previous : allowedParties;
+		});
+	}, [isPreferential, userVote?.ranking, allowedParties]);
 
 	// Fetch authoritative election options from backend on mount
 	useEffect(() => {
@@ -64,7 +84,8 @@ export default function useElectionState({
 						mode: payload.mode,
 						regionKey: payload.regionKey,
 						allocationRule: payload.allocationRule,
-						electoralVotesVersion: payload.electoralVotesVersion
+						electoralVotesVersion: payload.electoralVotesVersion,
+						votingSystem: payload.votingSystem
 					}));
 				}
 			} catch {
@@ -78,13 +99,18 @@ export default function useElectionState({
 	}, [scope.country, scope.district, scope.year]);
 
 	// Refresh totals from backend
-	const refreshTotals = useCallback(async () => {
+	const refreshTotals = useCallback(async ({ fresh = false } = {}) => {
 		const query = new URLSearchParams({
 			country: scope.country,
 			district: scope.district,
 			year: String(scope.year)
 		});
-		const response = await fetch(`/api/virtual-election/totals?${query}`);
+		// Right after voting, bypass shared caches so the voter sees their own vote immediately.
+		if (fresh) query.set('fresh', String(Date.now()));
+		const response = await fetch(
+			`/api/virtual-election/totals?${query}`,
+			fresh ? { cache: 'no-store' } : undefined
+		);
 		if (!response.ok) throw new Error('Failed to refresh totals');
 		const payload = await response.json();
 		setTotals(payload.ridings ?? []);
@@ -99,13 +125,16 @@ export default function useElectionState({
 	}, [refreshTotals]);
 
 	// Submit vote logic
-	async function submitVoteInternal(riding, party) {
+	async function submitVoteInternal(riding, party, ranking = null) {
 		if (isSubmitting) return;
 
+		const previousRankingKey = Array.isArray(userVote.ranking) ? userVote.ranking.join('>') : '';
 		const isOverwrite =
 			userVote.voted &&
 			(String(userVote.ridingId ?? '') !== String(riding.code) ||
-				String(userVote.party ?? '') !== String(party));
+				(ranking
+					? previousRankingKey !== ranking.join('>')
+					: String(userVote.party ?? '') !== String(party)));
 		if (isOverwrite) {
 			const confirmed = window.confirm(
 				'Are you going to have another vote? Original vote will be overwritten.'
@@ -121,7 +150,7 @@ export default function useElectionState({
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					ridingId: String(riding.code),
-					party,
+					...(ranking ? { ranking } : { party }),
 					country: scope.country,
 					district: scope.district,
 					year: scope.year
@@ -135,7 +164,7 @@ export default function useElectionState({
 			setUserVote(payload.me ?? userVote);
 			setSelectedRiding(riding);
 			setSelectedParty(party);
-			await refreshTotals();
+			await refreshTotals({ fresh: true });
 		} catch (error) {
 			setErrorMessage(error instanceof Error ? error.message : 'Vote failed.');
 		} finally {
@@ -144,7 +173,13 @@ export default function useElectionState({
 	}
 
 	async function submitVote() {
-		if (!selectedRiding || !selectedParty || isSubmitting) return;
+		if (isSubmitting || !selectedRiding) return;
+		if (isPreferential) {
+			if (!isCompleteRanking(selectedRanking, allowedParties)) return;
+			await submitVoteInternal(selectedRiding, selectedRanking[0], selectedRanking);
+			return;
+		}
+		if (!selectedParty) return;
 		await submitVoteInternal(selectedRiding, selectedParty);
 	}
 
@@ -164,6 +199,9 @@ export default function useElectionState({
 		setSelectedRiding,
 		selectedParty,
 		setSelectedParty,
+		isPreferential,
+		selectedRanking,
+		setSelectedRanking,
 		userVote,
 		totals,
 		errorMessage,

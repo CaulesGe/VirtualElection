@@ -43,6 +43,13 @@
 			"when": 1760000003000,
 			"tag": "0005_add_uk_riding_result",
 			"breakpoints": true
+		},
+		{
+			"idx": 6,
+			"version": "7",
+			"when": 1793100000000,
+			"tag": "0006_australia_ranked_voting",
+			"breakpoints": true
 		}
 	]
 }

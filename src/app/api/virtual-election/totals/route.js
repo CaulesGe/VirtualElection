@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import { DEFAULT_SCOPE } from '@/lib/config/virtualElection';
+import { getResultsCacheControl } from '@/lib/server/virtualElection/cache';
 import {
 	getTotals,
 	isMissingVirtualElectionTableError,
@@ -39,7 +40,7 @@ export async function GET(request) {
 
 		return json(body, 200, {
 			ETag: etag,
-			'Cache-Control': 'private, max-age=0, stale-while-revalidate=10'
+			'Cache-Control': getResultsCacheControl(scope)
 		});
 	} catch (error) {
 		if (error instanceof VirtualElectionError) {

@@ -23,6 +23,16 @@ export function getMapMetadataForScope(scope) {
 		};
 	}
 
+	if (countryCode === 'AU') {
+		return {
+			countryCode: 'AU',
+			mapVersion: `au-${year}`,
+			mode: 'house',
+			regionKey: 'division',
+			votingSystem: 'preferential'
+		};
+	}
+
 	if (countryCode === 'UK') {
 		return {
 			countryCode: 'UK',

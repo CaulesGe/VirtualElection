@@ -95,6 +95,8 @@ export const virtualElectionVotes = pgTable(
 		ipHash: text('ip_hash'),
 		ridingId: text('riding_id').notNull(),
 		party: text('party').notNull(),
+		// Full ranked ballot for preferential scopes (e.g. AU): "ALP>GRN>LP>...". Null otherwise.
+		rankingKey: text('ranking_key'),
 		country: text('country').notNull(),
 		district: text('district').notNull(),
 		year: integer('year').notNull(),
@@ -166,5 +168,44 @@ export const ukRidingResult = ridingResultsSchema.table(
 			columns: [table.ridingId, table.party, table.district, table.year]
 		}),
 		index('uk_riding_result_scope_idx').on(table.district, table.year)
+	]
+);
+
+export const australiaRidingResult = ridingResultsSchema.table(
+	'australia_riding_result',
+	{
+		ridingId: text('riding_id').notNull(),
+		party: text('party').notNull(),
+		district: text('district').notNull(),
+		year: integer('year').notNull(),
+		votes: integer('votes').notNull().default(0),
+		updatedAt: timestamp('updated_at').defaultNow().notNull()
+	},
+	(table) => [
+		primaryKey({
+			name: 'australia_riding_result_pk',
+			columns: [table.ridingId, table.party, table.district, table.year]
+		}),
+		index('australia_riding_result_scope_idx').on(table.district, table.year)
+	]
+);
+
+// Aggregated ranked ballots (one row per distinct full ranking per division) used for IRV counting.
+export const australiaBallotResult = ridingResultsSchema.table(
+	'australia_ballot_result',
+	{
+		ridingId: text('riding_id').notNull(),
+		rankingKey: text('ranking_key').notNull(),
+		district: text('district').notNull(),
+		year: integer('year').notNull(),
+		votes: integer('votes').notNull().default(0),
+		updatedAt: timestamp('updated_at').defaultNow().notNull()
+	},
+	(table) => [
+		primaryKey({
+			name: 'australia_ballot_result_pk',
+			columns: [table.ridingId, table.rankingKey, table.district, table.year]
+		}),
+		index('australia_ballot_result_scope_idx').on(table.district, table.year)
 	]
 );

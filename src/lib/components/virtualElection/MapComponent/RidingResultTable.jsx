@@ -1,13 +1,14 @@
 'use client';
 
 import { useMemo } from 'react';
-import { getPartyColor, getPartyShortName } from '@/lib/components/virtualElection/partyMeta';
+import { getPartyColor, getPartyFullName } from '@/lib/components/virtualElection/partyMeta';
 import styles from '@/lib/components/virtualElection/VirtualElectionPage.module.css';
 
 export default function RidingResultTable({
 	selectedRiding = null,
 	selectedRidingTotals = null,
-	allowedParties = []
+	allowedParties = [],
+	isPreferential = false
 }) {
 	const sortedRows = useMemo(() => {
 		const rows = (allowedParties ?? []).map((party) => ({
@@ -23,7 +24,7 @@ export default function RidingResultTable({
 
 	return (
 		<section className={styles.totalsCard}>
-			<h3>Selected Riding Live Totals</h3>
+			<h3>{isPreferential ? 'Selected Division First Preferences' : 'Selected Riding Live Totals'}</h3>
 			<div className={bodyClassName}>
 				{!selectedRiding ? (
 					<p className="muted">Select a riding to view totals.</p>
@@ -32,7 +33,8 @@ export default function RidingResultTable({
 						<p className="muted">
 							{selectedRidingTotals ? (
 								<>
-									Leader: <strong>{getPartyShortName(selectedRidingTotals.leader)}</strong> (
+									{isPreferential ? 'Projected winner (after preferences)' : 'Leader'}:{' '}
+									<strong>{getPartyFullName(selectedRidingTotals.leader)}</strong> (
 									{(selectedRidingTotals.intensity * 100).toFixed(1)}%)
 								</>
 							) : (
@@ -43,7 +45,7 @@ export default function RidingResultTable({
 							{sortedRows.map((row) => (
 								<div className={styles.totalsRow} key={row.party}>
 									<span style={{ color: getPartyColor(row.party), fontWeight: 600 }}>
-										{getPartyShortName(row.party)}
+										{getPartyFullName(row.party)}
 									</span>
 									<strong>{row.votes}</strong>
 								</div>

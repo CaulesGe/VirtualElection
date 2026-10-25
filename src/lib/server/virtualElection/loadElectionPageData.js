@@ -35,7 +35,8 @@ export async function loadElectionPageData(scope) {
 			mode: electionOptions.mode,
 			regionKey: electionOptions.regionKey,
 			allocationRule: electionOptions.allocationRule,
-			electoralVotesVersion: electionOptions.electoralVotesVersion
+			electoralVotesVersion: electionOptions.electoralVotesVersion,
+			votingSystem: electionOptions.votingSystem
 		};
 	}
 

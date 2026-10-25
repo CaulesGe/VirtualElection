@@ -17,11 +17,34 @@ export const VIRTUAL_ELECTION_ALLOWED_PARTIES_UK = [
 	'Traditional Unionist Voice',
 	'Restore Britain'
 ];
+// Australia (House of Representatives): ranked ballot. The order below is also the
+// deterministic last-resort tie-break order used by IRV counting.
+// Matches the primary-vote breakdown of the federal result: Labor, Liberal-National Coalition,
+// Greens, Independents, One Nation, Australian Federation Party and Others.
+export const VIRTUAL_ELECTION_ALLOWED_PARTIES_AU = [
+	'ALP',
+	'LNP',
+	'GRN',
+	'IND',
+	'ONP',
+	'AFP',
+	'OTH'
+];
+
 export const VIRTUAL_ELECTION_ALLOWED_PARTIES_BY_COUNTRY = {
 	CA: VIRTUAL_ELECTION_ALLOWED_PARTIES,
 	US: VIRTUAL_ELECTION_ALLOWED_PARTIES_US,
-	UK: VIRTUAL_ELECTION_ALLOWED_PARTIES_UK
+	UK: VIRTUAL_ELECTION_ALLOWED_PARTIES_UK,
+	AU: VIRTUAL_ELECTION_ALLOWED_PARTIES_AU
 };
+
+// Scopes that use a full preferential (ranked) ballot instead of a single party choice.
+export const PREFERENTIAL_COUNTRIES = ['AU'];
+
+export function isPreferentialScope(scope) {
+	const countryCode = String(scope?.country ?? '').toUpperCase();
+	return PREFERENTIAL_COUNTRIES.includes(countryCode);
+}
 
 export const VIRTUAL_ELECTION_ALLOWED_SCOPES = [
 	{
@@ -31,6 +54,11 @@ export const VIRTUAL_ELECTION_ALLOWED_SCOPES = [
 	},
 	{
 		country: 'uk',
+		district: 'fed',
+		year: 2025
+	},
+	{
+		country: 'au',
 		district: 'fed',
 		year: 2025
 	},
@@ -278,6 +306,52 @@ export const FEDERAL_PARTIES = {
 		textColor: 'text-rb',
 		logo: '',
 		colorGradient: ['#D58A98', '#C96579', '#B9475F', '#9B1C31', '#771524', '#520D18']
+	},
+	// Australia. IND and OTH are shared with the US / Canada definitions above.
+	ALP: {
+		name: 'Australian Labor Party',
+		shortName: 'ALP',
+		color: '#E13940',
+		backgroundColor: 'bg-alp',
+		textColor: 'text-alp',
+		logo: '',
+		colorGradient: ['#F5A3A6', '#EE7C80', '#E85A60', '#E13940', '#B22B31', '#7F1D22']
+	},
+	LNP: {
+		name: 'Liberal–National Coalition',
+		shortName: 'LNP',
+		color: '#0A5A8C',
+		backgroundColor: 'bg-lnp',
+		textColor: 'text-lnp',
+		logo: '',
+		colorGradient: ['#8DBBD8', '#5E9EC6', '#3482B2', '#0A5A8C', '#07446A', '#042C45']
+	},
+	GRN: {
+		name: 'Australian Greens',
+		shortName: 'GRN',
+		color: '#10C25B',
+		backgroundColor: 'bg-grn-au',
+		textColor: 'text-grn-au',
+		logo: '',
+		colorGradient: ['#8CE8B0', '#5FDB91', '#36CF76', '#10C25B', '#0C9948', '#07672F']
+	},
+	ONP: {
+		name: "Pauline Hanson's One Nation",
+		shortName: 'ONP',
+		color: '#F36F21',
+		backgroundColor: 'bg-onp',
+		textColor: 'text-onp',
+		logo: '',
+		colorGradient: ['#F9BC95', '#F6A06A', '#F58443', '#F36F21', '#C25819', '#8A3E11']
+	},
+	AFP: {
+		name: 'Australian Federation Party',
+		shortName: 'AFP',
+		color: '#F5D800',
+		backgroundColor: 'bg-afp',
+		textColor: 'text-afp',
+		logo: '',
+		colorGradient: ['#FBEF8A', '#F9E65C', '#F7DE2E', '#F5D800', '#C4AD00', '#8A7900']
 	}
 };
 

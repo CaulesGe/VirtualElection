@@ -8,6 +8,7 @@ function getCountryNameFromPath(pathname) {
 	if (pathname?.startsWith('/usa')) return 'USA';
 	if (pathname?.startsWith('/canada')) return 'Canada';
 	if (pathname?.startsWith('/uk')) return 'United Kingdom';
+	if (pathname?.startsWith('/australia')) return 'Australia';
 	return '...';
 }
 
@@ -15,6 +16,7 @@ function getCountryRouteFromPath(pathname) {
 	if (pathname?.startsWith('/canada')) return '/canada';
 	if (pathname?.startsWith('/usa')) return '/usa/president';
 	if (pathname?.startsWith('/uk')) return '/uk';
+	if (pathname?.startsWith('/australia')) return '/australia';
 	return '/canada';
 }
 
@@ -45,7 +47,7 @@ export default function Header({ isAuthenticated = false, userLabel = '' }) {
 		<header className={styles.header}>
 			<div className={styles.inner}>
 				<Link href="/" className={styles.brand}>
-					VirtualElection
+					Poliwave/VirtualElection
 				</Link>
 				<h1 className={styles.title}>How will you vote in {countryName}?</h1>
 				<div className={styles.selectorWrap}>
@@ -64,6 +66,7 @@ export default function Header({ isAuthenticated = false, userLabel = '' }) {
 						<option value="/canada">Canada</option>
 						<option value="/usa/president">USA</option>
 						<option value="/uk">United Kingdom</option>
+						<option value="/australia">Australia</option>
 					</select>
 				</div>
 				<div className={styles.userSlot}>

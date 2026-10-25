@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, Tooltip, XAxis, YAxis } from 'recharts';
-import { getPartyColor, getPartyShortName } from '@/lib/components/virtualElection/partyMeta';
+import { getPartyColor, getPartyFullName, getPartyShortName } from '@/lib/components/virtualElection/partyMeta';
 import ChartTooltip from '@/lib/components/virtualElection/ChartTooltip';
 
 function buildSeries(ridingTotals, electoralVotes) {
@@ -11,6 +11,7 @@ function buildSeries(ridingTotals, electoralVotes) {
 		.map(([party, votes]) => ({
 			party,
 			name: getPartyShortName(party),
+			fullName: getPartyFullName(party),
 			votes: Number(votes ?? 0),
 			electoralVotes
 		}))
@@ -83,7 +84,7 @@ export default function RidingBarChart({ riding, ridingTotals }) {
 									<>
 										<div style={{ fontWeight: 700 }}>{riding.name}</div>
 										{Number(row?.electoralVotes ?? 0) > 0 ? <div>EV: {row.electoralVotes}</div> : null}
-										<div style={{ color: getPartyColor(row.party), fontWeight: 600 }}>{row.name}</div>
+										<div style={{ color: getPartyColor(row.party), fontWeight: 600 }}>{row.fullName ?? row.name}</div>
 										<div>Votes: {row.votes}</div>
 									</>
 								)}
